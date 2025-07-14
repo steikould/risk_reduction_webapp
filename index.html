@@ -3,13 +3,500 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Reduction Intelligent App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Intelligent RRR Value Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Basic styling to mimic shadcn/ui components where direct Tailwind might not be enough */
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        .card {
+            border: 1px solid #e2e8f0; /* gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+        }
+        .card-title {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+        }
+        .card-description {
+            font-size: 0.875rem; /* text-sm */
+            color: #64748b; /* gray-500 */
+        }
+        .card-content {
+            padding: 1.5rem;
+        }
+        .input, .textarea {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #cbd5e1; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: white;
+            font-size: 0.875rem; /* text-sm */
+            color: #1e293b; /* gray-900 */
+        }
+        .input:focus, .textarea:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+        .select-trigger {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.625rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.375rem;
+            background-color: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+            min-height: 2.5rem; /* Equivalent to h-10 */
+        }
+        .select-content {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            position: absolute;
+            z-index: 10;
+            margin-top: 0.25rem;
+            width: var(--trigger-width); /* Controlled by JS */
+        }
+        .select-item {
+            padding: 0.625rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .select-item:hover, .select-item.selected {
+            background-color: #f1f5f9; /* gray-100 */
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .button.primary {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+        .button.primary:hover {
+            background-color: #2563eb; /* blue-600 */
+        }
+        .button.outline {
+            border: 1px solid #e2e8f0; /* gray-200 */
+            background-color: white;
+            color: #1e293b; /* gray-900 */
+        }
+        .button.outline:hover {
+            background-color: #f1f5f9; /* gray-100 */
+        }
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px; /* full rounded */
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .badge.outline {
+            border: 1px solid #e2e8f0;
+            color: #64748b; /* gray-500 */
+            background-color: transparent;
+        }
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc; /* gray-50 */
+            color: #334155; /* gray-700 */
+        }
+        .alert-icon {
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .alert-description {
+            font-size: 0.875rem;
+        }
+        .tabs-list {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f5f9; /* gray-100 */
+            border-radius: 0.5rem; /* rounded-md */
+            padding: 0.25rem;
+            width: 100%;
+        }
+        .tabs-trigger {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b; /* gray-500 */
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+            text-align: center;
+        }
+        .tabs-trigger.active {
+            background-color: white;
+            color: #1e293b; /* gray-900 */
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .progress-bar {
+            background-color: #e2e8f0; /* gray-200 */
+            border-radius: 9999px; /* full */
+            height: 0.5rem; /* h-2 */
+            overflow: hidden;
+        }
+        .progress-indicator {
+            background-color: #3b82f6; /* blue-500 */
+            height: 100%;
+            width: var(--progress-width, 0%); /* Controlled by JS */
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-    <div id="root" class="container mx-auto p-4"></div>
-    <script src="app.js"></script>
+<body class="bg-gray-50 text-gray-900">
+    <div id="app" class="max-w-4xl mx-auto p-6 space-y-6">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-2">Intelligent RRR Value Analysis</h1>
+            <p class="text-gray-600">AI-powered risk reduction assessment for project planning</p>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-list grid w-full grid-cols-3">
+                <button class="tabs-trigger active" data-tab="analysis">Analysis</button>
+                <button class="tabs-trigger" data-tab="data">Data Sources</button>
+                <button class="tabs-trigger" data-tab="golden">Golden Tables</button>
+            </div>
+
+            <div id="analysis-tab" class="tabs-content space-y-6 pt-6">
+                <div class="flex items-center justify-between mb-6">
+                    </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" id="current-step-title"></h2>
+                        <p class="card-description" id="current-step-description"></p>
+                    </div>
+                    <div class="card-content" id="current-step-content">
+                        </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button id="prev-button" class="button outline">
+                        Previous
+                    </button>
+                    <button id="next-button" class="button primary">
+                        Next
+                    </button>
+                </div>
+            </div>
+
+            <div id="data-tab" class="tabs-content space-y-4 pt-6 hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database h-5 w-5 mr-2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/><path d="M3 19A9 3 0 0 0 21 19"/></svg>
+                            Data Sources Integration
+                        </h2>
+                    </div>
+                    <div class="card-content space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 border rounded">
+                                <h4 class="font-medium mb-2">Structured Data (BigQuery)</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center justify-between">
+                                        <span>• Historical RRR reports</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            project_analytics.rrr_historical
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span>• Project success metrics</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            project_analytics.success_metrics
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span>• Cost and timeline data</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            project_analytics.cost_timeline
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span>• Risk outcome patterns</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            risk_management.outcome_patterns
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 border rounded">
+                                <h4 class="font-medium mb-2">Unstructured Documents (SharePoint)</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center justify-between">
+                                        <span>• Technical specifications</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            /sites/Engineering/TechSpecs/
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span>• Business requirements</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            /sites/ProjectMgmt/BizReqs/
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span>• Post-mortem reports</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            /sites/PMO/PostMortems/
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span>• Stakeholder feedback</span>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            /sites/Feedback/Reviews/
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="p-4 bg-gray-50 rounded">
+                                <h4 class="font-medium mb-3">Recent SharePoint Documents</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                        <div>
+                                            <span class="font-medium">DRA_Skid_Pump_Spec_Station47_Rev3.pdf</span>
+                                            <div class="text-xs text-gray-500">Modified: 1 day ago | Size: 3.2MB</div>
+                                        </div>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            https://company.sharepoint.com/sites/PipelineEng/DRASpecs/DRA_Skid_Pump_Spec_Station47_Rev3.pdf
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                        <div>
+                                            <span class="font-medium">Pump_Replacement_Procedure_v2.1.docx</span>
+                                            <div class="text-xs text-gray-500">Modified: 3 days ago | Size: 1.5MB</div>
+                                        </div>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            https://company.sharepoint.com/sites/Maintenance/PumpProcs/Pump_Replacement_Procedure_v2.1.docx
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                        <div>
+                                            <span class="font-medium">Station23_Pump_Overhaul_PostMaint_Report.pdf</span>
+                                            <div class="text-xs text-gray-500">Modified: 2 weeks ago | Size: 2.8MB</div>
+                                        </div>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            https://company.sharepoint.com/sites/Operations/PostMaint/Station23_Pump_Overhaul_PostMaint_Report.pdf
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                        <div>
+                                            <span class="font-medium">DRA_System_Safety_Protocol_2024.xlsx</span>
+                                            <div class="text-xs text-gray-500">Modified: 1 week ago | Size: 890KB</div>
+                                        </div>
+                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                            https://company.sharepoint.com/sites/Safety/ComplianceDocs/DRA_System_Safety_Protocol_2024.xlsx
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle h-4 w-4 alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 22h16a2 2 0 0 0 1.73-4Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                            <div class="flex-1">
+                                <p class="alert-description">
+                                    RAG system combines structured BQ data with document embeddings for contextual recommendations. Documents are automatically indexed from SharePoint with real-time updates.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="golden-tab" class="tabs-content space-y-4 pt-6 hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Golden Tables & Knowledge Base</h2>
+                        <p class="card-description">Curated datasets for enterprise AI applications (BigQuery)</p>
+                    </div>
+                    <div class="card-content space-y-4">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="p-4 border rounded">
+                                <h4 class="font-medium mb-2">Project Patterns</h4>
+                                <div class="text-sm space-y-1">
+                                    <div>Records: 1,247</div>
+                                    <div>Last Updated: Today</div>
+                                    <div>Quality Score: 94%</div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:underline text-xs">
+                                    golden_tables.project_patterns
+                                </a>
+                            </div>
+                            <div class="p-4 border rounded">
+                                <h4 class="font-medium mb-2">Risk Taxonomies</h4>
+                                <div class="text-sm space-y-1">
+                                    <div>Categories: 23</div>
+                                    <div>Sub-categories: 156</div>
+                                    <div>Validation: Complete</div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:underline text-xs">
+                                    golden_tables.risk_taxonomies
+                                </a>
+                            </div>
+                            <div class="p-4 border rounded">
+                                <h4 class="font-medium mb-2">Success Metrics</h4>
+                                <div class="text-sm space-y-1">
+                                    <div>KPIs: 45</div>
+                                    <div>Benchmarks: 12</div>
+                                    <div>Trends: Analyzed</div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:underline text-xs">
+                                    golden_tables.success_metrics
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded">
+                            <h4 class="font-medium mb-3">Query Interface</h4>
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="dateRange" class="block text-sm font-medium mb-1">Date Range</label>
+                                        <div class="select-wrapper">
+                                            <button class="select-trigger" id="dateRangeTrigger">
+                                                <span id="dateRangeValue">Last 6 Months</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                            </button>
+                                            <div class="select-content hidden" id="dateRangeContent">
+                                                <div class="select-item" data-value="last_month">Last Month</div>
+                                                <div class="select-item" data-value="last_3_months">Last 3 Months</div>
+                                                <div class="select-item selected" data-value="last_6_months">Last 6 Months</div>
+                                                <div class="select-item" data-value="last_year">Last Year</div>
+                                                <div class="select-item" data-value="all_time">All Time</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="projectTypeFilter" class="block text-sm font-medium mb-1">Project Type</label>
+                                        <div class="select-wrapper">
+                                            <button class="select-trigger" id="projectTypeFilterTrigger">
+                                                <span id="projectTypeFilterValue">All Types</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                            </button>
+                                            <div class="select-content hidden" id="projectTypeFilterContent">
+                                                <div class="select-item selected" data-value="all">All Types</div>
+                                                <div class="select-item" data-value="infrastructure">Infrastructure</div>
+                                                <div class="select-item" data-value="product">Product</div>
+                                                <div class="select-item" data-value="process">Process</div>
+                                                <div class="select-item" data-value="compliance">Compliance</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="button primary w-full" id="executeQueryButton">
+                                    Execute Query
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white border rounded">
+                            <h4 class="font-medium mb-3">Sample Query Results</h4>
+                            <div class="text-xs bg-gray-900 text-green-400 p-3 rounded font-mono">
+                                <div>SELECT project_type, AVG(rrr_score) as avg_rrr, COUNT(*) as project_count</div>
+                                <div>FROM `company-bq.golden_tables.project_patterns`</div>
+                                <div>WHERE created_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)</div>
+                                <div>GROUP BY project_type</div>
+                                <div>ORDER BY avg_rrr DESC;</div>
+                            </div>
+                            <div class="mt-3 text-sm">
+                                <div class="grid grid-cols-4 gap-2 font-medium border-b pb-2">
+                                    <div>Project Type</div>
+                                    <div>Avg RRR Score</div>
+                                    <div>Project Count</div>
+                                    <div>Success Rate</div>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2 py-1">
+                                    <div>Infrastructure</div>
+                                    <div>0.78</div>
+                                    <div>42</div>
+                                    <div>85%</div>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2 py-1 bg-gray-50">
+                                    <div>Product</div>
+                                    <div>0.71</div>
+                                    <div>38</div>
+                                    <div>72%</div>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2 py-1">
+                                    <div>Process</div>
+                                    <div>0.69</div>
+                                    <div>23</div>
+                                    <div>78%</div>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2 py-1 bg-gray-50">
+                                    <div>Compliance</div>
+                                    <div>0.82</div>
+                                    <div>18</div>
+                                    <div>89%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-blue-50 rounded">
+                            <h4 class="font-medium mb-2">BigQuery Connection Details</h4>
+                            <div class="text-sm space-y-1">
+                                <div><strong>Project ID:</strong> company-bq-analytics</div>
+                                <div><strong>Dataset:</strong> golden_tables</div>
+                                <div><strong>Service Account:</strong> rrr-analysis-service@company-bq.iam.gserviceaccount.com</div>
+                                <div><strong>Last Sync:</strong> 2 hours ago</div>
+                            </div>
+                            <p class="text-sm mt-2">
+                                These golden tables power advanced analytics, predictive modeling, and automated decision support across the enterprise.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    <script src="script.js"></script>
 </body>
 </html>

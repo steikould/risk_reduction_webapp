@@ -1,0 +1,516 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // State variables
+    let currentStep = 0;
+    let formData = {
+        projectName: '',
+        projectType: '',
+        businessUnit: '',
+        estimatedCost: '',
+        timeline: '',
+        proposedAction: '',
+        mitigationCircumstances: '',
+        expectedDowntime: '',
+        improvementMetrics: '',
+        technicalRequirements: '',
+        businessRequirements: '',
+        historicalContext: ''
+    };
+    let llmRecommendations = [];
+    let rrrScore = null;
+    let loading = false;
+
+    // Mock historical data and business context
+    const mockHistoricalData = {
+        similarProjects: [
+            { name: "DRA Skid Pump Replacement - Station 47", type: "Infrastructure", rrrScore: 0.78, successRate: 85, downtime: "4.2 hrs", cost: "$45,000" },
+            { name: "Main Line Pump Overhaul - Station 23", type: "Infrastructure", rrrScore: 0.82, successRate: 92, downtime: "6.1 hrs", cost: "$38,500" },
+            { name: "DRA System Upgrade - Station 31", type: "Infrastructure", rrrScore: 0.73, successRate: 78, downtime: "8.7 hrs", cost: "$67,200" },
+            { name: "Emergency Pump Replacement - Station 15", type: "Infrastructure", rrrScore: 0.65, successRate: 72, downtime: "12.3 hrs", cost: "$52,800" },
+            { name: "Scheduled DRA Pump Maintenance - Station 62", type: "Infrastructure", rrrScore: 0.88, successRate: 95, downtime: "2.8 hrs", cost: "$28,900" }
+        ],
+        riskPatterns: {
+            "Infrastructure": ["Equipment failure during operation", "Unplanned downtime extension", "Environmental compliance", "Personnel safety risks"],
+            "Product": ["Market timing", "User adoption", "Feature creep"],
+            "Process": ["Change management", "Training requirements", "Compliance"]
+        },
+        businessMetrics: {
+            avgProjectCost: 46480,
+            avgTimeline: 2.5,
+            avgDowntime: 6.8,
+            successRate: 84
+        }
+    };
+
+    const steps = [
+        { title: "Project Overview", icon: 'file-text' },
+        { title: "Risk Assessment", icon: 'alert-triangle' },
+        { title: "LLM Analysis", icon: 'brain' },
+        { title: "RRR Results", icon: 'trending-up' }
+    ];
+
+    // DOM Elements
+    const stepIndicatorsContainer = document.querySelector('#analysis-tab > .flex');
+    const currentStepTitle = document.getElementById('current-step-title');
+    const currentStepDescription = document.getElementById('current-step-description');
+    const currentStepContent = document.getElementById('current-step-content');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+
+    // Tabs functionality
+    const tabsList = document.querySelector('.tabs-list');
+    const tabsContent = {
+        analysis: document.getElementById('analysis-tab'),
+        data: document.getElementById('data-tab'),
+        golden: document.getElementById('golden-tab')
+    };
+
+    tabsList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tabs-trigger')) {
+            document.querySelectorAll('.tabs-trigger').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+
+            for (const key in tabsContent) {
+                tabsContent[key].classList.add('hidden');
+            }
+            tabsContent[e.target.dataset.tab].classList.remove('hidden');
+        }
+    });
+
+    // Handle form input changes
+    function handleInputChange(field, value) {
+        formData[field] = value;
+    }
+
+    // Render step indicators
+    function renderStepIndicators() {
+        stepIndicatorsContainer.innerHTML = '';
+        steps.forEach((step, index) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = `flex items-center`;
+            stepDiv.innerHTML = `
+                <div class="flex items-center justify-center w-10 h-10 rounded-full ${
+                    index <= currentStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+                }">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-${step.icon} h-5 w-5"></svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium ${
+                        index <= currentStep ? 'text-blue-600' : 'text-gray-500'
+                    }">
+                        ${step.title}
+                    </p>
+                </div>
+                ${index < steps.length - 1 ? `<div class="w-12 h-0.5 mx-4 ${index < currentStep ? 'bg-blue-500' : 'bg-gray-200'}"></div>` : ''}
+            `;
+            stepIndicatorsContainer.appendChild(stepDiv);
+        });
+        // Re-create Lucide icons after rendering
+        lucide.createIcons();
+    }
+
+    // Render current step content
+    function renderStepContent() {
+        currentStepTitle.textContent = steps[currentStep].title;
+        let description = "";
+        switch (currentStep) {
+            case 0: description = "Enter basic project information"; break;
+            case 1: description = "Provide detailed requirements and risk factors"; break;
+            case 2: description = "AI analysis of your project data"; break;
+            case 3: description = "Final RRR score and recommendations"; break;
+        }
+        currentStepDescription.textContent = description;
+
+        let contentHtml = '';
+        switch (currentStep) {
+            case 0:
+                contentHtml = `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="projectName" class="block text-sm font-medium mb-2">Project Name</label>
+                                <input id="projectName" value="${formData.projectName}" placeholder="Enter project name" class="input" />
+                            </div>
+                            <div>
+                                <label for="projectType" class="block text-sm font-medium mb-2">Project Type</label>
+                                <div class="select-wrapper">
+                                    <button class="select-trigger" id="projectTypeTrigger">
+                                        <span id="projectTypeValue">${formData.projectType || 'Select project type'}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="select-content hidden" id="projectTypeContent">
+                                        <div class="select-item" data-value="Equipment Replacement">Equipment Replacement</div>
+                                        <div class="select-item" data-value="Maintenance">Maintenance</div>
+                                        <div class="select-item" data-value="Safety Upgrade">Safety Upgrade</div>
+                                        <div class="select-item" data-value="Compliance">Compliance</div>
+                                        <div class="select-item" data-value="Emergency Repair">Emergency Repair</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="businessUnit" class="block text-sm font-medium mb-2">Business Unit</label>
+                                <div class="select-wrapper">
+                                    <button class="select-trigger" id="businessUnitTrigger">
+                                        <span id="businessUnitValue">${formData.businessUnit || 'Select business unit'}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="select-content hidden" id="businessUnitContent">
+                                        <div class="select-item" data-value="Pipeline Operations">Pipeline Operations</div>
+                                        <div class="select-item" data-value="Maintenance">Maintenance</div>
+                                        <div class="select-item" data-value="Engineering">Engineering</div>
+                                        <div class="select-item" data-value="Operations">Operations</div>
+                                        <div class="select-item" data-value="Safety & Compliance">Safety & Compliance</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="estimatedCost" class="block text-sm font-medium mb-2">Estimated Cost ($)</label>
+                                <input id="estimatedCost" type="number" value="${formData.estimatedCost}" placeholder="Enter estimated cost" class="input" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="timeline" class="block text-sm font-medium mb-2">Timeline (weeks)</label>
+                            <input id="timeline" type="number" value="${formData.timeline}" placeholder="Enter timeline in weeks" class="input" />
+                        </div>
+
+                        <div>
+                            <label for="proposedAction" class="block text-sm font-medium mb-2">Proposed Action</label>
+                            <textarea id="proposedAction" rows="3" placeholder="Describe the proposed pump replacement action (e.g., Replace DRA skid pump during scheduled maintenance window...)" class="textarea">${formData.proposedAction}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="mitigationCircumstances" class="block text-sm font-medium mb-2">Mitigation Circumstances</label>
+                                <textarea id="mitigationCircumstances" rows="3" placeholder="Describe risk mitigation measures (e.g., Hot standby pump available, bypass line operational...)" class="textarea">${formData.mitigationCircumstances}</textarea>
+                            </div>
+                            <div>
+                                <label for="expectedDowntime" class="block text-sm font-medium mb-2">Expected Downtime (hours)</label>
+                                <input id="expectedDowntime" type="number" step="0.1" value="${formData.expectedDowntime}" placeholder="Enter expected downtime" class="input" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="improvementMetrics" class="block text-sm font-medium mb-2">Improvement Metrics</label>
+                            <textarea id="improvementMetrics" rows="2" placeholder="Expected improvements (e.g., 15% efficiency increase, reduced vibration, extended MTBF...)" class="textarea">${formData.improvementMetrics}</textarea>
+                        </div>
+                    </div>
+                `;
+                break;
+            case 1:
+                contentHtml = `
+                    <div class="space-y-4">
+                        <div>
+                            <label for="technicalRequirements" class="block text-sm font-medium mb-2">Technical Requirements</label>
+                            <textarea id="technicalRequirements" rows="4" placeholder="Describe technical requirements and constraints..." class="textarea">${formData.technicalRequirements}</textarea>
+                        </div>
+
+                        <div>
+                            <label for="businessRequirements" class="block text-sm font-medium mb-2">Business Requirements</label>
+                            <textarea id="businessRequirements" rows="4" placeholder="Describe business requirements and objectives..." class="textarea">${formData.businessRequirements}</textarea>
+                        </div>
+
+                        <div>
+                            <h3 class="font-medium mb-2">Historical Context</h3>
+                            <div class="grid grid-cols-1 gap-2">
+                                ${mockHistoricalData.similarProjects.map((project, index) => `
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                        <div>
+                                            <span class="font-medium">${project.name}</span>
+                                            <span class="badge outline ml-2">${project.type}</span>
+                                        </div>
+                                        <div class="text-sm text-gray-600 text-right">
+                                            <div>RRR: ${project.rrrScore} | Success: ${project.successRate}%</div>
+                                            <div>Downtime: ${project.downtime} | Cost: ${project.cost}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+            case 2:
+                contentHtml = `
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain mx-auto h-12 w-12 text-blue-500 mb-4"><path d="M12 5c-3.31 0-6 2.69-6 6v3h12v-3c0-3.31-2.69-6-6-6Z"/><path d="M16 11V7"/><path d="M8 11V7"/><path d="M10 19v-6h4v6a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2Z"/></svg>
+                            <h3 class="text-lg font-medium">AI Analysis in Progress</h3>
+                            <p class="text-gray-600">Processing your project data against historical patterns...</p>
+                        </div>
+
+                        ${loading ? `
+                            <div class="space-y-2">
+                                <div class="progress-bar">
+                                    <div class="progress-indicator" style="--progress-width: 50%;"></div>
+                                </div>
+                                <p class="text-sm text-gray-600">Analyzing structured BQ data...</p>
+                            </div>
+                        ` : ''}
+
+                        ${!loading && llmRecommendations.length > 0 ? `
+                            <div class="space-y-4">
+                                <h4 class="font-medium flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb h-5 w-5 mr-2 text-yellow-500"><path d="M15 14v-3"/><path d="M15 10V7a3 3 0 0 0-3-3V2H9.5a.5.5 0 0 0-.5.5v.5a.5.5 0 0 1-.5.5H8a.5.5 0 0 0-.5.5v.5a.5.5 0 0 1-.5.5H6a.5.5 0 0 0-.5.5V11"/><path d="M7 14v-3"/><path d="M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/><path d="M12 18v-2"/></svg>
+                                    LLM Recommendations
+                                </h4>
+                                ${llmRecommendations.map((rec, index) => `
+                                    <div class="card">
+                                        <div class="card-header pb-2">
+                                            <div class="flex items-center justify-between">
+                                                <h3 class="card-title text-sm">${rec.category}</h3>
+                                                <span class="badge outline">
+                                                    ${Math.round(rec.confidence * 100)}% confidence
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="card-content pt-0">
+                                            <p class="text-sm mb-2">${rec.suggestion}</p>
+                                            <p class="text-xs text-gray-500">Source: ${rec.source}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                break;
+            case 3:
+                contentHtml = `
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle h-8 w-8 text-green-600"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">RRR Analysis Complete</h3>
+                            <div class="text-4xl font-bold text-green-600 mb-2">
+                                ${rrrScore ? (rrrScore * 100).toFixed(1) : 'N/A'}%
+                            </div>
+                            <p class="text-gray-600">Risk Reduction Ratio Score</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title text-sm">Project Viability</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="text-2xl font-bold">
+                                        ${rrrScore && rrrScore > 0.7 ? 'High' : rrrScore && rrrScore > 0.5 ? 'Medium' : 'Low'}
+                                    </div>
+                                    <p class="text-sm text-gray-600">
+                                        ${rrrScore && rrrScore > 0.7 ? 'Proceed with confidence' : 'Consider risk mitigation'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title text-sm">Comparable Projects</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="text-2xl font-bold">
+                                        ${mockHistoricalData.similarProjects.length}
+                                    </div>
+                                    <p class="text-sm text-gray-600">Similar historical projects analyzed</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle h-4 w-4 alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 22h16a2 2 0 0 0 1.73-4Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                            <div class="flex-1">
+                                <h3 class="alert-title">Important Note</h3>
+                                <p class="alert-description">
+                                    This DRA pump replacement analysis is based on ${mockHistoricalData.similarProjects.length} similar pipeline operations and current safety protocols. Final approval required from Pipeline Operations Manager.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+            default:
+                contentHtml = '';
+        }
+        currentStepContent.innerHTML = contentHtml;
+        addEventListenersToStepContent(); // Re-attach listeners after content is rendered
+        lucide.createIcons(); // Re-create Lucide icons for new content
+    }
+
+    // Function to handle custom select dropdowns
+    function setupSelects() {
+        document.querySelectorAll('.select-wrapper').forEach(wrapper => {
+            const trigger = wrapper.querySelector('.select-trigger');
+            const content = wrapper.querySelector('.select-content');
+            const valueSpan = trigger.querySelector('span');
+
+            // Set content width to match trigger
+            content.style.setProperty('--trigger-width', `${trigger.offsetWidth}px`);
+
+            trigger.addEventListener('click', () => {
+                content.classList.toggle('hidden');
+                // Adjust position if it goes off screen (simple top/bottom flip)
+                const rect = trigger.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                if (rect.bottom + content.offsetHeight > viewportHeight && rect.top - content.offsetHeight > 0) {
+                    content.style.bottom = `${trigger.offsetHeight + 5}px`;
+                    content.style.top = 'auto';
+                } else {
+                    content.style.top = `${trigger.offsetHeight + 5}px`;
+                    content.style.bottom = 'auto';
+                }
+            });
+
+            content.addEventListener('click', (e) => {
+                if (e.target.classList.contains('select-item')) {
+                    const selectedValue = e.target.dataset.value;
+                    const selectedText = e.target.textContent;
+
+                    // Update UI
+                    valueSpan.textContent = selectedText;
+                    content.classList.add('hidden');
+
+                    // Update formData based on the select ID
+                    const selectId = trigger.id.replace('Trigger', '');
+                    handleInputChange(selectId, selectedValue);
+
+                    // Update selected class for styling
+                    content.querySelectorAll('.select-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    // Attach event listeners to dynamically rendered inputs/textareas
+    function addEventListenersToStepContent() {
+        const inputs = currentStepContent.querySelectorAll('.input');
+        inputs.forEach(input => {
+            const field = input.id;
+            input.value = formData[field]; // Ensure current value is set
+            input.oninput = (e) => handleInputChange(field, e.target.value);
+        });
+
+        const textareas = currentStepContent.querySelectorAll('.textarea');
+        textareas.forEach(textarea => {
+            const field = textarea.id;
+            textarea.value = formData[field]; // Ensure current value is set
+            textarea.oninput = (e) => handleInputChange(field, e.target.value);
+        });
+
+        setupSelects(); // Setup the custom selects for current step
+    }
+
+    // LLM Analysis and RRR Score Calculation
+    function generateLLMRecommendations() {
+        setLoading(true);
+        setTimeout(() => {
+            llmRecommendations = [
+                {
+                    category: "Equipment Risk Mitigation",
+                    suggestion: "Based on Station 47 DRA pump replacement, implement hot standby configuration to reduce downtime risk by 35%",
+                    confidence: 0.88,
+                    source: "Historical Pipeline Operations Data"
+                },
+                {
+                    category: "Operational Continuity",
+                    suggestion: "Schedule replacement during low-flow period (Tuesday 2-6 AM) to minimize throughput impact - reduces risk exposure by 28%",
+                    confidence: 0.92,
+                    source: "Flow Pattern Analysis"
+                },
+                {
+                    category: "Safety Protocol",
+                    suggestion: "Implement nitrogen purging procedure used in Station 23 overhaul - eliminated 2 high-risk scenarios",
+                    confidence: 0.85,
+                    source: "Safety Incident Database"
+                },
+                {
+                    category: "Cost Optimization",
+                    suggestion: "Pre-order critical gaskets and seals based on Station 31 lessons learned - avoids 15% cost overrun risk",
+                    confidence: 0.78,
+                    source: "Procurement Pattern Analysis"
+                }
+            ];
+            calculateRRRScore();
+            setLoading(false);
+            renderApp(); // Re-render to show recommendations
+        }, 2000);
+    }
+
+    function calculateRRRScore() {
+        const estimatedCostNum = parseFloat(formData.estimatedCost) || 0;
+        const expectedDowntimeNum = parseFloat(formData.expectedDowntime) || 0;
+
+        const baseScore = 0.7;
+        const projectTypeBonus = formData.projectType === 'Equipment Replacement' ? 0.05 : 0.02;
+        const costFactor = estimatedCostNum > 50000 ? -0.05 : 0.05;
+        const downtimeFactor = expectedDowntimeNum > 6 ? -0.1 : 0.08;
+        const mitigationBonus = formData.mitigationCircumstances ? 0.07 : 0;
+
+        const finalScore = Math.max(0, Math.min(1, baseScore + projectTypeBonus + costFactor + downtimeFactor + mitigationBonus));
+        rrrScore = finalScore;
+    }
+
+    function setLoading(isLoading) {
+        loading = isLoading;
+        nextButton.disabled = isLoading;
+        if (isLoading && currentStep === 2) {
+             // Re-render only the progress bar part if it exists
+             renderStepContent();
+        }
+    }
+
+    // Navigation buttons
+    prevButton.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            renderApp();
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            if (currentStep === 1) { // If moving from Risk Assessment to LLM Analysis
+                generateLLMRecommendations();
+            }
+            currentStep++;
+            renderApp();
+        } else {
+            // This is the "Export Results" button
+            console.log('Exporting results...', { formData, llmRecommendations, rrrScore });
+            alert('Results Exported! Check console for details.');
+        }
+    });
+
+    // Initial render
+    function renderApp() {
+        renderStepIndicators();
+        renderStepContent();
+
+        prevButton.disabled = currentStep === 0;
+        if (currentStep < steps.length - 1) {
+            nextButton.textContent = currentStep === 1 ? 'Analyze with AI' : 'Next';
+            nextButton.classList.remove('outline');
+            nextButton.classList.add('primary');
+        } else {
+            nextButton.textContent = 'Export Results';
+            nextButton.classList.remove('primary');
+            nextButton.classList.add('primary'); // Still primary for export
+        }
+        nextButton.disabled = loading;
+    }
+
+    // Initial render call
+    renderApp();
+});
