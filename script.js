@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentStepContent = document.getElementById('current-step-content');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
+    const sidebarDrawer = document.getElementById('sidebar-drawer');
+    const drawerClose = document.getElementById('drawer-close');
+    const drawerTitle = document.getElementById('drawer-title');
+    const drawerContent = document.getElementById('drawer-content');
 
     // Tabs functionality
     const tabsList = document.querySelector('.tabs-list');
@@ -216,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h3 class="font-medium mb-2">Historical Context</h3>
                             <div class="grid grid-cols-1 gap-2">
                                 ${mockHistoricalData.similarProjects.map((project, index) => `
-                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100" data-project-index="${index}">
                                         <div>
                                             <span class="font-medium">${project.name}</span>
                                             <span class="badge outline ml-2">${project.type}</span>
@@ -252,6 +256,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         ${!loading && llmRecommendations.length > 0 ? `
                             <div class="space-y-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title text-sm">Interactive Analysis</h3>
+                                    </div>
+                                    <div class="card-content">
+                                        <div id="chatbot-container" class="space-y-4">
+                                            <div id="chatbot-messages" class="space-y-4 h-48 overflow-y-auto p-4 border rounded-md">
+                                                </div>
+                                            <div class="flex items-center space-x-2">
+                                                <input id="chatbot-input" type="text" placeholder="Ask a question about the recommendations..." class="input flex-grow" />
+                                                <button id="chatbot-send" class="button primary">Send</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h4 class="font-medium flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb h-5 w-5 mr-2 text-yellow-500"><path d="M15 14v-3"/><path d="M15 10V7a3 3 0 0 0-3-3V2H9.5a.5.5 0 0 0-.5.5v.5a.5.5 0 0 1-.5.5H8a.5.5 0 0 0-.5.5v.5a.5.5 0 0 1-.5.5H6a.5.5 0 0 0-.5.5V11"/><path d="M7 14v-3"/><path d="M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/><path d="M12 18v-2"/></svg>
                                     AI Insights
@@ -273,21 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </div>
                                     </div>
                                 `).join('')}
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title text-sm">Interactive Analysis</h3>
-                                    </div>
-                                    <div class="card-content">
-                                        <div id="chatbot-container" class="space-y-4">
-                                            <div id="chatbot-messages" class="space-y-4 h-48 overflow-y-auto p-4 border rounded-md">
-                                                </div>
-                                            <div class="flex items-center space-x-2">
-                                                <input id="chatbot-input" type="text" placeholder="Ask a question about the recommendations..." class="input flex-grow" />
-                                                <button id="chatbot-send" class="button primary">Send</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         ` : ''}
                     </div>
@@ -431,7 +435,50 @@ document.addEventListener('DOMContentLoaded', () => {
         if (chatbotSend) {
             chatbotSend.addEventListener('click', handleChatbotSend);
         }
+
+        document.querySelectorAll('[data-project-index]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const projectIndex = e.currentTarget.dataset.projectIndex;
+                const project = mockHistoricalData.similarProjects[projectIndex];
+                openDrawer(project);
+            });
+        });
     }
+
+    function openDrawer(project) {
+        drawerTitle.textContent = project.name;
+        drawerContent.innerHTML = `
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-medium text-sm text-gray-500">Project Type</h4>
+                    <p>${project.type}</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-sm text-gray-500">RRR Score</h4>
+                    <p>${project.rrrScore}</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-sm text-gray-500">Success Rate</h4>
+                    <p>${project.successRate}%</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-sm text-gray-500">Downtime</h4>
+                    <p>${project.downtime}</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-sm text-gray-500">Cost</h4>
+                    <p>${project.cost}</p>
+                </div>
+            </div>
+        `;
+        sidebarDrawer.classList.add('open');
+    }
+
+    function closeDrawer() {
+        sidebarDrawer.classList.remove('open');
+    }
+
+    drawerClose.addEventListener('click', closeDrawer);
 
     function handleChatbotSend() {
         const input = document.getElementById('chatbot-input');
@@ -477,19 +524,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     category: "Operational Continuity",
                     suggestion: "Schedule replacement during low-flow period (Tuesday 2-6 AM) to minimize throughput impact - reduces risk exposure by 28%",
                     confidence: 0.92,
-                    source: "Flow Pattern Analysis"
+                    source: "Flow Pattern Analysis",
+                    graph: true
                 },
                 {
                     category: "Safety Protocol",
                     suggestion: "Implement nitrogen purging procedure used in Station 23 overhaul - eliminated 2 high-risk scenarios",
                     confidence: 0.85,
-                    source: "Safety Incident Database"
+                    source: "Safety Incident Database",
+                    graph: true
                 },
                 {
                     category: "Cost Optimization",
                     suggestion: "Pre-order critical gaskets and seals based on Station 31 lessons learned - avoids 15% cost overrun risk",
                     confidence: 0.78,
-                    source: "Procurement Pattern Analysis"
+                    source: "Procurement Pattern Analysis",
+                    graph: true
                 }
             ];
             calculateRRRScore();
@@ -526,63 +576,76 @@ document.addEventListener('DOMContentLoaded', () => {
         llmRecommendations.forEach((rec, index) => {
             if (rec.graph) {
                 const ctx = document.getElementById(`chart-${index}`).getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%', '60%'],
-                        datasets: [{
-                            label: 'Downtime Reduction vs. Cost',
-                            data: [0, 5, 15, 30, 40, 55, 75, 100],
-                            borderColor: 'rgb(59, 130, 246)',
-                            tension: 0.4,
-                            pointBackgroundColor: (context) => {
-                                return context.dataIndex === 4 ? 'red' : 'rgb(59, 130, 246)';
+                let chartConfig;
+
+                switch (index) {
+                    case 0: // Equipment Risk Mitigation
+                        chartConfig = {
+                            type: 'line',
+                            data: {
+                                labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%'],
+                                datasets: [{
+                                    label: 'Downtime Reduction vs. Cost',
+                                    data: [0, 5, 15, 30, 40, 55, 75],
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    tension: 0.4,
+                                    pointBackgroundColor: (context) => context.dataIndex === 4 ? 'red' : 'rgb(59, 130, 246)',
+                                    pointRadius: (context) => context.dataIndex === 4 ? 6 : 3,
+                                }]
                             },
-                            pointRadius: (context) => {
-                                return context.dataIndex === 4 ? 6 : 3;
-                            }
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
+                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Downtime Reduction' } }, y: { title: { display: true, text: 'Implementation Cost ($k)' } } } }
+                        };
+                        break;
+                    case 1: // Operational Continuity
+                        chartConfig = {
+                            type: 'bar',
+                            data: {
+                                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                                datasets: [{
+                                    label: 'Flow Rate by Day',
+                                    data: [85, 45, 70, 75, 90, 60, 55],
+                                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    borderWidth: 1
+                                }]
                             },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y * 1000);
-                                        }
-                                        if (context.dataIndex === 4) {
-                                            label += ' (Optimal)';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Downtime Reduction'
-                                }
+                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Day of Week' } }, y: { title: { display: true, text: 'Avg. Flow Rate' } } } }
+                        };
+                        break;
+                    case 2: // Safety Protocol
+                        chartConfig = {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['High Risk', 'Medium Risk', 'Low Risk'],
+                                datasets: [{
+                                    label: 'Risk Scenarios',
+                                    data: [2, 5, 18],
+                                    backgroundColor: ['rgb(239, 68, 68)', 'rgb(245, 158, 11)', 'rgb(34, 197, 94)'],
+                                }]
                             },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: 'Implementation Cost (in $1000s)'
-                                }
-                            }
-                        }
-                    }
-                });
+                            options: { responsive: true, plugins: { legend: { position: 'top' } } }
+                        };
+                        break;
+                    case 3: // Cost Optimization
+                        chartConfig = {
+                            type: 'line',
+                            data: {
+                                labels: ['-20%', '-10%', '0%', '10%', '15%', '20%'],
+                                datasets: [{
+                                    label: 'Cost Overrun vs. Probability',
+                                    data: [5, 10, 25, 40, 60, 75],
+                                    borderColor: 'rgb(239, 68, 68)',
+                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                    fill: true,
+                                    tension: 0.3
+                                }]
+                            },
+                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Cost Overrun' } }, y: { title: { display: true, text: 'Probability (%)' } } } }
+                        };
+                        break;
+                }
+
+                new Chart(ctx, chartConfig);
             }
         });
     }
