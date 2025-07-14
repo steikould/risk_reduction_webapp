@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const steps = [
         { title: "Project Overview", icon: 'file-text' },
         { title: "Risk Assessment", icon: 'alert-triangle' },
-        { title: "LLM Analysis", icon: 'brain' },
+        { title: "AI Insights", icon: 'brain' },
         { title: "RRR Results", icon: 'trending-up' }
     ];
 
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="space-y-4">
                                 <h4 class="font-medium flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb h-5 w-5 mr-2 text-yellow-500"><path d="M15 14v-3"/><path d="M15 10V7a3 3 0 0 0-3-3V2H9.5a.5.5 0 0 0-.5.5v.5a.5.5 0 0 1-.5.5H8a.5.5 0 0 0-.5.5v.5a.5.5 0 0 1-.5.5H6a.5.5 0 0 0-.5.5V11"/><path d="M7 14v-3"/><path d="M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/><path d="M12 18v-2"/></svg>
-                                    LLM Recommendations
+                                    AI Insights
                                 </h4>
                                 ${llmRecommendations.map((rec, index) => `
                                     <div class="card">
@@ -269,9 +269,25 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <div class="card-content pt-0">
                                             <p class="text-sm mb-2">${rec.suggestion}</p>
                                             <p class="text-xs text-gray-500">Source: ${rec.source}</p>
+                                            ${rec.graph ? `<div class="mt-4"><canvas id="chart-${index}" height="150"></canvas></div>` : ''}
                                         </div>
                                     </div>
                                 `).join('')}
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title text-sm">Interactive Analysis</h3>
+                                    </div>
+                                    <div class="card-content">
+                                        <div id="chatbot-container" class="space-y-4">
+                                            <div id="chatbot-messages" class="space-y-4 h-48 overflow-y-auto p-4 border rounded-md">
+                                                </div>
+                                            <div class="flex items-center space-x-2">
+                                                <input id="chatbot-input" type="text" placeholder="Ask a question about the recommendations..." class="input flex-grow" />
+                                                <button id="chatbot-send" class="button primary">Send</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         ` : ''}
                     </div>
@@ -410,6 +426,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         setupSelects(); // Setup the custom selects for current step
+
+        const chatbotSend = document.getElementById('chatbot-send');
+        if (chatbotSend) {
+            chatbotSend.addEventListener('click', handleChatbotSend);
+        }
+    }
+
+    function handleChatbotSend() {
+        const input = document.getElementById('chatbot-input');
+        const messagesContainer = document.getElementById('chatbot-messages');
+        const message = input.value.trim();
+        if (message) {
+            // Display user message
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'text-right';
+            userMessageDiv.innerHTML = `<div class="inline-block bg-blue-500 text-white p-2 rounded-lg">${message}</div>`;
+            messagesContainer.appendChild(userMessageDiv);
+
+            // Clear input
+            input.value = '';
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Mock AI response
+            setTimeout(() => {
+                const aiResponseDiv = document.createElement('div');
+                aiResponseDiv.className = 'text-left';
+                aiResponseDiv.innerHTML = `<div class="inline-block bg-gray-200 text-gray-800 p-2 rounded-lg">This is a mock response to "${message}".</div>`;
+                messagesContainer.appendChild(aiResponseDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+        }
     }
 
     // LLM Analysis and RRR Score Calculation
@@ -421,7 +470,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     category: "Equipment Risk Mitigation",
                     suggestion: "Based on Station 47 DRA pump replacement, implement hot standby configuration to reduce downtime risk by 35%",
                     confidence: 0.88,
-                    source: "Historical Pipeline Operations Data"
+                    source: "Historical Pipeline Operations Data",
+                    graph: true
                 },
                 {
                     category: "Operational Continuity",
@@ -445,6 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             calculateRRRScore();
             setLoading(false);
             renderApp(); // Re-render to show recommendations
+            renderCharts();
         }, 2000);
     }
 
@@ -469,6 +520,71 @@ document.addEventListener('DOMContentLoaded', () => {
              // Re-render only the progress bar part if it exists
              renderStepContent();
         }
+    }
+
+    function renderCharts() {
+        llmRecommendations.forEach((rec, index) => {
+            if (rec.graph) {
+                const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%', '60%'],
+                        datasets: [{
+                            label: 'Downtime Reduction vs. Cost',
+                            data: [0, 5, 15, 30, 40, 55, 75, 100],
+                            borderColor: 'rgb(59, 130, 246)',
+                            tension: 0.4,
+                            pointBackgroundColor: (context) => {
+                                return context.dataIndex === 4 ? 'red' : 'rgb(59, 130, 246)';
+                            },
+                            pointRadius: (context) => {
+                                return context.dataIndex === 4 ? 6 : 3;
+                            }
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y * 1000);
+                                        }
+                                        if (context.dataIndex === 4) {
+                                            label += ' (Optimal)';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Downtime Reduction'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Implementation Cost (in $1000s)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     // Navigation buttons

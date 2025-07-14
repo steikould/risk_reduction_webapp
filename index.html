@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intelligent RRR Value Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         /* Basic styling to mimic shadcn/ui components where direct Tailwind might not be enough */
@@ -225,7 +226,7 @@
                     <div class="card-header">
                         <h2 class="card-title flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database h-5 w-5 mr-2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/><path d="M3 19A9 3 0 0 0 21 19"/></svg>
-                            Data Sources Integration
+                            Agent Analysis Source Documents
                         </h2>
                     </div>
                     <div class="card-content space-y-4">
@@ -294,7 +295,7 @@
                             <div class="p-4 bg-gray-50 rounded">
                                 <h4 class="font-medium mb-3">Recent SharePoint Documents</h4>
                                 <div class="space-y-2 text-sm">
-                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
                                         <div>
                                             <span class="font-medium">DRA_Skid_Pump_Spec_Station47_Rev3.pdf</span>
                                             <div class="text-xs text-gray-500">Modified: 1 day ago | Size: 3.2MB</div>
@@ -302,8 +303,11 @@
                                         <a href="#" class="text-blue-600 hover:underline text-xs">
                                             https://company.sharepoint.com/sites/PipelineEng/DRASpecs/DRA_Skid_Pump_Spec_Station47_Rev3.pdf
                                         </a>
+                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
+                                            <strong>AI Summary:</strong> This document outlines the technical specifications for the new DRA skid pump, including performance curves, material requirements, and dimensional drawings. It is crucial for ensuring the correct equipment is ordered and installed.
+                                        </div>
                                     </div>
-                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
                                         <div>
                                             <span class="font-medium">Pump_Replacement_Procedure_v2.1.docx</span>
                                             <div class="text-xs text-gray-500">Modified: 3 days ago | Size: 1.5MB</div>
@@ -311,8 +315,11 @@
                                         <a href="#" class="text-blue-600 hover:underline text-xs">
                                             https://company.sharepoint.com/sites/Maintenance/PumpProcs/Pump_Replacement_Procedure_v2.1.docx
                                         </a>
+                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
+                                            <strong>AI Summary:</strong> This document provides a step-by-step guide for the pump replacement procedure, including safety pre-checks, isolation steps, and post-installation testing.
+                                        </div>
                                     </div>
-                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
                                         <div>
                                             <span class="font-medium">Station23_Pump_Overhaul_PostMaint_Report.pdf</span>
                                             <div class="text-xs text-gray-500">Modified: 2 weeks ago | Size: 2.8MB</div>
@@ -320,8 +327,11 @@
                                         <a href="#" class="text-blue-600 hover:underline text-xs">
                                             https://company.sharepoint.com/sites/Operations/PostMaint/Station23_Pump_Overhaul_PostMaint_Report.pdf
                                         </a>
+                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
+                                            <strong>AI Summary:</strong> A post-maintenance report detailing the lessons learned from the Station 23 pump overhaul. It highlights unexpected challenges and recommendations for future projects.
+                                        </div>
                                     </div>
-                                    <div class="flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
                                         <div>
                                             <span class="font-medium">DRA_System_Safety_Protocol_2024.xlsx</span>
                                             <div class="text-xs text-gray-500">Modified: 1 week ago | Size: 890KB</div>
@@ -329,6 +339,9 @@
                                         <a href="#" class="text-blue-600 hover:underline text-xs">
                                             https://company.sharepoint.com/sites/Safety/ComplianceDocs/DRA_System_Safety_Protocol_2024.xlsx
                                         </a>
+                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
+                                            <strong>AI Summary:</strong> The latest safety protocols for the DRA system, including chemical handling, emergency shutdown procedures, and required personal protective equipment (PPE).
+                                        </div>
                                     </div>
                                 </div>
                             </div>
