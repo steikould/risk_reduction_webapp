@@ -1016,4 +1016,7 @@ document.addEventListener('DOMContentLoaded', () => {
     goldenTabTrigger.addEventListener('click', () => {
         initializeGoldenTablesTab();
     });
+
+    // Initialize the app
+    renderApp();
 });
