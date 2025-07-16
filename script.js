@@ -506,6 +506,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
     drawerClose.addEventListener('click', closeDrawer);
 
+    const queryDrawer = document.getElementById('query-drawer');
+    const queryDrawerClose = document.getElementById('query-drawer-close');
+
+    function openQueryDrawer(query) {
+        const queryDrawerContent = document.getElementById('query-drawer-content');
+        queryDrawerContent.innerHTML = `
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-medium text-sm text-gray-500">Plain Language Query</h4>
+                    <p>${query}</p>
+                </div>
+                <div>
+                    <label for="sql-query-input" class="block text-sm font-medium mb-1">BigQuery SQL</label>
+                    <textarea id="sql-query-input" class="textarea" rows="5">SELECT * FROM \`${selectedGoldenTable.name}\` WHERE ...</textarea>
+                </div>
+                <button id="submit-sql-query-btn" class="button primary w-full">Submit Query</button>
+            </div>
+        `;
+        queryDrawer.classList.add('open');
+
+        document.getElementById('submit-sql-query-btn').addEventListener('click', () => {
+            queryDrawer.classList.remove('open');
+            displayQueryResults();
+        });
+    }
+
+    function displayQueryResults() {
+        const resultsContainer = document.getElementById('query-results-container');
+        const resultsTable = document.getElementById('query-results-table');
+
+        const headers = selectedGoldenTable.columns.map(c => c.name);
+        let tableHtml = `
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50">
+                    <tr>
+                        ${headers.map(h => `<th class="p-2 font-medium">${h}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        for (let i = 0; i < 5; i++) {
+            tableHtml += '<tr class="border-b">';
+            headers.forEach(h => {
+                tableHtml += `<td class="p-2">Value ${i+1}</td>`;
+            });
+            tableHtml += '</tr>';
+        }
+        tableHtml += '</tbody></table>';
+
+        resultsTable.innerHTML = tableHtml;
+        resultsContainer.classList.remove('hidden');
+    }
+
+    function closeQueryDrawer() {
+        queryDrawer.classList.remove('open');
+    }
+
+    queryDrawerClose.addEventListener('click', closeQueryDrawer);
+
     function handleChatbotSend() {
         const input = document.getElementById('chatbot-input');
         const messagesContainer = document.getElementById('chatbot-messages');
@@ -894,7 +953,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Please select a golden table first.");
                 return;
             }
-            alert(`Executing query on ${selectedGoldenTable.name}: "${queryTextarea.value}"`);
+            openQueryDrawer(queryTextarea.value);
         });
 
         querySuggestions.addEventListener('click', (e) => {
