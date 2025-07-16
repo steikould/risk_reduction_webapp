@@ -767,16 +767,28 @@ document.addEventListener('DOMContentLoaded', () => {
         setupQueryInterface();
         setupVisualizationPanel();
         setupValidationRules();
-        setupSelects();
+        
+        // Make sure to call setupSelects for other dropdowns in the golden tab
+        setTimeout(() => {
+            setupSelects(); // This will handle the date preset dropdown
+        }, 100);
     }
 
     function setupGoldenTableSelector() {
         const selectorContent = document.getElementById('goldenTableSelectorContent');
         const selectorValue = document.getElementById('goldenTableSelectorValue');
 
-        selectorContent.innerHTML = Object.values(mockGoldenTables).map(table =>
-            `<div class="select-item" data-value="${table.name}">${table.name}</div>`
-        ).join('');
+        // Clear existing content
+        selectorContent.innerHTML = '';
+
+        // Populate dropdown options
+        Object.values(mockGoldenTables).forEach(table => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'select-item';
+            optionDiv.dataset.value = table.name;
+            optionDiv.textContent = table.name;
+            selectorContent.appendChild(optionDiv);
+        });
 
         // Pre-select the first table
         const firstTable = Object.values(mockGoldenTables)[0];
@@ -786,13 +798,69 @@ document.addEventListener('DOMContentLoaded', () => {
             updateGoldenTabContent();
         }
 
-        selectorContent.addEventListener('click', (e) => {
+        // Set up the click handler using the same pattern as other selects
+        const wrapper = selectorContent.closest('.select-wrapper');
+        const trigger = wrapper.querySelector('.select-trigger');
+
+        // Remove any existing listeners to prevent duplicates
+        const newWrapper = wrapper.cloneNode(true);
+        wrapper.parentNode.replaceChild(newWrapper, wrapper);
+
+        // Now set up the select functionality using the main setupSelects function
+        setupSelectsForGoldenTab();
+    }
+
+    function setupSelectsForGoldenTab() {
+        // This is a modified version of setupSelects that works specifically for the golden tab
+        const wrapper = document.querySelector('#goldenTableSelectorContent').closest('.select-wrapper');
+        const trigger = wrapper.querySelector('.select-trigger');
+        const content = wrapper.querySelector('.select-content');
+        const valueSpan = trigger.querySelector('span');
+
+        // Set content width to match trigger
+        content.style.setProperty('--trigger-width', `${trigger.offsetWidth}px`);
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            content.classList.toggle('hidden');
+            
+            // Adjust position if it goes off screen
+            const rect = trigger.getBoundingClientRect();
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            if (rect.bottom + content.offsetHeight > viewportHeight && rect.top - content.offsetHeight > 0) {
+                content.style.bottom = `${trigger.offsetHeight + 5}px`;
+                content.style.top = 'auto';
+            } else {
+                content.style.top = `${trigger.offsetHeight + 5}px`;
+                content.style.bottom = 'auto';
+            }
+        });
+
+        content.addEventListener('click', (e) => {
             if (e.target.classList.contains('select-item')) {
                 const tableName = e.target.dataset.value;
+                const selectedText = e.target.textContent;
+
+                // Update UI
+                valueSpan.textContent = selectedText;
+                content.classList.add('hidden');
+
+                // Update the selected table
                 selectedGoldenTable = mockGoldenTables[tableName];
-                selectorValue.textContent = tableName;
-                selectorContent.classList.add('hidden');
                 updateGoldenTabContent();
+
+                // Update selected class for styling
+                content.querySelectorAll('.select-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) {
+                content.classList.add('hidden');
             }
         });
     }
