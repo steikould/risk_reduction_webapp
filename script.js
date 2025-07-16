@@ -902,12 +902,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupValidationRules() {
         const submitBtn = document.getElementById('submit-new-rule-btn');
+        const newRuleInput = document.getElementById('new-rule-input');
         submitBtn.addEventListener('click', () => {
             if (!selectedGoldenTable) {
                 alert("Please select a golden table first.");
                 return;
             }
-            alert(`Confirmed: New rule submission for table '${selectedGoldenTable.name}' has been received.`);
+            const newRule = newRuleInput.value;
+            alert(`Confirmed: New rule submission for table '${selectedGoldenTable.name}' has been received.\n\nNew Rule: ${newRule}`);
+            newRuleInput.value = '';
         });
     }
 

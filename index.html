@@ -454,56 +454,55 @@
                 </div>
 
                 <!-- Main Grid Layout -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Left Column -->
-                    <div class="space-y-6">
-                        <!-- AI-Powered Query Interface -->
-                        <div class="card query-interface-card">
-                            <div class="card-header">
-                                <h3 class="card-title">AI-Powered Query Interface</h3>
-                            </div>
-                            <div class="card-content">
-                                <div class="flex items-center gap-4 mb-4">
-                                    <div class="flex-grow">
-                                        <label for="startDate" class="block text-sm font-medium mb-1">Start Date</label>
-                                        <input type="date" id="startDate" name="startDate" class="input">
-                                    </div>
-                                    <div class="flex-grow">
-                                        <label for="endDate" class="block text-sm font-medium mb-1">End Date</label>
-                                        <input type="date" id="endDate" name="endDate" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="datePresetTrigger" class="block text-sm font-medium mb-1">Presets</label>
-                                        <div class="select-wrapper">
-                                            <button class="select-trigger" id="datePresetTrigger">
-                                                <span id="datePresetValue">Select...</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                            </button>
-                                            <div class="select-content hidden" id="datePresetContent">
-                                                <div class="select-item" data-value="3">Last 3 Months</div>
-                                                <div class="select-item" data-value="6">Last 6 Months</div>
-                                                <div class="select-item" data-value="12">Last 12 Months</div>
-                                                <div class="select-item" data-value="18">Last 18 Months</div>
-                                                <div class="select-item" data-value="36">Last 36 Months</div>
-                                            </div>
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- AI-Powered Query Interface -->
+                    <div class="card query-interface-card">
+                        <div class="card-header">
+                            <h3 class="card-title">AI-Powered Query Interface</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div class="md:col-span-1">
+                                    <label for="startDate" class="block text-sm font-medium mb-1">Start Date</label>
+                                    <input type="date" id="startDate" name="startDate" class="input">
+                                </div>
+                                <div class="md:col-span-1">
+                                    <label for="endDate" class="block text-sm font-medium mb-1">End Date</label>
+                                    <input type="date" id="endDate" name="endDate" class="input">
+                                </div>
+                                <div class="md:col-span-1">
+                                    <label for="datePresetTrigger" class="block text-sm font-medium mb-1">Presets</label>
+                                    <div class="select-wrapper">
+                                        <button class="select-trigger" id="datePresetTrigger">
+                                            <span id="datePresetValue">Select...</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                        </button>
+                                        <div class="select-content hidden" id="datePresetContent">
+                                            <div class="select-item" data-value="3">Last 3 Months</div>
+                                            <div class="select-item" data-value="6">Last 6 Months</div>
+                                            <div class="select-item" data-value="12">Last 12 Months</div>
+                                            <div class="select-item" data-value="18">Last 18 Months</div>
+                                            <div class="select-item" data-value="36">Last 36 Months</div>
                                         </div>
                                     </div>
                                 </div>
-                                <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language..."></textarea>
-                                <div class="query-suggestions mt-4 space-x-2">
-                                    <!-- Dynamic query suggestions will be injected here -->
-                                </div>
-                                <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
-                                <div class="query-history mt-4">
-                                    <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
-                                    <div class="text-xs text-gray-500 space-y-1">
-                                        <p>Show me compliance projects - 2 minutes ago</p>
-                                        <p>List projects with RRR > 0.8 - 15 minutes ago</p>
-                                    </div>
+                            </div>
+                            <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language..."></textarea>
+                            <div class="query-suggestions mt-4 space-x-2">
+                                <!-- Dynamic query suggestions will be injected here -->
+                            </div>
+                            <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
+                            <div class="query-history mt-4">
+                                <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
+                                <div class="text-xs text-gray-500 space-y-1">
+                                    <p>Show me compliance projects - 2 minutes ago</p>
+                                    <p>List projects with RRR > 0.8 - 15 minutes ago</p>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Data Visualization Panel -->
                         <div class="card visualization-panel-card">
                             <div class="card-header">
@@ -521,10 +520,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Right Column -->
-                    <div class="space-y-6">
                         <!-- Validation Rules Management -->
                         <div class="card validation-rules-card">
                             <div class="card-header">
@@ -533,6 +529,10 @@
                             <div class="card-content">
                                 <div id="validation-rules-container">
                                     <!-- Validation rules table will be injected here -->
+                                </div>
+                                <div class="mt-4">
+                                    <label for="new-rule-input" class="block text-sm font-medium mb-1">New Rule</label>
+                                    <textarea id="new-rule-input" name="new-rule-input" class="textarea" placeholder="Enter new rule..."></textarea>
                                 </div>
                                 <button id="submit-new-rule-btn" class="button primary w-full mt-4">Submit New Rule</button>
                             </div>
