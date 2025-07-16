@@ -697,6 +697,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedGoldenTable = null;
 
     const mockGoldenTables = {
+        "maintenance_reports": {
+            name: "maintenance_reports",
+            description: "Detailed reports of maintenance activities.",
+            columns: [
+                { name: "report_id", type: "STRING" },
+                { name: "asset_id", type: "STRING" },
+                { name: "date", type: "DATE" },
+                { name: "technician", type: "STRING" },
+                { name: "summary", type: "STRING" }
+            ],
+            validationRules: [
+                { id: "MR01", name: "Asset ID Exists", description: "Asset ID must be valid.", status: "Active" },
+                { id: "MR02", name: "Technician Certified", description: "Technician must be certified for the asset type.", status: "Active" },
+                { id: "MR03", name: "Date is not in future", description: "Maintenance date cannot be in the future.", status: "Active" }
+            ],
+            queries: [
+                "Show all reports for asset X",
+                "Recent reports by technician Y",
+                "Reports with 'failure' in summary"
+            ]
+        },
         "safety_incidents": {
             name: "safety_incidents",
             description: "Records of safety incidents and near-misses.",
@@ -705,12 +726,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 { name: "date", type: "DATE" },
                 { name: "location", type: "STRING" },
                 { name: "severity", type: "INTEGER" },
-                { name: "report", type: "STRING" }
+                { name: "report_link", type: "STRING" }
             ],
             validationRules: [
-                { id: "S001", name: "Severity Range Check", description: "Severity must be between 1 and 5.", status: "Active" },
-                { id: "S002", name: "Future Date Check", description: "Incident date cannot be in the future.", status: "Active" },
-                { id: "S003", name: "Location Format", description: "Location must be a valid facility code.", status: "Pending" }
+                { id: "SI01", name: "Severity Range", description: "Severity must be 1-5.", status: "Active" },
+                { id: "SI02", name: "Location Code Valid", description: "Location code must be a valid facility code.", status: "Active" },
+                { id: "SI03", name: "Report Link Active", description: "Report link must be an active URL.", status: "Pending" }
             ],
             queries: [
                 "Show high severity incidents",
@@ -718,24 +739,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 "Recent near-misses"
             ]
         },
-        "maintenance_logs": {
-            name: "maintenance_logs",
-            description: "Logs of all maintenance activities.",
+        "sensor_data": {
+            name: "sensor_data",
+            description: "Time-series data from pipeline sensors.",
             columns: [
-                { name: "log_id", type: "STRING" },
-                { name: "asset_id", type: "STRING" },
-                { name: "date", type: "DATE" },
-                { name: "work_order", type: "STRING" },
-                { name: "notes", type: "STRING" }
+                { name: "timestamp", type: "TIMESTAMP" },
+                { name: "sensor_id", type: "STRING" },
+                { name: "pressure", type: "FLOAT" },
+                { name: "temperature", type: "FLOAT" },
+                { name: "flow_rate", type: "FLOAT" }
             ],
             validationRules: [
-                { id: "M001", name: "Asset ID Exists", description: "Asset ID must exist in the master asset table.", status: "Active" },
-                { id: "M002", name: "Work Order Format", description: "Work order must follow the 'WO-YYYY-NNNNN' format.", status: "Active" }
+                { id: "SD01", name: "Pressure within limits", description: "Pressure must be within operational limits.", status: "Active" },
+                { id: "SD02", name: "Temperature within limits", description: "Temperature must be within operational limits.", status: "Active" },
+                { id: "SD03", name: "Flow rate non-negative", description: "Flow rate must be non-negative.", status: "Active" }
             ],
             queries: [
-                "Show overdue maintenance",
-                "Maintenance history for asset X",
-                "Recent emergency repairs"
+                "Show pressure spikes for sensor X",
+                "Average temperature by sensor",
+                "Flow rate anomalies"
             ]
         }
     };
@@ -786,6 +808,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const executeBtn = document.querySelector('.execute-query-btn');
         const queryTextarea = document.querySelector('.query-interface-card textarea');
         const querySuggestions = document.querySelector('.query-suggestions');
+        const datePresetContent = document.getElementById('datePresetContent');
 
         executeBtn.addEventListener('click', () => {
             if (!selectedGoldenTable) {
@@ -798,6 +821,20 @@ document.addEventListener('DOMContentLoaded', () => {
         querySuggestions.addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON') {
                 queryTextarea.value = e.target.textContent.trim().replace(/"/g, '');
+            }
+        });
+
+        datePresetContent.addEventListener('click', (e) => {
+            if (e.target.classList.contains('select-item')) {
+                const months = parseInt(e.target.dataset.value);
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setMonth(endDate.getMonth() - months);
+
+                document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+                document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+                document.getElementById('datePresetValue').textContent = e.target.textContent;
+                datePresetContent.classList.add('hidden');
             }
         });
     }
