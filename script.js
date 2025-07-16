@@ -502,13 +502,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('submit-sql-query-btn').addEventListener('click', () => {
             queryDrawer.classList.remove('open');
-            displayQueryResults();
+            displayQueryResults(document.getElementById('sql-query-input').value);
         });
     }
 
-    function displayQueryResults() {
+    function displayQueryResults(query) {
         const tabId = `query-results-${Date.now()}`;
-        const tabName = `Results: ${selectedGoldenTable.name.substring(0, 10)}...`;
+        const tabName = `Results: ${table.name.substring(0, 10)}...`;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
 
         // Create new tab button
         const newTab = document.createElement('button');
@@ -523,14 +525,14 @@ document.addEventListener('DOMContentLoaded', () => {
         newTabContent.className = 'tabs-content space-y-4 pt-6';
         newTabContent.innerHTML = `
             <div class="card">
-                <div class="card-header flex justify-between items-center">
-                    <h2 class="card-title">Query Results</h2>
-                    <div>
-                        <button class="button outline text-sm" id="analyze-${tabId}">Analyze</button>
-                        <button class="button outline text-sm" id="export-${tabId}">Export to Excel</button>
-                    </div>
+                <div class="card-header">
+                    <h2 class="card-title">Query: ${query}</h2>
+                    <p class="card-description">Table: ${selectedGoldenTable.name} | Time Window: ${startDate} to ${endDate}</p>
                 </div>
                 <div class="card-content">
+                    <div class="flex justify-end mb-4">
+                        <button class="button primary text-sm" onclick="handleAnalyze('${tabId}')">Analyze</button>
+                    </div>
                     <div id="table-container-${tabId}"></div>
                 </div>
             </div>
@@ -538,7 +540,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.tabs-container').appendChild(newTabContent);
 
         // Switch to the new tab
-        // newTab.click();
         document.querySelectorAll('.tabs-trigger').forEach(btn => btn.classList.remove('active'));
         newTab.classList.add('active');
         document.querySelectorAll('.tabs-content').forEach(content => content.classList.add('hidden'));
@@ -546,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // Populate the table
-        populateResultsTable(tabId);
+        populateResultsTable(tabId, selectedGoldenTable);
     }
 
     function closeQueryDrawer() {
@@ -1023,9 +1024,9 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeGoldenTablesTab();
     });
 
-    function populateResultsTable(tabId) {
+    function populateResultsTable(tabId, table) {
         const tableContainer = document.getElementById(`table-container-${tabId}`);
-        const headers = selectedGoldenTable.columns.map(c => c.name);
+        const headers = table.columns.map(c => c.name);
         const data = Array.from({ length: 10 }, () => {
             const row = {};
             headers.forEach(h => {
@@ -1122,9 +1123,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Add this to the global scope to handle the dynamic buttons
+    window.handleAnalyze = function(tabId) {
+        createDashboardTab(tabId);
+    }
+
     function createDashboardTab(sourceTabId) {
         const tabId = `dashboard-${Date.now()}`;
         const tabName = `Dashboard: ${selectedGoldenTable.name.substring(0, 10)}...`;
+        const query = document.querySelector(`#${sourceTabId.replace('analyze', 'table-container')} .card-title`).textContent;
+        const timeWindow = document.querySelector(`#${sourceTabId.replace('analyze', 'table-container')} .card-description`).textContent;
 
         // Create new tab button
         const newTab = document.createElement('button');
@@ -1138,23 +1146,66 @@ document.addEventListener('DOMContentLoaded', () => {
         newTabContent.id = tabId;
         newTabContent.className = 'tabs-content space-y-4 pt-6';
         newTabContent.innerHTML = `
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 card">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">${query}</h2>
+                    <p class="card-description">${timeWindow}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <h3 class="text-lg font-medium">Anomaly Score</h3>
+                        <p class="text-3xl font-bold text-red-500">7.8</p>
+                        <p class="text-sm text-gray-500">ML Driven KPI</p>
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-content">
+                        <h3 class="text-lg font-medium">Data Quality</h3>
+                        <p class="text-3xl font-bold text-green-500">98%</p>
+                        <p class="text-sm text-gray-500">ML Driven KPI</p>
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-content">
+                        <h3 class="text-lg font-medium">Projected Risk</h3>
+                        <p class="text-3xl font-bold text-yellow-500">Medium</p>
+                        <p class="text-sm text-gray-500">ML Driven KPI</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Time Series Analysis with Outliers</h3>
+                        <h3 class="card-title">Time Series with Outliers</h3>
                     </div>
                     <div class="card-content">
-                        <canvas id="dashboard-chart-${tabId}"></canvas>
+                        <canvas id="chart1-${tabId}"></canvas>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Table Profile</h3>
+                        <h3 class="card-title">Distribution</h3>
                     </div>
                     <div class="card-content">
-                        <p><strong>Schema:</strong> ${selectedGoldenTable.columns.map(c => c.name).join(', ')}</p>
-                        <p><strong>Row Count:</strong> 10</p>
-                        <p><strong>Outliers Detected:</strong> 3 (mock)</p>
+                        <canvas id="chart2-${tabId}"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Correlation Matrix</h3>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="chart3-${tabId}"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Category Breakdown</h3>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="chart4-${tabId}"></canvas>
                     </div>
                 </div>
             </div>
@@ -1164,9 +1215,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Switch to new tab
         newTab.click();
 
-        // Render chart
-        const ctx = document.getElementById(`dashboard-chart-${tabId}`).getContext('2d');
-        new Chart(ctx, {
+        // Render charts
+        renderDashboardCharts(tabId);
+    }
+
+    function renderDashboardCharts(tabId) {
+        // Chart 1: Time Series with Outliers
+        new Chart(document.getElementById(`chart1-${tabId}`).getContext('2d'), {
             type: 'line',
             data: {
                 labels: Array.from({ length: 10 }, (_, i) => `Point ${i + 1}`),
@@ -1174,12 +1229,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     label: 'Value',
                     data: Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)),
                     borderColor: '#3b82f6',
-                    tension: 0.1
                 }, {
                     label: 'ML Outliers',
-                    data: [null, null, 85, null, null, 20, null, 95, null, null],
+                    data: [null, 85, null, null, 20, null, 95, null, null, null],
                     backgroundColor: 'red',
-                    pointRadius: 5
+                    pointRadius: 5,
+                    type: 'scatter'
+                }]
+            }
+        });
+
+        // Chart 2: Distribution
+        new Chart(document.getElementById(`chart2-${tabId}`).getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['<20', '20-40', '40-60', '60-80', '>80'],
+                datasets: [{
+                    label: 'Distribution',
+                    data: Array.from({ length: 5 }, () => Math.floor(Math.random() * 100)),
+                    backgroundColor: '#818cf8',
+                }]
+            }
+        });
+
+        // Chart 3: Correlation Matrix (mock)
+        const chart3Ctx = document.getElementById(`chart3-${tabId}`).getContext('2d');
+        chart3Ctx.fillStyle = '#f3f4f6';
+        chart3Ctx.fillRect(0, 0, 300, 200);
+        chart3Ctx.fillStyle = '#6b7280';
+        chart3Ctx.font = '16px sans-serif';
+        chart3Ctx.fillText('Mock Correlation Matrix', 50, 100);
+
+
+        // Chart 4: Category Breakdown
+        new Chart(document.getElementById(`chart4-${tabId}`).getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Category A', 'Category B', 'Category C'],
+                datasets: [{
+                    data: [30, 50, 20],
+                    backgroundColor: ['#a5b4fc', '#c7d2fe', '#e0e7ff'],
                 }]
             }
         });
