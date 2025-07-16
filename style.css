@@ -1,0 +1,56 @@
+.query-interface-card textarea {
+    resize: vertical;
+}
+
+.schema-browser-card .table-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.validation-rules-card .rules-list {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.chart-container {
+    position: relative;
+    height: 256px; /* h-64 */
+}
+
+/* Custom active state for chart type buttons */
+.chart-type-selector .button.active {
+    background-color: #eef2ff; /* indigo-50 */
+    border-color: #4f46e5; /* indigo-600 */
+    color: #4f46e5; /* indigo-600 */
+}
+
+/* Styling for expandable table items in schema browser */
+.table-item-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}
+.table-item-header:hover {
+    background-color: #f1f5f9; /* gray-100 */
+}
+.table-item-columns {
+    display: none; /* Hidden by default */
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px solid #e2e8f0; /* gray-200 */
+    margin-top: 0.5rem;
+}
+.table-item.open .table-item-columns {
+    display: block; /* Show when open */
+}
+.table-item.open .table-item-header .lucide-chevron-right {
+    transform: rotate(90deg);
+}
+
+.lucide-chevron-right {
+    transition: transform 0.2s ease-in-out;
+}

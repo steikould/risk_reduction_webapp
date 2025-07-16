@@ -431,145 +431,119 @@
             </div>
 
             <div id="golden-tab" class="tabs-content space-y-4 pt-6 hidden">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Golden Tables & Knowledge Base</h2>
-                        <p class="card-description">Curated datasets for enterprise AI applications (BigQuery)</p>
+                <!-- Golden Tables & Knowledge Base Header -->
+                <div class="text-left">
+                    <h2 class="text-2xl font-bold">Golden Tables & Knowledge Base</h2>
+                    <p class="text-gray-600">Curated datasets for enterprise AI applications (BigQuery)</p>
+                </div>
+
+                <!-- Main Grid Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- AI-Powered Query Interface -->
+                        <div class="card query-interface-card">
+                            <div class="card-header">
+                                <h3 class="card-title">AI-Powered Query Interface</h3>
+                            </div>
+                            <div class="card-content">
+                                <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language... Example: 'Show me infrastructure projects with RRR scores below 0.75 from the last 6 months'"></textarea>
+                                <div class="query-suggestions mt-4 space-x-2">
+                                    <button class="button outline text-xs">"Show projects with high risk scores"</button>
+                                    <button class="button outline text-xs">"List all compliance projects"</button>
+                                    <button class="button outline text-xs">"What is the average RRR score?"</button>
+                                </div>
+                                <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
+                                <div class="query-history mt-4">
+                                    <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
+                                    <div class="text-xs text-gray-500 space-y-1">
+                                        <p>Show me compliance projects - 2 minutes ago</p>
+                                        <p>List projects with RRR > 0.8 - 15 minutes ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Visualization Panel -->
+                        <div class="card visualization-panel-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Data Visualization</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="chart-type-selector space-x-2 mb-4">
+                                    <button class="button outline text-sm active" data-type="bar">Bar Chart</button>
+                                    <button class="button outline text-sm" data-type="line">Line Chart</button>
+                                    <button class="button outline text-sm" data-type="scatter">Scatter Plot</button>
+                                    <button class="button outline text-sm" data-type="heatmap">Heat Map</button>
+                                </div>
+                                <div class="chart-container bg-gray-50 h-64 flex items-center justify-center rounded">
+                                    <p>Chart will be rendered here</p>
+                                </div>
+                                <div class="chart-controls mt-4 space-x-2">
+                                    <button class="button outline">Export Chart</button>
+                                    <button class="button outline">Save to Dashboard</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-content space-y-4">
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Project Patterns</h4>
-                                <div class="text-sm space-y-1">
-                                    <div>Records: 1,247</div>
-                                    <div>Last Updated: Today</div>
-                                    <div>Quality Score: 94%</div>
-                                </div>
-                                <a href="#" class="text-blue-600 hover:underline text-xs">
-                                    golden_tables.project_patterns
-                                </a>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <!-- Golden Tables Schema -->
+                        <div class="card schema-browser-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Golden Tables Schema</h3>
                             </div>
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Risk Taxonomies</h4>
-                                <div class="text-sm space-y-1">
-                                    <div>Categories: 23</div>
-                                    <div>Sub-categories: 156</div>
-                                    <div>Validation: Complete</div>
+                            <div class="card-content">
+                                <div class="table-search mb-4">
+                                    <input type="text" placeholder="Search tables..." class="input">
                                 </div>
-                                <a href="#" class="text-blue-600 hover:underline text-xs">
-                                    golden_tables.risk_taxonomies
-                                </a>
-                            </div>
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Success Metrics</h4>
-                                <div class="text-sm space-y-1">
-                                    <div>KPIs: 45</div>
-                                    <div>Benchmarks: 12</div>
-                                    <div>Trends: Analyzed</div>
+                                <div class="table-list space-y-2">
+                                    <!-- Mock tables will be injected here by JS -->
                                 </div>
-                                <a href="#" class="text-blue-600 hover:underline text-xs">
-                                    golden_tables.success_metrics
-                                </a>
+                                <div class="table-details mt-4 p-3 bg-gray-50 rounded hidden">
+                                    <!-- Selected table info will be shown here -->
+                                </div>
                             </div>
                         </div>
 
-                        <div class="p-4 bg-gray-50 rounded">
-                            <h4 class="font-medium mb-3">Query Interface</h4>
-                            <div class="space-y-3">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="dateRange" class="block text-sm font-medium mb-1">Date Range</label>
-                                        <div class="select-wrapper">
-                                            <button class="select-trigger" id="dateRangeTrigger">
-                                                <span id="dateRangeValue">Last 6 Months</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                            </button>
-                                            <div class="select-content hidden" id="dateRangeContent">
-                                                <div class="select-item" data-value="last_month">Last Month</div>
-                                                <div class="select-item" data-value="last_3_months">Last 3 Months</div>
-                                                <div class="select-item selected" data-value="last_6_months">Last 6 Months</div>
-                                                <div class="select-item" data-value="last_year">Last Year</div>
-                                                <div class="select-item" data-value="all_time">All Time</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="projectTypeFilter" class="block text-sm font-medium mb-1">Project Type</label>
-                                        <div class="select-wrapper">
-                                            <button class="select-trigger" id="projectTypeFilterTrigger">
-                                                <span id="projectTypeFilterValue">All Types</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                            </button>
-                                            <div class="select-content hidden" id="projectTypeFilterContent">
-                                                <div class="select-item selected" data-value="all">All Types</div>
-                                                <div class="select-item" data-value="infrastructure">Infrastructure</div>
-                                                <div class="select-item" data-value="product">Product</div>
-                                                <div class="select-item" data-value="process">Process</div>
-                                                <div class="select-item" data-value="compliance">Compliance</div>
-                                            </div>
-                                        </div>
+                        <!-- Validation Rules Management -->
+                        <div class="card validation-rules-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Validation Rules</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="tabs-list grid grid-cols-2 mb-4">
+                                    <button class="tabs-trigger active" data-tab="current-rules">Current Rules</button>
+                                    <button class="tabs-trigger" data-tab="submit-rule">Submit New Rule</button>
+                                </div>
+
+                                <div class="tab-content current-rules">
+                                    <div class="rules-list space-y-2">
+                                        <!-- Mock rules will be injected here by JS -->
                                     </div>
                                 </div>
-                                <button class="button primary w-full" id="executeQueryButton">
-                                    Execute Query
-                                </button>
-                            </div>
-                        </div>
 
-                        <div class="p-4 bg-white border rounded">
-                            <h4 class="font-medium mb-3">Sample Query Results</h4>
-                            <div class="text-xs bg-gray-900 text-green-400 p-3 rounded font-mono">
-                                <div>SELECT project_type, AVG(rrr_score) as avg_rrr, COUNT(*) as project_count</div>
-                                <div>FROM `company-bq.golden_tables.project_patterns`</div>
-                                <div>WHERE created_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)</div>
-                                <div>GROUP BY project_type</div>
-                                <div>ORDER BY avg_rrr DESC;</div>
-                            </div>
-                            <div class="mt-3 text-sm">
-                                <div class="grid grid-cols-4 gap-2 font-medium border-b pb-2">
-                                    <div>Project Type</div>
-                                    <div>Avg RRR Score</div>
-                                    <div>Project Count</div>
-                                    <div>Success Rate</div>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 py-1">
-                                    <div>Infrastructure</div>
-                                    <div>0.78</div>
-                                    <div>42</div>
-                                    <div>85%</div>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 py-1 bg-gray-50">
-                                    <div>Product</div>
-                                    <div>0.71</div>
-                                    <div>38</div>
-                                    <div>72%</div>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 py-1">
-                                    <div>Process</div>
-                                    <div>0.69</div>
-                                    <div>23</div>
-                                    <div>78%</div>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 py-1 bg-gray-50">
-                                    <div>Compliance</div>
-                                    <div>0.82</div>
-                                    <div>18</div>
-                                    <div>89%</div>
+                                <div class="tab-content submit-rule hidden">
+                                    <form class="rule-submission-form space-y-3">
+                                        <input type="text" placeholder="Rule Name" required class="input">
+                                        <textarea placeholder="Rule Description" required class="textarea" rows="2"></textarea>
+                                        <textarea placeholder="Rule Logic (SQL or description)" required class="textarea" rows="3"></textarea>
+                                        <div class="select-wrapper">
+                                            <button type="button" class="select-trigger" id="ruleCategoryTrigger">
+                                                <span id="ruleCategoryValue">Select Category</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                            </button>
+                                            <div class="select-content hidden" id="ruleCategoryContent">
+                                                <div class="select-item" data-value="Data Quality">Data Quality</div>
+                                                <div class="select-item" data-value="Business Logic">Business Logic</div>
+                                                <div class="select-item" data-value="Compliance">Compliance</div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="button primary w-full">Submit to Data Engineers</button>
+                                    </form>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="p-4 bg-blue-50 rounded">
-                            <h4 class="font-medium mb-2">BigQuery Connection Details</h4>
-                            <div class="text-sm space-y-1">
-                                <div><strong>Project ID:</strong> company-bq-analytics</div>
-                                <div><strong>Dataset:</strong> golden_tables</div>
-                                <div><strong>Service Account:</strong> rrr-analysis-service@company-bq.iam.gserviceaccount.com</div>
-                                <div><strong>Last Sync:</strong> 2 hours ago</div>
-                            </div>
-                            <p class="text-sm mt-2">
-                                These golden tables power advanced analytics, predictive modeling, and automated decision support across the enterprise.
-                            </p>
                         </div>
                     </div>
                 </div>
