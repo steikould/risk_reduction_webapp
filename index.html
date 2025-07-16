@@ -233,6 +233,17 @@
                 </div>
         </div>
 
+        <div id="query-drawer" class="drawer">
+            <div class="drawer-header">
+                <h2 id="query-drawer-title" class="drawer-title">Query Details</h2>
+                <button id="query-drawer-close" class="drawer-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="query-drawer-content" class="drawer-content">
+            </div>
+        </div>
+
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold mb-2">Intelligent RRR Value Analysis</h1>
             <p class="text-gray-600">AI-powered risk reduction assessment for project planning</p>
@@ -425,6 +436,16 @@
                                     RAG system combines structured BQ data with document embeddings for contextual recommendations. Documents are automatically indexed from SharePoint with real-time updates.
                                 </p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="query-results-container" class="hidden">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Query Results</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="query-results-table"></div>
                         </div>
                     </div>
                 </div>
