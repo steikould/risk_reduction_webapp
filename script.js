@@ -941,11 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Call initialization function when the golden tab is shown
     const goldenTabTrigger = document.querySelector('.tabs-trigger[data-tab="golden"]');
-    let goldenTabInitialized = false;
     goldenTabTrigger.addEventListener('click', () => {
-        if (!goldenTabInitialized) {
-            initializeGoldenTablesTab();
-            goldenTabInitialized = true;
-        }
+        initializeGoldenTablesTab();
     });
 });
