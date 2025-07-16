@@ -507,30 +507,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayQueryResults() {
-        const resultsContainer = document.getElementById('query-results-container');
-        const resultsTable = document.getElementById('query-results-table');
+        const tabId = `query-results-${Date.now()}`;
+        const tabName = `Results: ${selectedGoldenTable.name.substring(0, 10)}...`;
 
-        const headers = selectedGoldenTable.columns.map(c => c.name);
-        let tableHtml = `
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50">
-                    <tr>
-                        ${headers.map(h => `<th class="p-2 font-medium">${h}</th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
+        // Create new tab button
+        const newTab = document.createElement('button');
+        newTab.className = 'tabs-trigger';
+        newTab.dataset.tab = tabId;
+        newTab.textContent = tabName;
+        tabsList.appendChild(newTab);
+
+        // Create new tab content
+        const newTabContent = document.createElement('div');
+        newTabContent.id = tabId;
+        newTabContent.className = 'tabs-content space-y-4 pt-6';
+        newTabContent.innerHTML = `
+            <div class="card">
+                <div class="card-header flex justify-between items-center">
+                    <h2 class="card-title">Query Results</h2>
+                    <div>
+                        <button class="button outline text-sm" id="analyze-${tabId}">Analyze</button>
+                        <button class="button outline text-sm" id="export-${tabId}">Export to Excel</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="table-container-${tabId}"></div>
+                </div>
+            </div>
         `;
-        for (let i = 0; i < 5; i++) {
-            tableHtml += '<tr class="border-b">';
-            headers.forEach(h => {
-                tableHtml += `<td class="p-2">Value ${i+1}</td>`;
-            });
-            tableHtml += '</tr>';
-        }
-        tableHtml += '</tbody></table>';
+        document.querySelector('.tabs-container').appendChild(newTabContent);
 
-        resultsTable.innerHTML = tableHtml;
-        resultsContainer.classList.remove('hidden');
+        // Switch to the new tab
+        // newTab.click();
+        document.querySelectorAll('.tabs-trigger').forEach(btn => btn.classList.remove('active'));
+        newTab.classList.add('active');
+        document.querySelectorAll('.tabs-content').forEach(content => content.classList.add('hidden'));
+        newTabContent.classList.remove('hidden');
+
+
+        // Populate the table
+        populateResultsTable(tabId);
     }
 
     function closeQueryDrawer() {
@@ -1007,6 +1023,167 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeGoldenTablesTab();
     });
 
+    function populateResultsTable(tabId) {
+        const tableContainer = document.getElementById(`table-container-${tabId}`);
+        const headers = selectedGoldenTable.columns.map(c => c.name);
+        const data = Array.from({ length: 10 }, () => {
+            const row = {};
+            headers.forEach(h => {
+                row[h] = Math.floor(Math.random() * 100);
+            });
+            return row;
+        });
+
+        const renderTable = (filteredData) => {
+            let tableHtml = `
+                <div class="flex mb-4">
+                    ${headers.map(h => `<input class="input text-sm mr-2" data-header="${h}" placeholder="Filter ${h}...">`).join('')}
+                </div>
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            ${headers.map((h, i) => `<th class="p-2 font-medium cursor-pointer" data-sort-by="${h}">${h} ↕️</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredData.map(row => `
+                            <tr class="border-b">
+                                ${headers.map(h => `<td class="p-2">${row[h]}</td>`).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            tableContainer.innerHTML = tableHtml;
+        };
+
+        renderTable(data);
+
+        tableContainer.addEventListener('input', e => {
+            if (e.target.classList.contains('input')) {
+                const filters = {};
+                tableContainer.querySelectorAll('.input').forEach(input => {
+                    if (input.value) {
+                        filters[input.dataset.header] = input.value.toLowerCase();
+                    }
+                });
+
+                const filteredData = data.filter(row => {
+                    return Object.keys(filters).every(header => {
+                        return String(row[header]).toLowerCase().includes(filters[header]);
+                    });
+                });
+
+                renderTable(filteredData);
+            }
+        });
+
+        tableContainer.addEventListener('click', e => {
+            if (e.target.tagName === 'TH') {
+                const sortBy = e.target.dataset.sortBy;
+                const sortedData = [...data].sort((a, b) => {
+                    if (a[sortBy] < b[sortBy]) return -1;
+                    if (a[sortBy] > b[sortBy]) return 1;
+                    return 0;
+                });
+                renderTable(sortedData);
+            }
+        });
+    }
+    function exportToExcel(tabId) {
+        const table = document.querySelector(`#table-container-${tabId} table`);
+        let csv = [];
+        for (const row of table.rows) {
+            const rowData = [];
+            for (const cell of row.cells) {
+                rowData.push(cell.textContent);
+            }
+            csv.push(rowData.join(','));
+        }
+
+        const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'query_results.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.id.startsWith('export-')) {
+            const tabId = e.target.id.replace('export-', '');
+            exportToExcel(tabId);
+        } else if (e.target.id.startsWith('analyze-')) {
+            const tabId = e.target.id.replace('analyze-', '');
+            createDashboardTab(tabId);
+        }
+    });
+
+    function createDashboardTab(sourceTabId) {
+        const tabId = `dashboard-${Date.now()}`;
+        const tabName = `Dashboard: ${selectedGoldenTable.name.substring(0, 10)}...`;
+
+        // Create new tab button
+        const newTab = document.createElement('button');
+        newTab.className = 'tabs-trigger';
+        newTab.dataset.tab = tabId;
+        newTab.textContent = tabName;
+        tabsList.appendChild(newTab);
+
+        // Create new tab content
+        const newTabContent = document.createElement('div');
+        newTabContent.id = tabId;
+        newTabContent.className = 'tabs-content space-y-4 pt-6';
+        newTabContent.innerHTML = `
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 card">
+                    <div class="card-header">
+                        <h3 class="card-title">Time Series Analysis with Outliers</h3>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="dashboard-chart-${tabId}"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Table Profile</h3>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Schema:</strong> ${selectedGoldenTable.columns.map(c => c.name).join(', ')}</p>
+                        <p><strong>Row Count:</strong> 10</p>
+                        <p><strong>Outliers Detected:</strong> 3 (mock)</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.querySelector('.tabs-container').appendChild(newTabContent);
+
+        // Switch to new tab
+        newTab.click();
+
+        // Render chart
+        const ctx = document.getElementById(`dashboard-chart-${tabId}`).getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 10 }, (_, i) => `Point ${i + 1}`),
+                datasets: [{
+                    label: 'Value',
+                    data: Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)),
+                    borderColor: '#3b82f6',
+                    tension: 0.1
+                }, {
+                    label: 'ML Outliers',
+                    data: [null, null, 85, null, null, 20, null, 95, null, null],
+                    backgroundColor: 'red',
+                    pointRadius: 5
+                }]
+            }
+        });
+    }
     // Initialize the app
     renderApp();
 });
