@@ -772,16 +772,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupGoldenTableSelector() {
         const selectorContent = document.getElementById('goldenTableSelectorContent');
+        const selectorValue = document.getElementById('goldenTableSelectorValue');
+
         selectorContent.innerHTML = Object.values(mockGoldenTables).map(table =>
             `<div class="select-item" data-value="${table.name}">${table.name}</div>`
         ).join('');
+
+        // Pre-select the first table
+        const firstTable = Object.values(mockGoldenTables)[0];
+        if (firstTable) {
+            selectedGoldenTable = firstTable;
+            selectorValue.textContent = firstTable.name;
+            updateGoldenTabContent();
+        }
 
         selectorContent.addEventListener('click', (e) => {
             if (e.target.classList.contains('select-item')) {
                 const tableName = e.target.dataset.value;
                 selectedGoldenTable = mockGoldenTables[tableName];
-                document.getElementById('goldenTableSelectorValue').textContent = tableName;
-                document.getElementById('goldenTableSelectorContent').classList.add('hidden');
+                selectorValue.textContent = tableName;
+                selectorContent.classList.add('hidden');
                 updateGoldenTabContent();
             }
         });
@@ -835,6 +845,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
                 document.getElementById('datePresetValue').textContent = e.target.textContent;
                 datePresetContent.classList.add('hidden');
+
+                // Manually trigger the select for the dropdown
+                const trigger = document.getElementById('datePresetTrigger');
+                const valueSpan = document.getElementById('datePresetValue');
+                valueSpan.textContent = e.target.textContent;
+                trigger.dispatchEvent(new Event('change'));
             }
         });
     }
@@ -925,10 +941,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Call initialization function when the golden tab is shown
     const goldenTabTrigger = document.querySelector('.tabs-trigger[data-tab="golden"]');
+    let goldenTabInitialized = false;
     goldenTabTrigger.addEventListener('click', () => {
-        // A simple check to ensure it only initializes once
-        if (!document.querySelector('.table-list').hasChildNodes()) {
+        if (!goldenTabInitialized) {
             initializeGoldenTablesTab();
+            goldenTabInitialized = true;
         }
     });
 });
