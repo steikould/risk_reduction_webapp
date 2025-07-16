@@ -430,37 +430,50 @@
                 </div>
             </div>
 
-            <div id="golden-tab" class="tabs-content space-y-4 pt-6 hidden">
+            <div id="golden-tab" class="tabs-content space-y-6 pt-6 hidden">
                 <!-- Golden Tables & Knowledge Base Header -->
                 <div class="text-left">
                     <h2 class="text-2xl font-bold">Golden Tables & Knowledge Base</h2>
                     <p class="text-gray-600">Curated datasets for enterprise AI applications (BigQuery)</p>
                 </div>
 
+                <!-- Golden Table Selection -->
+                <div class="card">
+                    <div class="card-content">
+                        <label for="goldenTableSelector" class="block text-sm font-medium mb-2">Select a Golden Table</label>
+                        <div class="select-wrapper">
+                            <button class="select-trigger" id="goldenTableSelectorTrigger">
+                                <span id="goldenTableSelectorValue">Select a table...</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                            </button>
+                            <div class="select-content hidden" id="goldenTableSelectorContent">
+                                <!-- Options will be injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Main Grid Layout -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Left Column -->
-                    <div class="lg:col-span-2 space-y-6">
+                    <div class="space-y-6">
                         <!-- AI-Powered Query Interface -->
                         <div class="card query-interface-card">
                             <div class="card-header">
                                 <h3 class="card-title">AI-Powered Query Interface</h3>
                             </div>
                             <div class="card-content">
-                                <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language... Example: 'Show me infrastructure projects with RRR scores below 0.75 from the last 6 months'"></textarea>
-                                <div class="query-suggestions mt-4 space-x-2">
-                                    <button class="button outline text-xs">"Show projects with high risk scores"</button>
-                                    <button class="button outline text-xs">"List all compliance projects"</button>
-                                    <button class="button outline text-xs">"What is the average RRR score?"</button>
-                                </div>
-                                <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
-                                <div class="query-history mt-4">
-                                    <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
-                                    <div class="text-xs text-gray-500 space-y-1">
-                                        <p>Show me compliance projects - 2 minutes ago</p>
-                                        <p>List projects with RRR > 0.8 - 15 minutes ago</p>
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="flex-grow">
+                                        <label for="dateRange" class="block text-sm font-medium mb-1">Time Range</label>
+                                        <input type="text" id="dateRange" class="input" value="Last 6 months">
                                     </div>
                                 </div>
+                                <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language..."></textarea>
+                                <div class="query-suggestions mt-4 space-x-2">
+                                    <!-- Dynamic query suggestions will be injected here -->
+                                </div>
+                                <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
                             </div>
                         </div>
 
@@ -477,11 +490,7 @@
                                     <button class="button outline text-sm" data-type="heatmap">Heat Map</button>
                                 </div>
                                 <div class="chart-container bg-gray-50 h-64 flex items-center justify-center rounded">
-                                    <p>Chart will be rendered here</p>
-                                </div>
-                                <div class="chart-controls mt-4 space-x-2">
-                                    <button class="button outline">Export Chart</button>
-                                    <button class="button outline">Save to Dashboard</button>
+                                    <p>Select a table to see visualization</p>
                                 </div>
                             </div>
                         </div>
@@ -489,60 +498,16 @@
 
                     <!-- Right Column -->
                     <div class="space-y-6">
-                        <!-- Golden Tables Schema -->
-                        <div class="card schema-browser-card">
-                            <div class="card-header">
-                                <h3 class="card-title">Golden Tables Schema</h3>
-                            </div>
-                            <div class="card-content">
-                                <div class="table-search mb-4">
-                                    <input type="text" placeholder="Search tables..." class="input">
-                                </div>
-                                <div class="table-list space-y-2">
-                                    <!-- Mock tables will be injected here by JS -->
-                                </div>
-                                <div class="table-details mt-4 p-3 bg-gray-50 rounded hidden">
-                                    <!-- Selected table info will be shown here -->
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Validation Rules Management -->
                         <div class="card validation-rules-card">
                             <div class="card-header">
                                 <h3 class="card-title">Validation Rules</h3>
                             </div>
                             <div class="card-content">
-                                <div class="tabs-list grid grid-cols-2 mb-4">
-                                    <button class="tabs-trigger active" data-tab="current-rules">Current Rules</button>
-                                    <button class="tabs-trigger" data-tab="submit-rule">Submit New Rule</button>
+                                <div id="validation-rules-container">
+                                    <!-- Validation rules table will be injected here -->
                                 </div>
-
-                                <div class="tab-content current-rules">
-                                    <div class="rules-list space-y-2">
-                                        <!-- Mock rules will be injected here by JS -->
-                                    </div>
-                                </div>
-
-                                <div class="tab-content submit-rule hidden">
-                                    <form class="rule-submission-form space-y-3">
-                                        <input type="text" placeholder="Rule Name" required class="input">
-                                        <textarea placeholder="Rule Description" required class="textarea" rows="2"></textarea>
-                                        <textarea placeholder="Rule Logic (SQL or description)" required class="textarea" rows="3"></textarea>
-                                        <div class="select-wrapper">
-                                            <button type="button" class="select-trigger" id="ruleCategoryTrigger">
-                                                <span id="ruleCategoryValue">Select Category</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                            </button>
-                                            <div class="select-content hidden" id="ruleCategoryContent">
-                                                <div class="select-item" data-value="Data Quality">Data Quality</div>
-                                                <div class="select-item" data-value="Business Logic">Business Logic</div>
-                                                <div class="select-item" data-value="Compliance">Compliance</div>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="button primary w-full">Submit to Data Engineers</button>
-                                    </form>
-                                </div>
+                                <button id="submit-new-rule-btn" class="button primary w-full mt-4">Submit New Rule</button>
                             </div>
                         </div>
                     </div>

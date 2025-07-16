@@ -694,22 +694,105 @@ document.addEventListener('DOMContentLoaded', () => {
     renderApp();
 
     // --- Golden Tables Tab Functionality ---
+    let selectedGoldenTable = null;
+
+    const mockGoldenTables = {
+        "safety_incidents": {
+            name: "safety_incidents",
+            description: "Records of safety incidents and near-misses.",
+            columns: [
+                { name: "incident_id", type: "STRING" },
+                { name: "date", type: "DATE" },
+                { name: "location", type: "STRING" },
+                { name: "severity", type: "INTEGER" },
+                { name: "report", type: "STRING" }
+            ],
+            validationRules: [
+                { id: "S001", name: "Severity Range Check", description: "Severity must be between 1 and 5.", status: "Active" },
+                { id: "S002", name: "Future Date Check", description: "Incident date cannot be in the future.", status: "Active" },
+                { id: "S003", name: "Location Format", description: "Location must be a valid facility code.", status: "Pending" }
+            ],
+            queries: [
+                "Show high severity incidents",
+                "Incidents by location",
+                "Recent near-misses"
+            ]
+        },
+        "maintenance_logs": {
+            name: "maintenance_logs",
+            description: "Logs of all maintenance activities.",
+            columns: [
+                { name: "log_id", type: "STRING" },
+                { name: "asset_id", type: "STRING" },
+                { name: "date", type: "DATE" },
+                { name: "work_order", type: "STRING" },
+                { name: "notes", type: "STRING" }
+            ],
+            validationRules: [
+                { id: "M001", name: "Asset ID Exists", description: "Asset ID must exist in the master asset table.", status: "Active" },
+                { id: "M002", name: "Work Order Format", description: "Work order must follow the 'WO-YYYY-NNNNN' format.", status: "Active" }
+            ],
+            queries: [
+                "Show overdue maintenance",
+                "Maintenance history for asset X",
+                "Recent emergency repairs"
+            ]
+        }
+    };
+
     function initializeGoldenTablesTab() {
+        setupGoldenTableSelector();
         setupQueryInterface();
-        setupSchemaBrowser();
         setupVisualizationPanel();
         setupValidationRules();
-        setupSelects(); // Ensure custom selects in this tab are initialized
+        setupSelects();
     }
 
-    // 1. Query Interface
+    function setupGoldenTableSelector() {
+        const selectorContent = document.getElementById('goldenTableSelectorContent');
+        selectorContent.innerHTML = Object.values(mockGoldenTables).map(table =>
+            `<div class="select-item" data-value="${table.name}">${table.name}</div>`
+        ).join('');
+
+        selectorContent.addEventListener('click', (e) => {
+            if (e.target.classList.contains('select-item')) {
+                const tableName = e.target.dataset.value;
+                selectedGoldenTable = mockGoldenTables[tableName];
+                document.getElementById('goldenTableSelectorValue').textContent = tableName;
+                document.getElementById('goldenTableSelectorContent').classList.add('hidden');
+                updateGoldenTabContent();
+            }
+        });
+    }
+
+    function updateGoldenTabContent() {
+        updateQuerySuggestions();
+        renderMockChart('bar'); // Re-render chart with new data context
+        renderValidationRules();
+    }
+
+    function updateQuerySuggestions() {
+        const suggestionsContainer = document.querySelector('.query-suggestions');
+        if (selectedGoldenTable) {
+            suggestionsContainer.innerHTML = selectedGoldenTable.queries.map(q =>
+                `<button class="button outline text-xs">"${q}"</button>`
+            ).join('');
+        } else {
+            suggestionsContainer.innerHTML = '';
+        }
+    }
+
     function setupQueryInterface() {
         const executeBtn = document.querySelector('.execute-query-btn');
         const queryTextarea = document.querySelector('.query-interface-card textarea');
         const querySuggestions = document.querySelector('.query-suggestions');
 
         executeBtn.addEventListener('click', () => {
-            alert(`Executing query: "${queryTextarea.value}"`);
+            if (!selectedGoldenTable) {
+                alert("Please select a golden table first.");
+                return;
+            }
+            alert(`Executing query on ${selectedGoldenTable.name}: "${queryTextarea.value}"`);
         });
 
         querySuggestions.addEventListener('click', (e) => {
@@ -719,84 +802,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Schema Browser
-    function setupSchemaBrowser() {
-        const mockTables = [
-          {
-            name: "project_patterns",
-            description: "Historical project data for pattern analysis",
-            columns: [
-              {name: "project_id", type: "STRING", description: "Unique project identifier"},
-              {name: "project_type", type: "STRING", description: "Category of project"},
-              {name: "rrr_score", type: "FLOAT", description: "Risk reduction ratio score"},
-              {name: "created_date", type: "DATE", description: "Project creation date"}
-            ],
-            recordCount: 1247,
-            lastUpdated: "Today"
-          },
-          {
-            name: "risk_taxonomies",
-            description: "Risk categorization and classification data",
-            columns: [
-              {name: "risk_id", type: "STRING", description: "Risk identifier"},
-              {name: "category", type: "STRING", description: "Primary risk category"},
-              {name: "severity", type: "INTEGER", description: "Risk severity level 1-5"}
-            ],
-            recordCount: 156,
-            lastUpdated: "2 hours ago"
-          }
-        ];
-
-        const tableList = document.querySelector('.table-list');
-        const tableDetails = document.querySelector('.table-details');
-
-        tableList.innerHTML = mockTables.map(table => `
-            <div class="table-item border rounded p-2">
-                <div class="table-item-header">
-                    <span class="font-medium text-sm">${table.name}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
-                </div>
-                <div class="table-item-columns text-xs space-y-1 mt-2">
-                    ${table.columns.map(col => `
-                        <div class="flex justify-between">
-                            <span>${col.name}</span>
-                            <span class="text-gray-500">${col.type}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `).join('');
-        lucide.createIcons();
-
-        tableList.addEventListener('click', e => {
-            const header = e.target.closest('.table-item-header');
-            if (header) {
-                const tableItem = header.parentElement;
-                tableItem.classList.toggle('open');
-                const tableName = header.querySelector('span').textContent;
-                const tableData = mockTables.find(t => t.name === tableName);
-
-                if (tableItem.classList.contains('open')) {
-                    tableDetails.innerHTML = `
-                        <h5 class="font-bold text-sm mb-1">${tableData.name}</h5>
-                        <p class="text-xs text-gray-600 mb-2">${tableData.description}</p>
-                        <p class="text-xs"><strong>Records:</strong> ${tableData.recordCount}</p>
-                        <p class="text-xs"><strong>Last Updated:</strong> ${tableData.lastUpdated}</p>
-                    `;
-                    tableDetails.classList.remove('hidden');
-                } else {
-                    tableDetails.classList.add('hidden');
-                }
-            }
-        });
-    }
-
-    // 3. Visualization Panel
     function setupVisualizationPanel() {
         const chartTypeSelector = document.querySelector('.chart-type-selector');
-        const chartContainer = document.querySelector('.chart-container');
-        let currentChart = null;
-
         chartTypeSelector.addEventListener('click', e => {
             if (e.target.tagName === 'BUTTON') {
                 chartTypeSelector.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
@@ -805,106 +812,78 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderMockChart(chartType);
             }
         });
-
-        function renderMockChart(type) {
-            chartContainer.innerHTML = `<canvas id="golden-chart"></canvas>`;
-            const ctx = document.getElementById('golden-chart').getContext('2d');
-
-            if (currentChart) {
-                currentChart.destroy();
-            }
-
-            const mockData = {
-                labels: ['Infra', 'Product', 'Process', 'Compliance'],
-                datasets: [{
-                    label: 'Avg. RRR Score',
-                    data: [0.78, 0.71, 0.69, 0.82],
-                    backgroundColor: ['#4F46E5', '#818CF8', '#A5B4FC', '#C7D2FE'],
-                }]
-            };
-
-            currentChart = new Chart(ctx, {
-                type: type,
-                data: mockData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: type === 'bar' || type === 'line' ? false : true,
-                        }
-                    }
-                }
-            });
-        }
-        // Initial render
-        renderMockChart('bar');
     }
 
-    // 4. Validation Rules
-    function setupValidationRules() {
-        const mockValidationRules = [
-          {
-            id: "rule_001",
-            name: "RRR Score Range Check",
-            description: "Ensures RRR scores are between 0.0 and 1.0",
-            category: "Data Quality",
-            status: "Active",
-            success_rate: "99.2%",
-            last_run: "2 hours ago"
-          },
-          {
-            id: "rule_002",
-            name: "Project Date Validation",
-            description: "Validates project dates are not in the future",
-            category: "Business Logic",
-            status: "Active",
-            success_rate: "100%",
-            last_run: "1 hour ago"
-          }
-        ];
+    function renderMockChart(type) {
+        const chartContainer = document.querySelector('.chart-container');
+        if (!selectedGoldenTable) {
+            chartContainer.innerHTML = '<p>Select a table to see visualization</p>';
+            return;
+        }
+        chartContainer.innerHTML = `<canvas id="golden-chart"></canvas>`;
+        const ctx = document.getElementById('golden-chart').getContext('2d');
 
-        const rulesList = document.querySelector('.rules-list');
-        rulesList.innerHTML = mockValidationRules.map(rule => `
-            <div class="text-sm p-2 border-b">
-                <div class="flex justify-between items-center">
-                    <span class="font-medium">${rule.name}</span>
-                    <span class="badge ${rule.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} text-xs">${rule.status}</span>
-                </div>
-                <p class="text-xs text-gray-600">${rule.description}</p>
-                <div class="text-xs text-gray-500 mt-1">
-                    <span>${rule.category} | Success: ${rule.success_rate}</span>
-                </div>
-            </div>
-        `).join('');
+        // Destroy previous chart if it exists
+        if (window.goldenChart instanceof Chart) {
+            window.goldenChart.destroy();
+        }
 
-        const tabs = document.querySelector('.validation-rules-card .tabs-list');
-        const contents = {
-            'current-rules': document.querySelector('.validation-rules-card .current-rules'),
-            'submit-rule': document.querySelector('.validation-rules-card .submit-rule')
+        const mockData = {
+            labels: selectedGoldenTable.columns.map(c => c.name),
+            datasets: [{
+                label: `Data for ${selectedGoldenTable.name}`,
+                data: selectedGoldenTable.columns.map(() => Math.random() * 100),
+                backgroundColor: '#4F46E5',
+            }]
         };
 
-        tabs.addEventListener('click', e => {
-            if (e.target.classList.contains('tabs-trigger')) {
-                const tabName = e.target.dataset.tab;
-                tabs.querySelectorAll('.tabs-trigger').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-
-                for (const content in contents) {
-                    contents[content].classList.add('hidden');
-                }
-                contents[tabName].classList.remove('hidden');
+        window.goldenChart = new Chart(ctx, {
+            type: type,
+            data: mockData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
             }
         });
+    }
 
-        const submissionForm = document.querySelector('.rule-submission-form');
-        submissionForm.addEventListener('submit', e => {
-            e.preventDefault();
-            alert('Rule submitted for review!');
-            submissionForm.reset();
-            // Switch back to the rules list
-            tabs.querySelector('[data-tab="current-rules"]').click();
+    function setupValidationRules() {
+        const submitBtn = document.getElementById('submit-new-rule-btn');
+        submitBtn.addEventListener('click', () => {
+            if (!selectedGoldenTable) {
+                alert("Please select a golden table first.");
+                return;
+            }
+            alert(`Confirmed: New rule submission for table '${selectedGoldenTable.name}' has been received.`);
         });
+    }
+
+    function renderValidationRules() {
+        const container = document.getElementById('validation-rules-container');
+        if (!selectedGoldenTable) {
+            container.innerHTML = '<p>Select a table to see validation rules.</p>';
+            return;
+        }
+
+        const rules = selectedGoldenTable.validationRules;
+        const headers = Object.keys(rules[0]);
+
+        container.innerHTML = `
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50">
+                    <tr>
+                        ${headers.map(h => `<th class="p-2 font-medium">${h.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rules.map(rule => `
+                        <tr class="border-b">
+                            ${headers.map(h => `<td class="p-2">${rule[h]}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
     }
 
     // Call initialization function when the golden tab is shown
