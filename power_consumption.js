@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const steps = [
-        { title: "Project Overview", icon: 'file-text' },
-        { title: "Risk Assessment", icon: 'alert-triangle' },
+        { title: "Run Query", icon: 'play-circle' },
+        { title: "Query Summary", icon: 'list-checks' },
         { title: "AI Insights", icon: 'brain' },
-        { title: "Power Consumption Results", icon: 'trending-up' }
+        { title: "Power Consumption Forecast", icon: 'trending-up' }
     ];
 
     // DOM Elements
@@ -117,10 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currentStepTitle.textContent = steps[currentStep].title;
         let description = "";
         switch (currentStep) {
-            case 0: description = "Enter basic project information"; break;
-            case 1: description = "Provide detailed requirements and risk factors"; break;
-            case 2: description = "AI analysis of your pump data"; break;
-            case 3: description = "Final Power Consumption score and recommendations"; break;
+            case 0: description = "Set filters for your query"; break;
+            case 1: description = "Review query summary and results"; break;
+            case 2: description = "AI-powered analysis of your query results"; break;
+            case 3: description = "View the power consumption forecast"; break;
         }
         currentStepDescription.textContent = description;
 
@@ -131,106 +131,75 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label for="projectName" class="block text-sm font-medium mb-2">Project Name</label>
-                                <input id="projectName" value="${formData.projectName}" placeholder="Enter project name" class="input" />
+                                <label for="startDate" class="block text-sm font-medium mb-2">Start Date</label>
+                                <input id="startDate" type="date" value="${formData.startDate || ''}" class="input" />
                             </div>
                             <div>
-                                <label for="projectType" class="block text-sm font-medium mb-2">Project Type</label>
-                                <div class="select-wrapper">
-                                    <button class="select-trigger" id="projectTypeTrigger">
-                                        <span id="projectTypeValue">${formData.projectType || 'Select project type'}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                    </button>
-                                    <div class="select-content hidden" id="projectTypeContent">
-                                        <div class="select-item" data-value="Equipment Replacement">Equipment Replacement</div>
-                                        <div class="select-item" data-value="Maintenance">Maintenance</div>
-                                        <div class="select-item" data-value="Safety Upgrade">Safety Upgrade</div>
-                                        <div class="select-item" data-value="Compliance">Compliance</div>
-                                        <div class="select-item" data-value="Emergency Repair">Emergency Repair</div>
-                                    </div>
-                                </div>
+                                <label for="endDate" class="block text-sm font-medium mb-2">End Date</label>
+                                <input id="endDate" type="date" value="${formData.endDate || ''}" class="input" />
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label for="businessUnit" class="block text-sm font-medium mb-2">Business Unit</label>
-                                <div class="select-wrapper">
-                                    <button class="select-trigger" id="businessUnitTrigger">
-                                        <span id="businessUnitValue">${formData.businessUnit || 'Select business unit'}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                    </button>
-                                    <div class="select-content hidden" id="businessUnitContent">
-                                        <div class="select-item" data-value="Pipeline Operations">Pipeline Operations</div>
-                                        <div class="select-item" data-value="Maintenance">Maintenance</div>
-                                        <div class="select-item" data-value="Engineering">Engineering</div>
-                                        <div class="select-item" data-value="Operations">Operations</div>
-                                        <div class="select-item" data-value="Safety & Compliance">Safety & Compliance</div>
-                                    </div>
+                                <label for="location" class="block text-sm font-medium mb-2">Location</label>
+                                <input id="location" value="${formData.location || ''}" placeholder="Enter location" class="input" />
+                            </div>
+                            <div>
+                                <label for="lineNumber" class="block text-sm font-medium mb-2">Line Number</label>
+                                <input id="lineNumber" type="number" value="${formData.lineNumber || ''}" placeholder="Enter line number" class="input" />
+                            </div>
+                        </div>
+                        <div>
+                            <label for="sensorTagIds" class="block text-sm font-medium mb-2">Sensor Tag IDs</label>
+                            <textarea id="sensorTagIds" rows="3" placeholder="Enter comma-separated sensor tag IDs" class="textarea">${formData.sensorTagIds || ''}</textarea>
+                        </div>
+                        <div>
+                            <label for="timeIncrement" class="block text-sm font-medium mb-2">Time Increment</label>
+                            <div class="select-wrapper">
+                                <button class="select-trigger" id="timeIncrementTrigger">
+                                    <span id="timeIncrementValue">${formData.timeIncrement || 'Select time increment'}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+                                </button>
+                                <div class="select-content hidden" id="timeIncrementContent">
+                                    <div class="select-item" data-value="raw">Raw</div>
+                                    <div class="select-item" data-value="1min">1 Minute</div>
+                                    <div class="select-item" data-value="5min">5 Minutes</div>
+                                    <div class="select-item" data-value="15min">15 Minutes</div>
+                                    <div class="select-item" data-value="1hour">1 Hour</div>
                                 </div>
                             </div>
-                            <div>
-                                <label for="estimatedCost" class="block text-sm font-medium mb-2">Estimated Cost ($)</label>
-                                <input id="estimatedCost" type="number" value="${formData.estimatedCost}" placeholder="Enter estimated cost" class="input" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="timeline" class="block text-sm font-medium mb-2">Timeline (weeks)</label>
-                            <input id="timeline" type="number" value="${formData.timeline}" placeholder="Enter timeline in weeks" class="input" />
-                        </div>
-
-                        <div>
-                            <label for="proposedAction" class="block text-sm font-medium mb-2">Proposed Action</label>
-                            <textarea id="proposedAction" rows="3" placeholder="Describe the proposed pump replacement action (e.g., Replace DRA skid pump during scheduled maintenance window...)" class="textarea">${formData.proposedAction}</textarea>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="mitigationCircumstances" class="block text-sm font-medium mb-2">Mitigation Circumstances</label>
-                                <textarea id="mitigationCircumstances" rows="3" placeholder="Describe risk mitigation measures (e.g., Hot standby pump available, bypass line operational...)" class="textarea">${formData.mitigationCircumstances}</textarea>
-                            </div>
-                            <div>
-                                <label for="expectedDowntime" class="block text-sm font-medium mb-2">Expected Downtime (hours)</label>
-                                <input id="expectedDowntime" type="number" step="0.1" value="${formData.expectedDowntime}" placeholder="Enter expected downtime" class="input" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="improvementMetrics" class="block text-sm font-medium mb-2">Improvement Metrics</label>
-                            <textarea id="improvementMetrics" rows="2" placeholder="Expected improvements (e.g., 15% efficiency increase, reduced vibration, extended MTBF...)" class="textarea">${formData.improvementMetrics}</textarea>
                         </div>
                     </div>
                 `;
                 break;
             case 1:
                 contentHtml = `
-                    <div class="space-y-4">
-                        <div>
-                            <label for="technicalRequirements" class="block text-sm font-medium mb-2">Technical Requirements</label>
-                            <textarea id="technicalRequirements" rows="4" placeholder="Describe technical requirements and constraints..." class="textarea">${formData.technicalRequirements}</textarea>
+                    <div class="space-y-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Query Profile</h3>
+                            </div>
+                            <div class="card-content grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p class="text-sm text-gray-500">Unique Tags</p>
+                                    <p class="text-2xl font-bold">12</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Total Records</p>
+                                    <p class="text-2xl font-bold">1,452</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Time Period</p>
+                                    <p class="text-2xl font-bold">7d</p>
+                                </div>
+                            </div>
                         </div>
-
-                        <div>
-                            <label for="businessRequirements" class="block text-sm font-medium mb-2">Business Requirements</label>
-                            <textarea id="businessRequirements" rows="4" placeholder="Describe business requirements and objectives..." class="textarea">${formData.businessRequirements}</textarea>
-                        </div>
-
-                        <div>
-                            <h3 class="font-medium mb-2">Historical Context</h3>
-                            <div class="grid grid-cols-1 gap-2">
-                                ${mockHistoricalData.similarProjects.map((project, index) => `
-                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100" data-project-index="${index}">
-                                        <div>
-                                            <span class="font-medium">${project.name}</span>
-                                            <span class="badge outline ml-2">${project.type}</span>
-                                        </div>
-                                        <div class="text-sm text-gray-600 text-right">
-                                            <div>RRR: ${project.rrrScore} | Success: ${project.successRate}%</div>
-                                            <div>Downtime: ${project.downtime} | Cost: ${project.cost}</div>
-                                        </div>
-                                    </div>
-                                `).join('')}
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Query Results</h3>
+                            </div>
+                            <div class="card-content">
+                                <div id="query-results-table-container"></div>
                             </div>
                         </div>
                     </div>
@@ -300,52 +269,20 @@ document.addEventListener('DOMContentLoaded', () => {
             case 3:
                 contentHtml = `
                     <div class="space-y-6">
-                        <div class="text-center">
-                            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap h-8 w-8 text-blue-600"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Power Consumption Forecast</h3>
                             </div>
-                            <h3 class="text-2xl font-bold mb-2">Power Consumption Analysis Complete</h3>
-                            <div class="text-4xl font-bold text-blue-600 mb-2">
-                                ${powerConsumptionScore ? powerConsumptionScore.toFixed(2) : 'N/A'} kWh
-                            </div>
-                            <p class="text-gray-600">Estimated Power Consumption</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title text-sm">Efficiency Rating</h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="text-2xl font-bold">
-                                        ${powerConsumptionScore && powerConsumptionScore < 100 ? 'High' : powerConsumptionScore && powerConsumptionScore < 200 ? 'Medium' : 'Low'}
-                                    </div>
-                                    <p class="text-sm text-gray-600">
-                                        ${powerConsumptionScore && powerConsumptionScore < 100 ? 'Excellent performance' : 'Consider optimization'}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title text-sm">Comparable Projects</h3>
-                                </div>
-                                <div class="card-content">
-                                    <div class="text-2xl font-bold">
-                                        ${mockHistoricalData.similarProjects.length}
-                                    </div>
-                                    <p class="text-sm text-gray-600">Similar historical projects analyzed</p>
-                                </div>
+                            <div class="card-content">
+                                <canvas id="forecast-chart" height="150"></canvas>
                             </div>
                         </div>
-
-                        <div class="alert">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle h-4 w-4 alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 22h16a2 2 0 0 0 1.73-4Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                            <div class="flex-1">
-                                <h3 class="alert-title">Important Note</h3>
-                                <p class="alert-description">
-                                    This power consumption analysis is based on ${mockHistoricalData.similarProjects.length} similar pump configurations and operational data.
-                                </p>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Forecast Data</h3>
+                            </div>
+                            <div class="card-content">
+                                <div id="forecast-table-container"></div>
                             </div>
                         </div>
                     </div>
@@ -462,13 +399,12 @@ document.addEventListener('DOMContentLoaded', () => {
             chatbotSend.addEventListener('click', handleChatbotSend);
         }
 
-        document.querySelectorAll('[data-project-index]').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const projectIndex = e.currentTarget.dataset.projectIndex;
-                const project = mockHistoricalData.similarProjects[projectIndex];
-                openDrawer(project);
-            });
-        });
+        if (currentStep === 1) {
+            renderQueryResultsTable();
+        } else if (currentStep === 3) {
+            renderForecastChart();
+            renderForecastTable();
+        }
     }
 
     function openDrawer(project) {
@@ -616,31 +552,31 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             llmRecommendations = [
                 {
-                    category: "Efficiency Improvement",
-                    suggestion: "Consider a variable frequency drive (VFD) to reduce power consumption by up to 25% during off-peak hours.",
-                    confidence: 0.91,
-                    source: "Pump Performance Curves & Load Profiles",
+                    category: "Outlier Detection",
+                    suggestion: "Detected an unusual spike in power consumption for PUMP-A1 on 2023-07-23. Recommend investigating for potential cavitation or mechanical issue.",
+                    confidence: 0.95,
+                    source: "Time-series Anomaly Detection",
                     graph: true
                 },
                 {
-                    category: "Operational Adjustment",
-                    suggestion: "Optimize discharge pressure to match system demand; a 10% pressure reduction can yield significant power savings.",
-                    confidence: 0.85,
-                    source: "Real-time Sensor Data Analysis",
+                    category: "Efficiency Opportunity",
+                    suggestion: "PUMP-C3 is consistently operating at a lower efficiency than its peers. A 5% improvement is possible with impeller adjustments.",
+                    confidence: 0.88,
+                    source: "Comparative Power Analysis",
                     graph: true
                 },
                 {
-                    category: "Maintenance Impact",
-                    suggestion: "Impeller trimming could reduce energy use by 10-15%, but may impact peak flow capacity.",
-                    confidence: 0.78,
-                    source: "Maintenance Logs & Performance Data",
-                    graph: true
-                },
-                {
-                    category: "System-level Optimization",
-                    suggestion: "Analyze parallel pump operation; running two pumps at lower speeds can be more efficient than one at max speed.",
+                    category: "Predictive Maintenance",
+                    suggestion: "Vibration data for PUMP-B2 correlates with increased power draw. Recommend scheduling maintenance in the next 2-4 weeks to prevent failure.",
                     confidence: 0.82,
-                    source: "System-wide Efficiency Modeling",
+                    source: "Multi-variate Correlation Analysis",
+                    graph: true
+                },
+                {
+                    category: "Load Balancing",
+                    suggestion: "Shifting 15% of the load from PUMP-A1 to PUMP-B2 during peak hours could reduce overall power consumption by 8%.",
+                    confidence: 0.79,
+                    source: "System Load Optimization Model",
                     graph: true
                 }
             ];
@@ -781,7 +717,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         prevButton.disabled = currentStep === 0;
         if (currentStep < steps.length - 1) {
-            nextButton.textContent = currentStep === 1 ? 'Analyze with AI' : 'Next';
+            nextButton.textContent = currentStep === 0 ? 'Run Query' : 'Next';
             nextButton.classList.remove('outline');
             nextButton.classList.add('primary');
         } else {
@@ -790,6 +726,106 @@ document.addEventListener('DOMContentLoaded', () => {
             nextButton.classList.add('primary'); // Still primary for export
         }
         nextButton.disabled = loading;
+    }
+
+    function renderQueryResultsTable() {
+        const container = document.getElementById('query-results-table-container');
+        if (!container) return;
+
+        const mockData = [
+            { timestamp: '2023-07-23 10:00:00', tag: 'PUMP-A1', value: 120.5, location: 'Station A', line: 1 },
+            { timestamp: '2023-07-23 10:01:00', tag: 'PUMP-A1', value: 121.2, location: 'Station A', line: 1 },
+            { timestamp: '2023-07-23 10:00:00', tag: 'PUMP-B2', value: 210.8, location: 'Station B', line: 2 },
+            { timestamp: '2023-07-23 10:01:00', tag: 'PUMP-B2', value: 209.9, location: 'Station B', line: 2 },
+            { timestamp: '2023-07-23 10:00:00', tag: 'PUMP-C3', value: 150.1, location: 'Station C', line: 3 },
+            { timestamp: '2023-07-23 10:01:00', tag: 'PUMP-C3', value: 151.3, location: 'Station C', line: 3 },
+        ];
+
+        const headers = Object.keys(mockData[0]);
+
+        container.innerHTML = `
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50">
+                    <tr>
+                        ${headers.map(h => `<th class="p-2 font-medium">${h.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${mockData.map(row => `
+                        <tr class="border-b">
+                            ${headers.map(h => `<td class="p-2">${row[h]}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    function renderForecastChart() {
+        const ctx = document.getElementById('forecast-chart')?.getContext('2d');
+        if (!ctx) return;
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['+1d', '+2d', '+3d', '+4d', '+5d', '+6d', '+7d'],
+                datasets: [
+                    {
+                        label: 'Forecast',
+                        data: [125, 128, 130, 127, 132, 135, 133],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                    },
+                    {
+                        label: 'Upper Bound',
+                        data: [130, 133, 135, 132, 137, 140, 138],
+                        borderColor: 'rgba(59, 130, 246, 0.3)',
+                        fill: '+1',
+                    },
+                    {
+                        label: 'Lower Bound',
+                        data: [120, 123, 125, 122, 127, 130, 128],
+                        borderColor: 'rgba(59, 130, 246, 0.3)',
+                        fill: false,
+                    },
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { title: { display: true, text: 'Power Consumption (kWh)' } } } }
+        });
+    }
+
+    function renderForecastTable() {
+        const container = document.getElementById('forecast-table-container');
+        if (!container) return;
+
+        const mockData = [
+            { date: '2023-07-24', forecast: 125, lower_bound: 120, upper_bound: 130 },
+            { date: '2023-07-25', forecast: 128, lower_bound: 123, upper_bound: 133 },
+            { date: '2023-07-26', forecast: 130, lower_bound: 125, upper_bound: 135 },
+            { date: '2023-07-27', forecast: 127, lower_bound: 122, upper_bound: 132 },
+            { date: '2023-07-28', forecast: 132, lower_bound: 127, upper_bound: 137 },
+            { date: '2023-07-29', forecast: 135, lower_bound: 130, upper_bound: 140 },
+            { date: '2023-07-30', forecast: 133, lower_bound: 128, upper_bound: 138 },
+        ];
+
+        const headers = Object.keys(mockData[0]);
+
+        container.innerHTML = `
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50">
+                    <tr>
+                        ${headers.map(h => `<th class="p-2 font-medium">${h.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${mockData.map(row => `
+                        <tr class="border-b">
+                            ${headers.map(h => `<td class="p-2">${row[h]}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
     }
 
     // Initial render call
