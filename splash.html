@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: #f9fafb; /* gray-50 */
+        }
+        .agent-cards {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+        .agent-card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            width: 320px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .agent-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 0.75rem;
+        }
+        .agent-status {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 9999px; /* rounded-full */
+            background-color: #22c55e; /* green-500 */
+            margin-right: 0.75rem;
+        }
+        .agent-description {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Select an Analysis App</h1>
+        <p class="text-lg text-gray-600 mb-8">Choose one of the available applications to get started.</p>
+        <div class="agent-cards">
+            <div class="agent-card" onclick="window.location.href='index.html'">
+                <div class="agent-title">
+                    <div class="agent-status"></div>
+                    🎯 Risk Reduction Analysis
+                </div>
+                <div class="agent-description">
+                    AI-powered risk reduction assessment for project planning.
+                </div>
+            </div>
+            <div class="agent-card" onclick="window.location.href='power_consumption.html'">
+                <div class="agent-title">
+                    <div class="agent-status"></div>
+                    ⚡ Pump Power Consumption Analysis
+                </div>
+                <div class="agent-description">
+                    Analyze and optimize pump power consumption for efficiency.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
