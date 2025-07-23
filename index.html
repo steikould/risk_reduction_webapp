@@ -3,571 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intelligent RRR Value Analysis</title>
+    <title>Analysis Apps</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Basic styling to mimic shadcn/ui components where direct Tailwind might not be enough */
         body {
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: #f9fafb; /* gray-50 */
         }
-        .card {
-            border: 1px solid #e2e8f0; /* gray-200 */
-            border-radius: 0.5rem; /* rounded-lg */
-            background-color: white;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-        }
-        .card-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e2e8f0; /* gray-200 */
-        }
-        .card-title {
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 600; /* font-semibold */
-        }
-        .card-description {
-            font-size: 0.875rem; /* text-sm */
-            color: #64748b; /* gray-500 */
-        }
-        .card-content {
-            padding: 1.5rem;
-        }
-        .input, .textarea {
-            display: block;
-            width: 100%;
-            padding: 0.625rem 1rem;
-            border: 1px solid #cbd5e1; /* gray-300 */
-            border-radius: 0.375rem; /* rounded-md */
-            background-color: white;
-            font-size: 0.875rem; /* text-sm */
-            color: #1e293b; /* gray-900 */
-        }
-        .input:focus, .textarea:focus {
-            outline: 2px solid transparent;
-            outline-offset: 2px;
-            border-color: #3b82f6; /* blue-500 */
-            box-shadow: 0 0 0 1px #3b82f6;
-        }
-        .select-trigger {
+        .agent-cards {
             display: flex;
-            width: 100%;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.625rem 1rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 0.375rem;
-            background-color: white;
-            font-size: 0.875rem;
-            cursor: pointer;
-            min-height: 2.5rem; /* Equivalent to h-10 */
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2rem;
         }
-        .select-content {
+        .agent-card {
             background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            width: 320px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            position: absolute;
-            z-index: 10;
-            margin-top: 0.25rem;
-            width: var(--trigger-width); /* Controlled by JS */
         }
-        .select-item {
-            padding: 0.625rem 1rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-        .select-item:hover, .select-item.selected {
-            background-color: #f1f5f9; /* gray-100 */
-        }
-        .button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.625rem 1rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-            cursor: pointer;
-            transition: background-color 0.15s ease-in-out;
-        }
-        .button.primary {
-            background-color: #3b82f6; /* blue-500 */
-            color: white;
-        }
-        .button.primary:hover {
-            background-color: #2563eb; /* blue-600 */
-        }
-        .button.outline {
-            border: 1px solid #e2e8f0; /* gray-200 */
-            background-color: white;
-            color: #1e293b; /* gray-900 */
-        }
-        .button.outline:hover {
-            background-color: #f1f5f9; /* gray-100 */
-        }
-        .button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 9999px; /* full rounded */
-            padding: 0.25rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        .badge.outline {
-            border: 1px solid #e2e8f0;
-            color: #64748b; /* gray-500 */
-            background-color: transparent;
-        }
-        .alert {
+        .agent-title {
             display: flex;
-            align-items: flex-start;
-            padding: 1rem;
-            border-radius: 0.375rem;
-            border: 1px solid #e2e8f0;
-            background-color: #f8fafc; /* gray-50 */
-            color: #334155; /* gray-700 */
+            align-items: center;
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 0.75rem;
         }
-        .alert-icon {
+        .agent-status {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 9999px; /* rounded-full */
+            background-color: #22c55e; /* green-500 */
             margin-right: 0.75rem;
-            flex-shrink: 0;
         }
-        .alert-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-size: 0.875rem;
-        }
-        .alert-description {
-            font-size: 0.875rem;
-        }
-        .tabs-list {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f1f5f9; /* gray-100 */
-            border-radius: 0.5rem; /* rounded-md */
-            padding: 0.25rem;
-            width: 100%;
-        }
-        .tabs-trigger {
-            flex: 1;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #64748b; /* gray-500 */
-            cursor: pointer;
-            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
-            text-align: center;
-        }
-        .tabs-trigger.active {
-            background-color: white;
-            color: #1e293b; /* gray-900 */
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-        }
-        .progress-bar {
-            background-color: #e2e8f0; /* gray-200 */
-            border-radius: 9999px; /* full */
-            height: 0.5rem; /* h-2 */
-            overflow: hidden;
-        }
-        .progress-indicator {
-            background-color: #3b82f6; /* blue-500 */
-            height: 100%;
-            width: var(--progress-width, 0%); /* Controlled by JS */
-            transition: width 0.3s ease-in-out;
-        }
-        /* Sidebar Drawer Styles */
-        .drawer {
-            position: fixed;
-            top: 0;
-            right: -450px; /* Start off-screen */
-            width: 400px;
-            height: 100%;
-            background-color: white;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            transition: right 0.3s ease-in-out;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-        }
-        .drawer.open {
-            right: 0;
-        }
-        .drawer-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .drawer-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-        .drawer-content {
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-        .drawer-close {
-            cursor: pointer;
+        .agent-description {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
-    <div id="app" class="max-w-4xl mx-auto p-6 space-y-6">
-        <div id="sidebar-drawer" class="drawer">
-            <div class="drawer-header">
-                <h2 id="drawer-title" class="drawer-title">Historical Report</h2>
-                <button id="drawer-close" class="drawer-close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-            </div>
-            <div id="drawer-content" class="drawer-content">
+<body class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Select an Analysis App</h1>
+        <p class="text-lg text-gray-600 mb-8">Choose one of the available applications to get started.</p>
+        <div class="agent-cards">
+            <div class="agent-card" onclick="window.location.href='risk_reduction.html'">
+                <div class="agent-title">
+                    <div class="agent-status"></div>
+                    🎯 Risk Reduction Analysis
                 </div>
-        </div>
-
-        <div id="query-drawer" class="drawer">
-            <div class="drawer-header">
-                <h2 id="query-drawer-title" class="drawer-title">Query Details</h2>
-                <button id="query-drawer-close" class="drawer-close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-            </div>
-            <div id="query-drawer-content" class="drawer-content">
-            </div>
-        </div>
-
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-2">Intelligent RRR Value Analysis</h1>
-            <p class="text-gray-600">AI-powered risk reduction assessment for project planning</p>
-        </div>
-
-        <div class="tabs-container">
-            <div class="tabs-list grid w-full grid-cols-3">
-                <button class="tabs-trigger active" data-tab="analysis">Analysis</button>
-                <button class="tabs-trigger" data-tab="data">Data Sources</button>
-                <button class="tabs-trigger" data-tab="golden">Golden Tables</button>
-            </div>
-
-            <div id="analysis-tab" class="tabs-content space-y-6 pt-6">
-                <div class="flex items-center justify-between mb-6">
-                    </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title" id="current-step-title"></h2>
-                        <p class="card-description" id="current-step-description"></p>
-                    </div>
-                    <div class="card-content" id="current-step-content">
-                        </div>
-                </div>
-
-                <div class="flex justify-between">
-                    <button id="prev-button" class="button outline">
-                        Previous
-                    </button>
-                    <button id="next-button" class="button primary">
-                        Next
-                    </button>
+                <div class="agent-description">
+                    AI-powered risk reduction assessment for project planning.
                 </div>
             </div>
-
-            <div id="data-tab" class="tabs-content space-y-4 pt-6 hidden">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database h-5 w-5 mr-2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/><path d="M3 19A9 3 0 0 0 21 19"/></svg>
-                            Agent Analysis Source Documents
-                        </h2>
-                    </div>
-                    <div class="card-content space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Structured Data (BigQuery)</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Historical RRR reports</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            project_analytics.rrr_historical
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>project_analytics.rrr_historical:</strong> Contains all historical Risk Reduction Ratio reports, including scores, project details, and outcomes.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Project success metrics</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            project_analytics.success_metrics
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>project_analytics.success_metrics:</strong> Tracks key performance indicators (KPIs) and success rates for completed projects.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Cost and timeline data</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            project_analytics.cost_timeline
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>project_analytics.cost_timeline:</strong> Detailed cost and timeline data for all projects, used for benchmarking and estimation.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Risk outcome patterns</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            risk_management.outcome_patterns
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>risk_management.outcome_patterns:</strong> Analyzes and categorizes risk patterns and their outcomes from past projects.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Unstructured Documents (SharePoint)</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Technical specifications</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            /sites/Engineering/TechSpecs/
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/Engineering/TechSpecs/:</strong> Repository of technical specification documents for various engineering projects.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Business requirements</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            /sites/ProjectMgmt/BizReqs/
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/ProjectMgmt/BizReqs/:</strong> Collection of business requirement documents outlining project goals and stakeholder needs.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Post-mortem reports</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            /sites/PMO/PostMortems/
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-.text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/PMO/PostMortems/:</strong> Contains post-mortem reports analyzing the successes and failures of completed projects.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Stakeholder feedback</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            /sites/Feedback/Reviews/
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/Feedback/Reviews/:</strong> A central location for stakeholder feedback and reviews on various projects and initiatives.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-4">
-                            <div class="p-4 bg-gray-50 rounded">
-                                <h4 class="font-medium mb-3">Recent SharePoint Documents</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
-                                        <div>
-                                            <span class="font-medium">DRA_Skid_Pump_Spec_Station47_Rev3.pdf</span>
-                                            <div class="text-xs text-gray-500">Modified: 1 day ago | Size: 3.2MB</div>
-                                        </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/PipelineEng/DRASpecs/DRA_Skid_Pump_Spec_Station47_Rev3.pdf
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>DRA_Skid_Pump_Spec_Station47_Rev3.pdf:</strong> This document outlines the technical specifications for the new DRA skid pump, including performance curves, material requirements, and dimensional drawings. It is crucial for ensuring the correct equipment is ordered and installed.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
-                                        <div>
-                                            <span class="font-medium">Pump_Replacement_Procedure_v2.1.docx</span>
-                                            <div class="text-xs text-gray-500">Modified: 3 days ago | Size: 1.5MB</div>
-                                        </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/Maintenance/PumpProcs/Pump_Replacement_Procedure_v2.1.docx
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>Pump_Replacement_Procedure_v2.1.docx:</strong> This document provides a step-by-step guide for the pump replacement procedure, including safety pre-checks, isolation steps, and post-installation testing.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
-                                        <div>
-                                            <span class="font-medium">Station23_Pump_Overhaul_PostMaint_Report.pdf</span>
-                                            <div class="text-xs text-gray-500">Modified: 2 weeks ago | Size: 2.8MB</div>
-                                        </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/Operations/PostMaint/Station23_Pump_Overhaul_PostMaint_Report.pdf
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>Station23_Pump_Overhaul_PostMaint_Report.pdf:</strong> A post-maintenance report detailing the lessons learned from the Station 23 pump overhaul. It highlights unexpected challenges and recommendations for future projects.
-                                        </div>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
-                                        <div>
-                                            <span class="font-medium">DRA_System_Safety_Protocol_2024.xlsx</span>
-                                            <div class="text-xs text-gray-500">Modified: 1 week ago | Size: 890KB</div>
-                                        </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/Safety/ComplianceDocs/DRA_System_Safety_Protocol_2024.xlsx
-                                        </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>DRA_System_Safety_Protocol_2024.xlsx:</strong> The latest safety protocols for the DRA system, including chemical handling, emergency shutdown procedures, and required personal protective equipment (PPE).
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="alert">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle h-4 w-4 alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 22h16a2 2 0 0 0 1.73-4Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                            <div class="flex-1">
-                                <p class="alert-description">
-                                    RAG system combines structured BQ data with document embeddings for contextual recommendations. Documents are automatically indexed from SharePoint with real-time updates.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="agent-card" onclick="window.location.href='power_consumption.html'">
+                <div class="agent-title">
+                    <div class="agent-status"></div>
+                    ⚡ Pump Power Consumption Analysis
                 </div>
-                <div id="query-results-container" class="hidden">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Query Results</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="query-results-table"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="golden-tab" class="tabs-content space-y-6 pt-6 hidden">
-                <!-- Golden Tables & Knowledge Base Header -->
-                <div class="text-left">
-                    <h2 class="text-2xl font-bold">Golden Tables & Knowledge Base</h2>
-                    <p class="text-gray-600">Curated datasets for enterprise AI applications (BigQuery)</p>
-                </div>
-
-                <!-- Golden Table Selection -->
-                <div class="card">
-                    <div class="card-content">
-                        <label for="goldenTableSelectorTrigger" class="block text-sm font-medium mb-2">Select a Golden Table</label>
-                        <div class="select-wrapper">
-                            <button class="select-trigger" id="goldenTableSelectorTrigger">
-                                <span id="goldenTableSelectorValue">Select a table...</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                            </button>
-                            <div class="select-content hidden" id="goldenTableSelectorContent">
-                                <!-- Options will be injected by JS -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Main Grid Layout -->
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- AI-Powered Query Interface -->
-                    <div class="card query-interface-card">
-                        <div class="card-header">
-                            <h3 class="card-title">AI-Powered Query Interface</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <div class="md:col-span-1">
-                                    <label for="startDate" class="block text-sm font-medium mb-1">Start Date</label>
-                                    <input type="date" id="startDate" name="startDate" class="input">
-                                </div>
-                                <div class="md:col-span-1">
-                                    <label for="endDate" class="block text-sm font-medium mb-1">End Date</label>
-                                    <input type="date" id="endDate" name="endDate" class="input">
-                                </div>
-                                <div class="md:col-span-1">
-                                    <label for="datePresetTrigger" class="block text-sm font-medium mb-1">Presets</label>
-                                    <div class="select-wrapper">
-                                        <button class="select-trigger" id="datePresetTrigger">
-                                            <span id="datePresetValue">Select...</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                        </button>
-                                        <div class="select-content hidden" id="datePresetContent">
-                                            <div class="select-item" data-value="3">Last 3 Months</div>
-                                            <div class="select-item" data-value="6">Last 6 Months</div>
-                                            <div class="select-item" data-value="12">Last 12 Months</div>
-                                            <div class="select-item" data-value="18">Last 18 Months</div>
-                                            <div class="select-item" data-value="36">Last 36 Months</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language..."></textarea>
-                            <div class="query-suggestions mt-4 space-x-2">
-                                <!-- Dynamic query suggestions will be injected here -->
-                            </div>
-                            <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
-                            <div class="query-history mt-4">
-                                <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
-                                <div class="text-xs text-gray-500 space-y-1">
-                                    <p>Show me compliance projects - 2 minutes ago</p>
-                                    <p>List projects with RRR > 0.8 - 15 minutes ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Data Visualization Panel -->
-                        <div class="card visualization-panel-card">
-                            <div class="card-header">
-                                <h3 class="card-title">Data Visualization</h3>
-                            </div>
-                            <div class="card-content">
-                                <div class="chart-type-selector space-x-2 mb-4">
-                                    <button class="button outline text-sm active" data-type="bar">Bar Chart</button>
-                                    <button class="button outline text-sm" data-type="line">Line Chart</button>
-                                    <button class="button outline text-sm" data-type="scatter">Scatter Plot</button>
-                                    <button class="button outline text-sm" data-type="heatmap">Heat Map</button>
-                                </div>
-                                <div class="chart-container bg-gray-50 h-64 flex items-center justify-center rounded">
-                                    <p>Select a table to see visualization</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Validation Rules Management -->
-                        <div class="card validation-rules-card">
-                            <div class="card-header">
-                                <h3 class="card-title">Validation Rules</h3>
-                            </div>
-                            <div class="card-content">
-                                <div id="validation-rules-container">
-                                    <!-- Validation rules table will be injected here -->
-                                </div>
-                                <div class="mt-4">
-                                    <label for="new-rule-input" class="block text-sm font-medium mb-1">New Rule</label>
-                                    <textarea id="new-rule-input" name="new-rule-input" class="textarea" placeholder="Enter new rule..."></textarea>
-                                </div>
-                                <button id="submit-new-rule-btn" class="button primary w-full mt-4">Submit New Rule</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="agent-description">
+                    Analyze and optimize pump power consumption for efficiency.
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-    </script>
-    <script src="script.js"></script>
 </body>
 </html>
