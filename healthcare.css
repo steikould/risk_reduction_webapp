@@ -56,3 +56,70 @@
     visibility: visible;
     opacity: 1;
 }
+
+/* Alert Styles */
+.alert-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+}
+.alert-header {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+.alert-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.alert-body {
+    padding: 24px;
+}
+.patient-info {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-left: 4px solid #ff6b6b;
+}
+.patient-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+.patient-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+.compliance-issue {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+.issue-title {
+    font-weight: bold;
+    color: #c53030;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+.issue-description {
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
