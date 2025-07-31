@@ -1,0 +1,29 @@
+.query-interface-card textarea {
+    resize: vertical;
+}
+
+.chart-container {
+    position: relative;
+    height: 256px; /* h-64 */
+}
+
+/* Custom active state for chart type buttons */
+.chart-type-selector .button.active {
+    background-color: #3b82f6; /* blue-500 */
+    color: white;
+    border-color: #3b82f6; /* blue-500 */
+}
+
+.query-suggestions .button.outline {
+    background-color: #e0e7ff; /* indigo-200 */
+    border-color: transparent;
+    color: #3730a3; /* indigo-800 */
+}
+
+.query-suggestions .button.outline:hover {
+    background-color: #c7d2fe; /* indigo-300 */
+}
+
+.select-wrapper {
+    position: relative;
+}
