@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actuarial/Financial Dashboard</title>
+    <title>Financial Analysis Workbench</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="healthcare.css">
@@ -74,31 +74,12 @@
             padding: 0.75rem 1rem;
             border-bottom: 1px solid #e2e8f0; /* gray-200 */
         }
-        .chat-input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-        }
-        .prompt-suggestion {
-            background-color: #f1f5f9;
-            border-radius: 0.375rem;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        .prompt-suggestion:hover {
-            background-color: #e2e8f0;
-        }
-        .input, .textarea {
+        .input {
             display: block;
             width: 100%;
             padding: 0.625rem 1rem;
             border: 1px solid #cbd5e1; /* gray-300 */
             border-radius: 0.375rem; /* rounded-md */
-            background-color: white;
-            font-size: 0.875rem; /* text-sm */
-            color: #1e293b; /* gray-900 */
         }
     </style>
 </head>
@@ -106,117 +87,91 @@
     <div class="max-w-7xl mx-auto p-6 space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold mb-2">Actuarial/Financial Dashboard</h1>
-                <p class="text-gray-600">Cost avoidance, ROI tracking, and financial impact analysis.</p>
+                <h1 class="text-3xl font-bold mb-2">Financial Analysis Workbench</h1>
+                <p class="text-gray-600">Quantifying the impact of the smart pill bottle program.</p>
             </div>
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Real-time ROI Calculations & Projections -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Real-time ROI Calculations & Projections</h2>
+                </div>
+                <div class="card-content">
+                    <canvas id="roiChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <!-- Cost Avoidance Trend Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Cost Avoidance Trend Analysis</h2>
+                    <p class="card-description">Breakdown by member segment.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="costAvoidanceChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Top-line Metrics -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Projected Cost Avoidance</h2>
-                        </div>
-                        <div class="card-content">
-                            <p class="text-4xl font-bold text-green-600">$1.2M</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Return on Investment (ROI)</h2>
-                        </div>
-                        <div class="card-content">
-                            <p class="text-4xl font-bold text-green-600">3.5x</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Adherence Improvement</h2>
-                        </div>
-                        <div class="card-content">
-                            <p class="text-4xl font-bold text-green-600">+25%</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">ER Visits Avoided</h2>
-                        </div>
-                        <div class="card-content">
-                            <p class="text-4xl font-bold text-green-600">125</p>
-                        </div>
-                    </div>
+            <!-- Budget Impact Modeling Tools -->
+            <div class="lg:col-span-2 card">
+                <div class="card-header">
+                    <h2 class="card-title">Budget Impact Modeling Tools</h2>
+                    <p class="card-description">"What if" scenario analysis.</p>
                 </div>
-
-                <!-- Clinical Risk Stratification -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Clinical Risk Stratification</h2>
-                        <p class="card-description">Distribution of members by risk level.</p>
+                <div class="card-content space-y-4">
+                    <div>
+                        <label for="member-count" class="block text-sm font-medium">Number of Members</label>
+                        <input type="range" id="member-count" name="member-count" min="1000" max="10000" value="5000" class="w-full">
+                        <span id="member-count-value" class="text-sm font-medium">5000</span>
                     </div>
-                    <div class="card-content">
-                        <canvas id="riskStratificationChart" height="150"></canvas>
-                    </div>
-                </div>
-
-                <!-- Adherence Pattern Analysis -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Adherence Pattern Analysis</h2>
-                        <p class="card-description">Medication adherence trends over the last 12 months.</p>
-                    </div>
-                    <div class="card-content">
-                        <canvas id="adherencePatternChart" height="150"></canvas>
+                    <div class="text-center">
+                        <p class="text-lg">Projected ROI: <span id="projected-roi" class="font-bold text-green-600">4.2x</span></p>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Interactive Analysis</h2>
-                    </div>
-                    <div class="card-content space-y-4">
-                        <div>
-                            <label class="font-medium">Ask a question</label>
-                            <input type="text" class="chat-input" placeholder="Type your question here...">
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="prompt-suggestion">"Cost savings for high-risk diabetes"</span>
-                            <span class="prompt-suggestion">"ROI for hypertension program"</span>
-                        </div>
-                    </div>
+            <!-- Program Efficiency Benchmarking -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Program Efficiency Benchmarking</h2>
+                    <p class="card-description">Comparison against internal targets.</p>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Synthetic Data</h3>
-                    </div>
-                    <div class="card-content">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Total Members</td>
-                                    <td>10,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Avg. Age</td>
-                                    <td>58</td>
-                                </tr>
-                                 <tr>
-                                    <td>Avg. Risk Score</td>
-                                    <td>62</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="card-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Actual</th>
+                                <th>Target</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Adherence Lift</td>
+                                <td>+25%</td>
+                                <td>+20%</td>
+                                <td class="text-green-600">Exceeds</td>
+                            </tr>
+                            <tr>
+                                <td>Cost per Member</td>
+                                <td>$150</td>
+                                <td>$160</td>
+                                <td class="text-green-600">Below</td>
+                            </tr>
+                            <tr>
+                                <td>ROI</td>
+                                <td>3.5x</td>
+                                <td>3.0x</td>
+                                <td class="text-green-600">Exceeds</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
