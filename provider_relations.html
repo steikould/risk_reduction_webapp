@@ -53,6 +53,20 @@
         .button.outline:hover {
             background-color: #f1f5f9; /* gray-100 */
         }
+        .table {
+            width: 100%;
+            text-align: left;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .table th {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+            font-weight: 600;
+        }
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -65,10 +79,114 @@
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
-        <div class="card">
-            <div class="card-content text-center">
-                <h2 class="text-2xl font-semibold mb-2">Coming Soon</h2>
-                <p class="text-gray-600">This dashboard is under construction.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Smart Pill Bottle Prescription Patterns -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Smart Pill Bottle Prescription Patterns</h2>
+                    <p class="card-description">Prescriptions by provider type.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="prescriptionPatternsChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <!-- Provider Adoption Rate -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Provider Adoption Rate</h2>
+                    <p class="card-description">Adoption of the smart pill bottle program over time.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="adoptionRateChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Provider Engagement Metrics -->
+            <div class="lg:col-span-2 card">
+                <div class="card-header">
+                    <h2 class="card-title">Provider Engagement Metrics</h2>
+                    <p class="card-description">Top engaging providers in the smart bottle program.</p>
+                </div>
+                <div class="card-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Provider Name</th>
+                                <th>Specialty</th>
+                                <th>Patients Enrolled</th>
+                                <th>Adherence Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dr. Emily Carter</td>
+                                <td>Cardiology</td>
+                                <td>152</td>
+                                <td>92%</td>
+                            </tr>
+                            <tr>
+                                <td>Dr. Benjamin Hayes</td>
+                                <td>Endocrinology</td>
+                                <td>128</td>
+                                <td>88%</td>
+                            </tr>
+                            <tr>
+                                <td>Oak Street Health Clinic</td>
+                                <td>Primary Care</td>
+                                <td>95</td>
+                                <td>85%</td>
+                            </tr>
+                             <tr>
+                                <td>Dr. Olivia Chen</td>
+                                <td>Geriatrics</td>
+                                <td>88</td>
+                                <td>94%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Network Optimization -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Network Optimization</h2>
+                    <p class="card-description">Provider density and opportunities.</p>
+                </div>
+                <div class="card-content">
+                    <div class="bg-gray-200 h-40 flex items-center justify-center rounded mb-4">
+                        <p class="text-gray-500">Map Placeholder</p>
+                    </div>
+                     <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Region</th>
+                                <th>Provider Count</th>
+                                <th>Opportunity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>North County</td>
+                                <td>45</td>
+                                <td class="text-green-600">Low</td>
+                            </tr>
+                            <tr>
+                                <td>South Bay</td>
+                                <td>22</td>
+                                <td class="text-red-600">High</td>
+                            </tr>
+                             <tr>
+                                <td>Eastlake</td>
+                                <td>31</td>
+                                <td class="text-yellow-600">Medium</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

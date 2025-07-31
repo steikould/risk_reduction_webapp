@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Check if the successRateChart element exists
+    // Care Coordinator Dashboard
     const successRateChartCanvas = document.getElementById('successRateChart');
     if (successRateChartCanvas) {
         const ctx = successRateChartCanvas.getContext('2d');
@@ -20,6 +20,176 @@ document.addEventListener('DOMContentLoaded', function () {
                     y: {
                         beginAtZero: true,
                         max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Medical Management Dashboard
+    const riskStratificationChartCanvas = document.getElementById('riskStratificationChart');
+    if (riskStratificationChartCanvas) {
+        const ctx = riskStratificationChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Low', 'Medium', 'High'],
+                datasets: [{
+                    label: 'Number of Members',
+                    data: [1200, 650, 350],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    const adherencePatternChartCanvas = document.getElementById('adherencePatternChart');
+    if (adherencePatternChartCanvas) {
+        const ctx = adherencePatternChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Adherence Rate',
+                    data: [82, 84, 85, 83, 86, 88, 90, 91, 89, 92, 93, 94],
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 70,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Provider Relations Dashboard
+    const prescriptionPatternsChartCanvas = document.getElementById('prescriptionPatternsChart');
+    if (prescriptionPatternsChartCanvas) {
+        const ctx = prescriptionPatternsChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Primary Care', 'Cardiology', 'Endocrinology', 'Geriatrics'],
+                datasets: [{
+                    label: 'Prescriptions',
+                    data: [300, 150, 120, 90],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    }
+
+    const adoptionRateChartCanvas = document.getElementById('adoptionRateChart');
+    if (adoptionRateChartCanvas) {
+        const ctx = adoptionRateChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'Adoption Rate',
+                    data: [15, 25, 40, 60],
+                    borderColor: 'rgb(54, 162, 235)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Actuarial/Financial Dashboard
+    const financialImpactChartCanvas = document.getElementById('financialImpactChart');
+    if (financialImpactChartCanvas) {
+        const ctx = financialImpactChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Inpatient', 'ER Visits', 'Readmissions', 'Pharmacy'],
+                datasets: [{
+                    label: 'Cost Savings ($)',
+                    data: [500000, 250000, 300000, 150000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 },
                 plugins: {
