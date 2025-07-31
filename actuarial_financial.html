@@ -114,6 +114,42 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
+                <!-- Top-line Metrics -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Projected Cost Avoidance</h2>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-4xl font-bold text-green-600">$1.2M</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Return on Investment (ROI)</h2>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-4xl font-bold text-green-600">3.5x</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Adherence Improvement</h2>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-4xl font-bold text-green-600">+25%</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">ER Visits Avoided</h2>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-4xl font-bold text-green-600">125</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Clinical Risk Stratification -->
                 <div class="card">
                     <div class="card-header">
@@ -133,30 +169,6 @@
                     </div>
                     <div class="card-content">
                         <canvas id="adherencePatternChart" height="150"></canvas>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Cost Avoidance by Risk Segment -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Cost Avoidance by Risk Segment</h2>
-                            <p class="card-description">Targeting accuracy validation.</p>
-                        </div>
-                        <div class="card-content">
-                            <canvas id="costAvoidanceByRiskChart" height="150"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Population Health Metrics -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Population Health Metrics</h2>
-                            <p class="card-description">Breakdown by condition type.</p>
-                        </div>
-                        <div class="card-content">
-                            <canvas id="populationHealthChart" height="150"></canvas>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -204,20 +216,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Validation Rules</h2>
-                    </div>
-                    <div class="card-content space-y-4">
-                        <div class="text-sm">
-                            <p><strong>Rule 1:</strong> ROI must be > 2.0</p>
-                            <p><strong>Rule 2:</strong> PMPM savings must be positive</p>
-                        </div>
-                        <button class="button primary w-full">Apply Rules</button>
-                        <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
-                        <button class="button outline w-full">Request New Rule</button>
                     </div>
                 </div>
             </div>
