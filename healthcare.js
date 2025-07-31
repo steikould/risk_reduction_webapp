@@ -213,6 +213,77 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Shared Charts
+    const riskStratificationChartCanvas = document.getElementById('riskStratificationChart');
+    if (riskStratificationChartCanvas) {
+        const ctx = riskStratificationChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Low', 'Medium', 'High'],
+                datasets: [{
+                    label: 'Number of Members',
+                    data: [1200, 650, 350],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    const adherencePatternChartCanvas = document.getElementById('adherencePatternChart');
+    if (adherencePatternChartCanvas) {
+        const ctx = adherencePatternChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Adherence Rate',
+                    data: [82, 84, 85, 83, 86, 88, 90, 91, 89, 92, 93, 94],
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 70,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+
     const memberCountSlider = document.getElementById('member-count');
     const memberCountValue = document.getElementById('member-count-value');
     const projectedRoi = document.getElementById('projected-roi');
