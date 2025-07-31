@@ -112,15 +112,14 @@
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
-        <!-- Cost Avoidance and ROI -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Top-line Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Projected Cost Avoidance</h2>
                 </div>
                 <div class="card-content">
                     <p class="text-4xl font-bold text-green-600">$1.2M</p>
-                    <p class="text-sm text-gray-500">Next 12 months</p>
                 </div>
             </div>
             <div class="card">
@@ -129,40 +128,66 @@
                 </div>
                 <div class="card-content">
                     <p class="text-4xl font-bold text-green-600">3.5x</p>
-                    <p class="text-sm text-gray-500">Year to date</p>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">PMPM Savings</h2>
+                    <h2 class="card-title">Adherence Improvement</h2>
                 </div>
                 <div class="card-content">
-                    <p class="text-4xl font-bold text-green-600">$15.72</p>
-                    <p class="text-sm text-gray-500">Per member per month</p>
+                    <p class="text-4xl font-bold text-green-600">+25%</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">ER Visits Avoided</h2>
+                </div>
+                <div class="card-content">
+                    <p class="text-4xl font-bold text-green-600">125</p>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Financial Impact Analysis -->
+            <!-- Cost Avoidance by Risk Segment -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Financial Impact Analysis</h2>
-                    <p class="card-description">Breakdown of cost savings by category.</p>
+                    <h2 class="card-title">Cost Avoidance by Risk Segment</h2>
+                    <p class="card-description">Targeting accuracy validation.</p>
                 </div>
                 <div class="card-content">
-                    <canvas id="financialImpactChart" height="150"></canvas>
+                    <canvas id="costAvoidanceByRiskChart" height="150"></canvas>
                 </div>
             </div>
 
-            <!-- Cost with and without Smart Pill Bottle -->
+            <!-- Population Health Metrics -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Cost With vs. Without Smart Pill Bottle</h2>
-                    <p class="card-description">Comparison of total cost of care.</p>
+                    <h2 class="card-title">Population Health Metrics</h2>
+                    <p class="card-description">Breakdown by condition type.</p>
                 </div>
                 <div class="card-content">
-                    <canvas id="costComparisonChart" height="150"></canvas>
+                    <canvas id="populationHealthChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Deployment Efficiency Tracking</h2>
+            </div>
+            <div class="card-content grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div>
+                    <h3 class="font-semibold">Smart Bottle Utilization</h3>
+                    <p class="text-3xl font-bold">85%</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Member Engagement</h3>
+                    <p class="text-3xl font-bold">78%</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Intervention Success</h3>
+                    <p class="text-3xl font-bold">92%</p>
                 </div>
             </div>
         </div>
@@ -178,40 +203,16 @@
                         <input type="text" class="chat-input" placeholder="Type your question here...">
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <span class="prompt-suggestion">"What if adherence improves by 10%?"</span>
-                        <span class="prompt-suggestion">"Project ROI for next 2 years"</span>
-                        <span class="prompt-suggestion">"Model cost savings with 500 new members"</span>
+                        <span class="prompt-suggestion">"Cost savings for high-risk diabetes patients"</span>
+                        <span class="prompt-suggestion">"ROI for hypertension program"</span>
+                        <span class="prompt-suggestion">"Engagement rate for low-risk members"</span>
                     </div>
                     <div class="border-t pt-4 mt-4">
                         <h3 class="font-medium mb-2">Query Parameters</h3>
                         <div class="grid grid-cols-2 gap-4">
-                            <input type="text" class="input" placeholder="Parameter 1">
-                            <input type="text" class="input" placeholder="Parameter 2">
+                            <input type="text" class="input" placeholder="Risk Segment">
+                            <input type="text" class="input" placeholder="Condition">
                         </div>
-                    </div>
-                    <div class="border-t pt-4 mt-4">
-                         <h3 class="font-medium mb-2">Data Table</h3>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Value</th>
-                                    <th>Change</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>ER Visits Avoided</td>
-                                    <td>125</td>
-                                    <td class="text-green-600">-10%</td>
-                                </tr>
-                                <tr>
-                                    <td>Hospital Stays Averted</td>
-                                    <td>45</td>
-                                    <td class="text-green-600">-8%</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
