@@ -45,6 +45,13 @@
             cursor: pointer;
             transition: background-color 0.15s ease-in-out;
         }
+        .button.primary {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+        .button.primary:hover {
+            background-color: #2563eb; /* blue-600 */
+        }
         .button.outline {
             border: 1px solid #e2e8f0; /* gray-200 */
             background-color: white;
@@ -66,6 +73,32 @@
         .table td {
             padding: 0.75rem 1rem;
             border-bottom: 1px solid #e2e8f0; /* gray-200 */
+        }
+        .chat-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+        }
+        .prompt-suggestion {
+            background-color: #f1f5f9;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .prompt-suggestion:hover {
+            background-color: #e2e8f0;
+        }
+        .input, .textarea {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #cbd5e1; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: white;
+            font-size: 0.875rem; /* text-sm */
+            color: #1e293b; /* gray-900 */
         }
     </style>
 </head>
@@ -103,89 +136,115 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Provider Engagement Metrics -->
-            <div class="lg:col-span-2 card">
-                <div class="card-header">
+        <div class="lg:col-span-2 card">
+            <div class="card-header flex justify-between items-center">
+                <div>
                     <h2 class="card-title">Provider Engagement Metrics</h2>
                     <p class="card-description">Top engaging providers in the smart bottle program.</p>
                 </div>
-                <div class="card-content">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Provider Name</th>
-                                <th>Specialty</th>
-                                <th>Patients Enrolled</th>
-                                <th>Adherence Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Dr. Emily Carter</td>
-                                <td>Cardiology</td>
-                                <td>152</td>
-                                <td>92%</td>
-                            </tr>
-                            <tr>
-                                <td>Dr. Benjamin Hayes</td>
-                                <td>Endocrinology</td>
-                                <td>128</td>
-                                <td>88%</td>
-                            </tr>
-                            <tr>
-                                <td>Oak Street Health Clinic</td>
-                                <td>Primary Care</td>
-                                <td>95</td>
-                                <td>85%</td>
-                            </tr>
-                             <tr>
-                                <td>Dr. Olivia Chen</td>
-                                <td>Geriatrics</td>
-                                <td>88</td>
-                                <td>94%</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <button class="button primary">Interact/Chat/Email with Providers</button>
+            </div>
+            <div class="card-content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Provider Name</th>
+                            <th>Specialty</th>
+                            <th>Patients Enrolled</th>
+                            <th>Adherence Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dr. Emily Carter</td>
+                            <td>Cardiology</td>
+                            <td>152</td>
+                            <td>92%</td>
+                        </tr>
+                        <tr>
+                            <td>Dr. Benjamin Hayes</td>
+                            <td>Endocrinology</td>
+                            <td>128</td>
+                            <td>88%</td>
+                        </tr>
+                        <tr>
+                            <td>Oak Street Health Clinic</td>
+                            <td>Primary Care</td>
+                            <td>95</td>
+                            <td>85%</td>
+                        </tr>
+                         <tr>
+                            <td>Dr. Olivia Chen</td>
+                            <td>Geriatrics</td>
+                            <td>88</td>
+                            <td>94%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 card">
+                <div class="card-header">
+                    <h2 class="card-title">Interactive Analysis</h2>
+                </div>
+                <div class="card-content space-y-4">
+                    <div>
+                        <label class="font-medium">Ask a question</label>
+                        <input type="text" class="chat-input" placeholder="Type your question here...">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="prompt-suggestion">"Which providers have low adoption?"</span>
+                        <span class="prompt-suggestion">"Show providers in the South Bay"</span>
+                        <span class="prompt-suggestion">"Identify providers with high-risk patients"</span>
+                    </div>
+                    <div class="border-t pt-4 mt-4">
+                        <h3 class="font-medium mb-2">Query Parameters</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" class="input" placeholder="Region">
+                            <input type="text" class="input" placeholder="Specialty">
+                        </div>
+                    </div>
+                    <div class="border-t pt-4 mt-4">
+                         <h3 class="font-medium mb-2">Data Table</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Provider ID</th>
+                                    <th>Region</th>
+                                    <th>Adoption Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PRV1023</td>
+                                    <td>North County</td>
+                                    <td>85%</td>
+                                </tr>
+                                <tr>
+                                    <td>PRV2451</td>
+                                    <td>South Bay</td>
+                                    <td>32%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Network Optimization -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Network Optimization</h2>
-                    <p class="card-description">Provider density and opportunities.</p>
+                    <h2 class="card-title">Validation Rules</h2>
                 </div>
-                <div class="card-content">
-                    <div class="bg-gray-200 h-40 flex items-center justify-center rounded mb-4">
-                        <p class="text-gray-500">Map Placeholder</p>
+                <div class="card-content space-y-4">
+                    <div class="text-sm">
+                        <p><strong>Rule 1:</strong> Adoption rate > 50%</p>
+                        <p><strong>Rule 2:</strong> At least 20 patients enrolled</p>
                     </div>
-                     <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Region</th>
-                                <th>Provider Count</th>
-                                <th>Opportunity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>North County</td>
-                                <td>45</td>
-                                <td class="text-green-600">Low</td>
-                            </tr>
-                            <tr>
-                                <td>South Bay</td>
-                                <td>22</td>
-                                <td class="text-red-600">High</td>
-                            </tr>
-                             <tr>
-                                <td>Eastlake</td>
-                                <td>31</td>
-                                <td class="text-yellow-600">Medium</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <button class="button primary w-full">Apply Rules</button>
+                    <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
+                    <button class="button outline w-full">Request New Rule</button>
                 </div>
             </div>
         </div>
