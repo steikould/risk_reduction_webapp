@@ -112,147 +112,113 @@
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Clinical Risk Stratification -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Clinical Risk Stratification</h2>
-                    <p class="card-description">Distribution of members by risk level.</p>
-                </div>
-                <div class="card-content">
-                    <canvas id="riskStratificationChart" height="150"></canvas>
-                </div>
-            </div>
-
-            <!-- Adherence Pattern Analysis -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Adherence Pattern Analysis</h2>
-                    <p class="card-description">Medication adherence trends over the last 12 months.</p>
-                </div>
-                <div class="card-content">
-                    <canvas id="adherencePatternChart" height="150"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Top-line Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Projected Cost Avoidance</h2>
-                </div>
-                <div class="card-content">
-                    <p class="text-4xl font-bold text-green-600">$1.2M</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Return on Investment (ROI)</h2>
-                </div>
-                <div class="card-content">
-                    <p class="text-4xl font-bold text-green-600">3.5x</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Adherence Improvement</h2>
-                </div>
-                <div class="card-content">
-                    <p class="text-4xl font-bold text-green-600">+25%</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">ER Visits Avoided</h2>
-                </div>
-                <div class="card-content">
-                    <p class="text-4xl font-bold text-green-600">125</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Cost Avoidance by Risk Segment -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Cost Avoidance by Risk Segment</h2>
-                    <p class="card-description">Targeting accuracy validation.</p>
-                </div>
-                <div class="card-content">
-                    <canvas id="costAvoidanceByRiskChart" height="150"></canvas>
-                </div>
-            </div>
-
-            <!-- Population Health Metrics -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Population Health Metrics</h2>
-                    <p class="card-description">Breakdown by condition type.</p>
-                </div>
-                <div class="card-content">
-                    <canvas id="populationHealthChart" height="150"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Deployment Efficiency Tracking</h2>
-            </div>
-            <div class="card-content grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div>
-                    <h3 class="font-semibold">Smart Bottle Utilization</h3>
-                    <p class="text-3xl font-bold">85%</p>
-                </div>
-                <div>
-                    <h3 class="font-semibold">Member Engagement</h3>
-                    <p class="text-3xl font-bold">78%</p>
-                </div>
-                <div>
-                    <h3 class="font-semibold">Intervention Success</h3>
-                    <p class="text-3xl font-bold">92%</p>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 card">
-                <div class="card-header">
-                    <h2 class="card-title">Interactive Analysis</h2>
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Clinical Risk Stratification -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Clinical Risk Stratification</h2>
+                        <p class="card-description">Distribution of members by risk level.</p>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="riskStratificationChart" height="150"></canvas>
+                    </div>
                 </div>
-                <div class="card-content space-y-4">
-                    <div>
-                        <label class="font-medium">Ask a question</label>
-                        <input type="text" class="chat-input" placeholder="Type your question here...">
+
+                <!-- Adherence Pattern Analysis -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Adherence Pattern Analysis</h2>
+                        <p class="card-description">Medication adherence trends over the last 12 months.</p>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="prompt-suggestion">"Cost savings for high-risk diabetes patients"</span>
-                        <span class="prompt-suggestion">"ROI for hypertension program"</span>
-                        <span class="prompt-suggestion">"Engagement rate for low-risk members"</span>
+                    <div class="card-content">
+                        <canvas id="adherencePatternChart" height="150"></canvas>
                     </div>
-                    <div class="border-t pt-4 mt-4">
-                        <h3 class="font-medium mb-2">Query Parameters</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="text" class="input" placeholder="Risk Segment">
-                            <input type="text" class="input" placeholder="Condition">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Cost Avoidance by Risk Segment -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Cost Avoidance by Risk Segment</h2>
+                            <p class="card-description">Targeting accuracy validation.</p>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="costAvoidanceByRiskChart" height="150"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Population Health Metrics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Population Health Metrics</h2>
+                            <p class="card-description">Breakdown by condition type.</p>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="populationHealthChart" height="150"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Validation Rules</h2>
-                </div>
-                <div class="card-content space-y-4">
-                    <div class="text-sm">
-                        <p><strong>Rule 1:</strong> ROI must be > 2.0</p>
-                        <p><strong>Rule 2:</strong> PMPM savings must be positive</p>
+            <div class="space-y-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Interactive Analysis</h2>
                     </div>
-                    <button class="button primary w-full">Apply Rules</button>
-                    <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
-                    <button class="button outline w-full">Request New Rule</button>
+                    <div class="card-content space-y-4">
+                        <div>
+                            <label class="font-medium">Ask a question</label>
+                            <input type="text" class="chat-input" placeholder="Type your question here...">
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="prompt-suggestion">"Cost savings for high-risk diabetes"</span>
+                            <span class="prompt-suggestion">"ROI for hypertension program"</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Synthetic Data</h3>
+                    </div>
+                    <div class="card-content">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Members</td>
+                                    <td>10,000</td>
+                                </tr>
+                                <tr>
+                                    <td>Avg. Age</td>
+                                    <td>58</td>
+                                </tr>
+                                 <tr>
+                                    <td>Avg. Risk Score</td>
+                                    <td>62</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Validation Rules</h2>
+                    </div>
+                    <div class="card-content space-y-4">
+                        <div class="text-sm">
+                            <p><strong>Rule 1:</strong> ROI must be > 2.0</p>
+                            <p><strong>Rule 2:</strong> PMPM savings must be positive</p>
+                        </div>
+                        <button class="button primary w-full">Apply Rules</button>
+                        <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
+                        <button class="button outline w-full">Request New Rule</button>
+                    </div>
                 </div>
             </div>
         </div>
