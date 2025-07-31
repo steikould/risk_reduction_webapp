@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Alerts Drawer
+    const alertsButton = document.getElementById('alerts-button');
+    const alertsDrawer = document.getElementById('alerts-drawer');
+    const drawerCloseButton = document.getElementById('drawer-close');
+
+    if (alertsButton && alertsDrawer && drawerCloseButton) {
+        alertsButton.addEventListener('click', () => {
+            alertsDrawer.classList.add('open');
+        });
+
+        drawerCloseButton.addEventListener('click', () => {
+            alertsDrawer.classList.remove('open');
+        });
+    }
+
     // Care Coordinator Dashboard
     const successRateChartCanvas = document.getElementById('successRateChart');
     if (successRateChartCanvas) {

@@ -102,21 +102,40 @@
             background-color: #dcfce7; /* green-100 */
             color: #166534; /* green-800 */
         }
-        .chat-input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -450px; /* Start off-screen */
+            width: 450px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            transition: right 0.3s ease-in-out;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
         }
-        .prompt-suggestion {
-            background-color: #f1f5f9;
-            border-radius: 0.375rem;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
+        .drawer.open {
+            right: 0;
+        }
+        .drawer-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .drawer-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .drawer-content {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .drawer-close {
             cursor: pointer;
-        }
-        .prompt-suggestion:hover {
-            background-color: #e2e8f0;
         }
     </style>
 </head>
@@ -127,7 +146,50 @@
                 <h1 class="text-3xl font-bold mb-2">Care Coordinator Dashboard</h1>
                 <p class="text-gray-600">Prioritized member queues, intervention timing, and outreach planning.</p>
             </div>
-            <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
+            <div>
+                <button id="alerts-button" class="button primary">View Alerts (1)</button>
+                <a href="healthcare_landing.html" class="button outline ml-4">&larr; Back to Dashboards</a>
+            </div>
+        </div>
+
+        <div id="alerts-drawer" class="drawer">
+            <div class="drawer-header">
+                <h2 class="drawer-title">High Priority Alerts</h2>
+                <button id="drawer-close" class="drawer-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div class="drawer-content">
+                <div class="alert-container">
+                    <div class="alert-header">
+                        <div class="alert-title">
+                            MEDICATION NON-COMPLIANCE ALERT
+                        </div>
+                    </div>
+                    <div class="alert-body">
+                        <div class="patient-info">
+                            <div class="patient-name">
+                                Maria Rodriguez, 67
+                            </div>
+                            <div class="patient-details">
+                                <span>Patient ID:</span><strong>MRN-789456</strong>
+                                <span>Care Plan:</span><strong>Diabetes Type 2</strong>
+                                <span>Risk Level:</span><strong style="color: #c53030;">Critical</strong>
+                            </div>
+                        </div>
+                        <div class="compliance-issue">
+                            <div class="issue-title">Missed Medication Doses</div>
+                            <div class="issue-description">
+                                Patient has missed <strong>4 consecutive doses</strong> of Metformin (850mg).
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="button primary">Call Patient Now</button>
+                            <button class="button outline">Schedule Home Visit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -136,7 +198,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Prioritized Member Queue</h2>
-                        <p class="card-description">Members identified for outreach based on risk scores.</p>
                     </div>
                     <div class="card-content">
                         <table class="table">
@@ -175,71 +236,12 @@
                         </table>
                     </div>
                 </div>
-
-                <!-- New Patient Approval -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">New Patient Approval Queue</h2>
-                        <p class="card-description">Review and approve new patients for the smart pill bottle program.</p>
-                    </div>
-                    <div class="card-content">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Member Name</th>
-                                    <th>Risk Score</th>
-                                    <th>Condition</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Sarah Lee</td>
-                                    <td><span class="badge badge-red">High (88%)</span></td>
-                                    <td>Hypertension</td>
-                                    <td><button class="button primary text-sm">Approve</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Tom Wilson</td>
-                                    <td><span class="badge badge-yellow">Medium (72%)</span></td>
-                                    <td>Diabetes</td>
-                                    <td><button class="button primary text-sm">Approve</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
-
             <div class="space-y-6">
-                <!-- Intervention Timing Recommendations -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Intervention Timing</h2>
-                        <p class="card-description">Recommended outreach windows.</p>
-                    </div>
-                    <div class="card-content space-y-4">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-semibold">John Doe</p>
-                                <p class="text-sm text-gray-500">Hypertension Program</p>
-                            </div>
-                            <span class="text-sm font-medium text-red-600">Immediate</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-semibold">Jane Smith</p>
-                                <p class="text-sm text-gray-500">Diabetes Management</p>
-                            </div>
-                            <span class="text-sm font-medium text-yellow-600">Within 3 days</span>
-                        </div>
-                    </div>
-                </div>
                 <!-- Member Outreach Planning -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Plan Outreach</h2>
-                        <p class="card-description">Schedule a new member interaction.</p>
                     </div>
                     <div class="card-content space-y-4">
                         <div>
@@ -261,71 +263,6 @@
                         </div>
                         <button class="button primary w-full">Schedule</button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 card">
-                <div class="card-header">
-                    <h2 class="card-title">Interactive Analysis</h2>
-                </div>
-                <div class="card-content space-y-4">
-                    <div>
-                        <label class="font-medium">Ask a question</label>
-                        <input type="text" class="chat-input" placeholder="Type your question here...">
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="prompt-suggestion">"Who is the highest risk patient?"</span>
-                        <span class="prompt-suggestion">"Show me patients with no recent contact"</span>
-                        <span class="prompt-suggestion">"What is the average risk score?"</span>
-                    </div>
-                    <div class="border-t pt-4 mt-4">
-                        <h3 class="font-medium mb-2">Query Parameters</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="text" class="input" placeholder="Risk Score >">
-                            <input type="text" class="input" placeholder="Last Contact <">
-                        </div>
-                    </div>
-                    <div class="border-t pt-4 mt-4">
-                         <h3 class="font-medium mb-2">Data Table</h3>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Patient ID</th>
-                                    <th>Risk Score</th>
-                                    <th>Last Contact</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PAT123</td>
-                                    <td>92</td>
-                                    <td>2024-07-15</td>
-                                </tr>
-                                <tr>
-                                    <td>PAT456</td>
-                                    <td>85</td>
-                                    <td>2024-07-20</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Validation Rules</h2>
-                </div>
-                <div class="card-content space-y-4">
-                    <div class="text-sm">
-                        <p><strong>Rule 1:</strong> High-risk patients contacted weekly</p>
-                        <p><strong>Rule 2:</strong> New patients approved in 48 hours</p>
-                    </div>
-                    <button class="button primary w-full">Apply Rules</button>
-                    <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
-                    <button class="button outline w-full">Request New Rule</button>
                 </div>
             </div>
         </div>
