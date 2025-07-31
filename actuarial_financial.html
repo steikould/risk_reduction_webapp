@@ -53,6 +53,20 @@
         .button.outline:hover {
             background-color: #f1f5f9; /* gray-100 */
         }
+        .table {
+            width: 100%;
+            text-align: left;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .table th {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+            font-weight: 600;
+        }
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -65,10 +79,87 @@
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
-        <div class="card">
-            <div class="card-content text-center">
-                <h2 class="text-2xl font-semibold mb-2">Coming Soon</h2>
-                <p class="text-gray-600">This dashboard is under construction.</p>
+        <!-- Cost Avoidance and ROI -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Projected Cost Avoidance</h2>
+                </div>
+                <div class="card-content">
+                    <p class="text-4xl font-bold text-green-600">$1.2M</p>
+                    <p class="text-sm text-gray-500">Next 12 months</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Return on Investment (ROI)</h2>
+                </div>
+                <div class="card-content">
+                    <p class="text-4xl font-bold text-green-600">3.5x</p>
+                    <p class="text-sm text-gray-500">Year to date</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">PMPM Savings</h2>
+                </div>
+                <div class="card-content">
+                    <p class="text-4xl font-bold text-green-600">$15.72</p>
+                    <p class="text-sm text-gray-500">Per member per month</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Financial Impact Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Financial Impact Analysis</h2>
+                    <p class="card-description">Breakdown of cost savings by category.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="financialImpactChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <!-- Program Efficiency Metrics -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Program Efficiency Metrics</h2>
+                    <p class="card-description">Cost vs. benefit analysis of program components.</p>
+                </div>
+                <div class="card-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Program</th>
+                                <th>Cost per Member</th>
+                                <th>Avoided Cost per Member</th>
+                                <th>Net Savings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Smart Pill Bottle</td>
+                                <td>$150</td>
+                                <td>$550</td>
+                                <td class="text-green-600">$400</td>
+                            </tr>
+                            <tr>
+                                <td>Care Coordination</td>
+                                <td>$250</td>
+                                <td>$800</td>
+                                <td class="text-green-600">$550</td>
+                            </tr>
+                            <tr>
+                                <td>Telehealth Visits</td>
+                                <td>$75</td>
+                                <td>$200</td>
+                                <td class="text-green-600">$125</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

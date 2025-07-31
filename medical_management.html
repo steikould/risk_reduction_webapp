@@ -53,6 +53,20 @@
         .button.outline:hover {
             background-color: #f1f5f9; /* gray-100 */
         }
+        .table {
+            width: 100%;
+            text-align: left;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .table th {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+            font-weight: 600;
+        }
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0; /* gray-200 */
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -65,10 +79,91 @@
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
-        <div class="card">
-            <div class="card-content text-center">
-                <h2 class="text-2xl font-semibold mb-2">Coming Soon</h2>
-                <p class="text-gray-600">This dashboard is under construction.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Clinical Risk Stratification -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Clinical Risk Stratification</h2>
+                    <p class="card-description">Distribution of members by risk level.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="riskStratificationChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <!-- Adherence Pattern Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Adherence Pattern Analysis</h2>
+                    <p class="card-description">Medication adherence trends over the last 12 months.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="adherencePatternChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Provider Coordination Needs -->
+            <div class="lg:col-span-2 card">
+                <div class="card-header">
+                    <h2 class="card-title">Provider Coordination Needs</h2>
+                    <p class="card-description">Members requiring multi-provider coordination.</p>
+                </div>
+                <div class="card-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Member Name</th>
+                                <th>Condition</th>
+                                <th>Providers Involved</th>
+                                <th>Next Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Alice Johnson</td>
+                                <td>Comorbid Diabetes & CKD</td>
+                                <td>Dr. Smith (Endo), Dr. Davis (Nephro)</td>
+                                <td>Schedule joint consultation</td>
+                            </tr>
+                            <tr>
+                                <td>Robert Brown</td>
+                                <td>Post-Surgical Rehab</td>
+                                <td>Dr. Wilson (Ortho), PT Clinic</td>
+                                <td>Review rehab progress</td>
+                            </tr>
+                            <tr>
+                                <td>Linda Miller</td>
+                                <td>Complex Cardiology</td>
+                                <td>Dr. Clark (Cardio), Dr. Moore (EP)</td>
+                                <td>Medication reconciliation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Clinical Outcome Improvement -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Clinical Outcome Tracking</h2>
+                    <p class="card-description">Key outcome improvements this quarter.</p>
+                </div>
+                <div class="card-content space-y-4">
+                    <div>
+                        <p class="text-sm font-medium">A1c Reduction (Avg)</p>
+                        <p class="text-2xl font-bold text-green-600">-0.8%</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">Hospital Readmissions</p>
+                        <p class="text-2xl font-bold text-green-600">-15%</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">Medication Adherence</p>
+                        <p class="text-2xl font-bold text-green-600">+12%</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
