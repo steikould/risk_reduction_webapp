@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Apps</title>
+    <title>Healthcare Data Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -12,10 +12,10 @@
         }
         .agent-cards {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 1.5rem;
             padding: 2rem;
-            flex-wrap: wrap;
         }
         .agent-card {
             background-color: white;
@@ -52,36 +52,48 @@
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="text-center">
-        <h1 class="text-4xl font-bold mb-4">Select an Analysis App</h1>
-        <p class="text-lg text-gray-600 mb-8">Choose one of the available applications to get started.</p>
+        <h1 class="text-4xl font-bold mb-4">Healthcare Data Intelligence</h1>
+        <p class="text-lg text-gray-600 mb-8">Select a dashboard to view.</p>
         <div class="agent-cards">
-            <div class="agent-card" onclick="window.location.href='risk_reduction.html'">
+            <div class="agent-card" onclick="window.location.href='care_coordinators.html'">
                 <div class="agent-title">
                     <div class="agent-status"></div>
-                    🎯 Risk Reduction Analysis
+                    🧑‍⚕️ Care Coordinators
                 </div>
                 <div class="agent-description">
-                    AI-powered risk reduction assessment for project planning.
+                    Prioritized member queues, intervention timing, and outreach planning.
                 </div>
             </div>
-            <div class="agent-card" onclick="window.location.href='power_consumption.html'">
+            <div class="agent-card" onclick="window.location.href='medical_management.html'">
                 <div class="agent-title">
                     <div class="agent-status"></div>
-                    ⚡ Pump Power Consumption Analysis
+                    🩺 Medical Management
                 </div>
                 <div class="agent-description">
-                    Analyze and optimize pump power consumption for efficiency.
+                    Clinical risk stratification, adherence patterns, and outcome tracking.
                 </div>
             </div>
-            <div class="agent-card" onclick="window.location.href='healthcare_landing.html'">
+            <div class="agent-card" onclick="window.location.href='provider_relations.html'">
                 <div class="agent-title">
                     <div class="agent-status"></div>
-                    ❤️ Healthcare Data Intelligence
+                    🤝 Provider Relations
                 </div>
                 <div class="agent-description">
-                    Interactive dashboards for medication adherence and intervention optimization.
+                    Prescription patterns, provider engagement, and network optimization.
                 </div>
             </div>
+            <div class="agent-card" onclick="window.location.href='actuarial_financial.html'">
+                <div class="agent-title">
+                    <div class="agent-status"></div>
+                    💰 Actuarial/Financial
+                </div>
+                <div class="agent-description">
+                    Cost avoidance, ROI tracking, and financial impact analysis.
+                </div>
+            </div>
+        </div>
+        <div class="mt-8">
+            <a href="index.html" class="text-blue-600 hover:underline">&larr; Back to All Apps</a>
         </div>
     </div>
 </body>
