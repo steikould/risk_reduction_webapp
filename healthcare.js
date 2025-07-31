@@ -101,6 +101,67 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const patientRiskDrilldownChartCanvas = document.getElementById('patientRiskDrilldownChart');
+    if (patientRiskDrilldownChartCanvas) {
+        const riskFilter = document.getElementById('risk-filter');
+        const patientData = {
+            high: {
+                labels: ['PAT123', 'PAT456', 'PAT789'],
+                data: [92, 88, 85]
+            },
+            medium: {
+                labels: ['PAT234', 'PAT567', 'PAT890'],
+                data: [72, 68, 65]
+            },
+            low: {
+                labels: ['PAT345', 'PAT678', 'PAT901'],
+                data: [32, 28, 25]
+            }
+        };
+
+        let chart;
+
+        function updateChart() {
+            const riskLevel = riskFilter.value;
+            if (chart) {
+                chart.data.labels = patientData[riskLevel].labels;
+                chart.data.datasets[0].data = patientData[riskLevel].data;
+                chart.update();
+            } else {
+                const ctx = patientRiskDrilldownChartCanvas.getContext('2d');
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: patientData[riskLevel].labels,
+                        datasets: [{
+                            label: 'Risk Score',
+                            data: patientData[riskLevel].data,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        riskFilter.addEventListener('change', updateChart);
+        updateChart();
+    }
+
     // Provider Relations Dashboard
     const prescriptionPatternsChartCanvas = document.getElementById('prescriptionPatternsChart');
     if (prescriptionPatternsChartCanvas) {
@@ -195,6 +256,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 plugins: {
                     legend: {
                         display: false
+                    }
+                }
+            }
+        });
+    }
+
+    const costComparisonChartCanvas = document.getElementById('costComparisonChart');
+    if (costComparisonChartCanvas) {
+        const ctx = costComparisonChartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Cost of Care'],
+                datasets: [
+                    {
+                        label: 'Without Smart Bottle',
+                        data: [12000],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'With Smart Bottle',
+                        data: [8000],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
             }

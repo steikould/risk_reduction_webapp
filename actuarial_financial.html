@@ -45,6 +45,13 @@
             cursor: pointer;
             transition: background-color 0.15s ease-in-out;
         }
+        .button.primary {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+        .button.primary:hover {
+            background-color: #2563eb; /* blue-600 */
+        }
         .button.outline {
             border: 1px solid #e2e8f0; /* gray-200 */
             background-color: white;
@@ -66,6 +73,32 @@
         .table td {
             padding: 0.75rem 1rem;
             border-bottom: 1px solid #e2e8f0; /* gray-200 */
+        }
+        .chat-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+        }
+        .prompt-suggestion {
+            background-color: #f1f5f9;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .prompt-suggestion:hover {
+            background-color: #e2e8f0;
+        }
+        .input, .textarea {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #cbd5e1; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: white;
+            font-size: 0.875rem; /* text-sm */
+            color: #1e293b; /* gray-900 */
         }
     </style>
 </head>
@@ -122,43 +155,79 @@
                 </div>
             </div>
 
-            <!-- Program Efficiency Metrics -->
+            <!-- Cost with and without Smart Pill Bottle -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Program Efficiency Metrics</h2>
-                    <p class="card-description">Cost vs. benefit analysis of program components.</p>
+                    <h2 class="card-title">Cost With vs. Without Smart Pill Bottle</h2>
+                    <p class="card-description">Comparison of total cost of care.</p>
                 </div>
                 <div class="card-content">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Program</th>
-                                <th>Cost per Member</th>
-                                <th>Avoided Cost per Member</th>
-                                <th>Net Savings</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Smart Pill Bottle</td>
-                                <td>$150</td>
-                                <td>$550</td>
-                                <td class="text-green-600">$400</td>
-                            </tr>
-                            <tr>
-                                <td>Care Coordination</td>
-                                <td>$250</td>
-                                <td>$800</td>
-                                <td class="text-green-600">$550</td>
-                            </tr>
-                            <tr>
-                                <td>Telehealth Visits</td>
-                                <td>$75</td>
-                                <td>$200</td>
-                                <td class="text-green-600">$125</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <canvas id="costComparisonChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 card">
+                <div class="card-header">
+                    <h2 class="card-title">Interactive Analysis</h2>
+                </div>
+                <div class="card-content space-y-4">
+                    <div>
+                        <label class="font-medium">Ask a question</label>
+                        <input type="text" class="chat-input" placeholder="Type your question here...">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="prompt-suggestion">"What if adherence improves by 10%?"</span>
+                        <span class="prompt-suggestion">"Project ROI for next 2 years"</span>
+                        <span class="prompt-suggestion">"Model cost savings with 500 new members"</span>
+                    </div>
+                    <div class="border-t pt-4 mt-4">
+                        <h3 class="font-medium mb-2">Query Parameters</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" class="input" placeholder="Parameter 1">
+                            <input type="text" class="input" placeholder="Parameter 2">
+                        </div>
+                    </div>
+                    <div class="border-t pt-4 mt-4">
+                         <h3 class="font-medium mb-2">Data Table</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ER Visits Avoided</td>
+                                    <td>125</td>
+                                    <td class="text-green-600">-10%</td>
+                                </tr>
+                                <tr>
+                                    <td>Hospital Stays Averted</td>
+                                    <td>45</td>
+                                    <td class="text-green-600">-8%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Validation Rules</h2>
+                </div>
+                <div class="card-content space-y-4">
+                    <div class="text-sm">
+                        <p><strong>Rule 1:</strong> ROI must be > 2.0</p>
+                        <p><strong>Rule 2:</strong> PMPM savings must be positive</p>
+                    </div>
+                    <button class="button primary w-full">Apply Rules</button>
+                    <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
+                    <button class="button outline w-full">Request New Rule</button>
                 </div>
             </div>
         </div>

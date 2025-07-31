@@ -67,6 +67,58 @@
             padding: 0.75rem 1rem;
             border-bottom: 1px solid #e2e8f0; /* gray-200 */
         }
+        .chat-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+        }
+        .prompt-suggestion {
+            background-color: #f1f5f9;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .prompt-suggestion:hover {
+            background-color: #e2e8f0;
+        }
+        .input, .textarea {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #cbd5e1; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: white;
+            font-size: 0.875rem; /* text-sm */
+            color: #1e293b; /* gray-900 */
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-bottom: 1px dotted black;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -91,78 +143,105 @@
                 </div>
             </div>
 
-            <!-- Adherence Pattern Analysis -->
+            <!-- Patient Risk Drilldown -->
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Adherence Pattern Analysis</h2>
-                    <p class="card-description">Medication adherence trends over the last 12 months.</p>
+                 <div class="card-header">
+                    <h2 class="card-title">Patient Risk Drilldown</h2>
+                    <p class="card-description">Filter by risk category to see patient IDs.</p>
                 </div>
                 <div class="card-content">
-                    <canvas id="adherencePatternChart" height="150"></canvas>
+                    <select id="risk-filter" class="input mb-4">
+                        <option value="high">High Risk</option>
+                        <option value="medium">Medium Risk</option>
+                        <option value="low">Low Risk</option>
+                    </select>
+                    <canvas id="patientRiskDrilldownChart" height="125"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 card">
+            <div class="card-header">
+                <h2 class="card-title">Clinical Outcome Tracking</h2>
+                <p class="card-description">Key outcome improvements this quarter.</p>
+            </div>
+            <div class="card-content grid grid-cols-3 gap-6 text-center">
+                <div>
+                    <p class="text-sm font-medium tooltip">A1c Reduction (Avg)<span class="tooltiptext">Average reduction in hemoglobin A1c levels for diabetic patients.</span></p>
+                    <p class="text-2xl font-bold text-green-600">-0.8%</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium tooltip">Hospital Readmissions<span class="tooltiptext">Reduction in 30-day hospital readmission rates.</span></p>
+                    <p class="text-2xl font-bold text-green-600">-15%</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium tooltip">Medication Adherence<span class="tooltiptext">Improvement in medication adherence rates for chronic conditions.</span></p>
+                    <p class="text-2xl font-bold text-green-600">+12%</p>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Provider Coordination Needs -->
             <div class="lg:col-span-2 card">
                 <div class="card-header">
-                    <h2 class="card-title">Provider Coordination Needs</h2>
-                    <p class="card-description">Members requiring multi-provider coordination.</p>
-                </div>
-                <div class="card-content">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Member Name</th>
-                                <th>Condition</th>
-                                <th>Providers Involved</th>
-                                <th>Next Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Alice Johnson</td>
-                                <td>Comorbid Diabetes & CKD</td>
-                                <td>Dr. Smith (Endo), Dr. Davis (Nephro)</td>
-                                <td>Schedule joint consultation</td>
-                            </tr>
-                            <tr>
-                                <td>Robert Brown</td>
-                                <td>Post-Surgical Rehab</td>
-                                <td>Dr. Wilson (Ortho), PT Clinic</td>
-                                <td>Review rehab progress</td>
-                            </tr>
-                            <tr>
-                                <td>Linda Miller</td>
-                                <td>Complex Cardiology</td>
-                                <td>Dr. Clark (Cardio), Dr. Moore (EP)</td>
-                                <td>Medication reconciliation</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Clinical Outcome Improvement -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Clinical Outcome Tracking</h2>
-                    <p class="card-description">Key outcome improvements this quarter.</p>
+                    <h2 class="card-title">Interactive Analysis</h2>
                 </div>
                 <div class="card-content space-y-4">
                     <div>
-                        <p class="text-sm font-medium">A1c Reduction (Avg)</p>
-                        <p class="text-2xl font-bold text-green-600">-0.8%</p>
+                        <label class="font-medium">Ask a question</label>
+                        <input type="text" class="chat-input" placeholder="Type your question here...">
                     </div>
-                    <div>
-                        <p class="text-sm font-medium">Hospital Readmissions</p>
-                        <p class="text-2xl font-bold text-green-600">-15%</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="prompt-suggestion">"Show me high-risk patients with diabetes"</span>
+                        <span class="prompt-suggestion">"What is the adherence rate for hypertension patients?"</span>
+                        <span class="prompt-suggestion">"List patients with multiple providers"</span>
                     </div>
-                    <div>
-                        <p class="text-sm font-medium">Medication Adherence</p>
-                        <p class="text-2xl font-bold text-green-600">+12%</p>
+                    <div class="border-t pt-4 mt-4">
+                        <h3 class="font-medium mb-2">Query Parameters</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" class="input" placeholder="Condition">
+                            <input type="text" class="input" placeholder="Medication">
+                        </div>
                     </div>
+                    <div class="border-t pt-4 mt-4">
+                         <h3 class="font-medium mb-2">Data Table</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Patient ID</th>
+                                    <th>Condition</th>
+                                    <th>Adherence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PAT456</td>
+                                    <td>Diabetes</td>
+                                    <td>89%</td>
+                                </tr>
+                                <tr>
+                                    <td>PAT789</td>
+                                    <td>Hypertension</td>
+                                    <td>78%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Validation Rules</h2>
+                </div>
+                <div class="card-content space-y-4">
+                    <div class="text-sm">
+                        <p><strong>Rule 1:</strong> Adherence rate > 80%</p>
+                        <p><strong>Rule 2:</strong> A1c reduction > 0.5%</p>
+                    </div>
+                    <button class="button primary w-full">Apply Rules</button>
+                    <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
+                    <button class="button outline w-full">Request New Rule</button>
                 </div>
             </div>
         </div>

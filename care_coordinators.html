@@ -102,6 +102,22 @@
             background-color: #dcfce7; /* green-100 */
             color: #166534; /* green-800 */
         }
+        .chat-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+        }
+        .prompt-suggestion {
+            background-color: #f1f5f9;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .prompt-suggestion:hover {
+            background-color: #e2e8f0;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -128,7 +144,7 @@
                                 <tr>
                                     <th>Member Name</th>
                                     <th>Risk Score</th>
-                                    <th>Last Contact</th>
+                                    <th>Program</th>
                                     <th>Recommended Action</th>
                                     <th></th>
                                 </tr>
@@ -137,36 +153,22 @@
                                 <tr>
                                     <td>John Doe</td>
                                     <td><span class="badge badge-red">High (92%)</span></td>
-                                    <td>2024-07-15</td>
+                                    <td>💊 Smart Bottle</td>
                                     <td>Immediate Outreach</td>
                                     <td><button class="button primary text-sm">View</button></td>
                                 </tr>
                                 <tr>
                                     <td>Jane Smith</td>
                                     <td><span class="badge badge-red">High (85%)</span></td>
-                                    <td>2024-07-20</td>
+                                    <td>💊 Smart Bottle</td>
                                     <td>Schedule Appointment</td>
                                     <td><button class="button primary text-sm">View</button></td>
                                 </tr>
                                 <tr>
                                     <td>Peter Jones</td>
                                     <td><span class="badge badge-yellow">Medium (65%)</span></td>
-                                    <td>2024-07-22</td>
+                                    <td>Standard</td>
                                     <td>Monitor Adherence</td>
-                                    <td><button class="button primary text-sm">View</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Mary Johnson</td>
-                                    <td><span class="badge badge-yellow">Medium (58%)</span></td>
-                                    <td>2024-07-25</td>
-                                    <td>Send Reminder</td>
-                                    <td><button class="button primary text-sm">View</button></td>
-                                </tr>
-                                <tr>
-                                    <td>David Williams</td>
-                                    <td><span class="badge badge-green">Low (32%)</span></td>
-                                    <td>2024-07-28</td>
-                                    <td>No Action Needed</td>
                                     <td><button class="button primary text-sm">View</button></td>
                                 </tr>
                             </tbody>
@@ -174,14 +176,37 @@
                     </div>
                 </div>
 
-                <!-- Success Rate Tracking -->
+                <!-- New Patient Approval -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Intervention Success Rate</h2>
-                        <p class="card-description">Tracks the success of interventions over the last 6 months.</p>
+                        <h2 class="card-title">New Patient Approval Queue</h2>
+                        <p class="card-description">Review and approve new patients for the smart pill bottle program.</p>
                     </div>
                     <div class="card-content">
-                        <canvas id="successRateChart" height="120"></canvas>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Member Name</th>
+                                    <th>Risk Score</th>
+                                    <th>Condition</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sarah Lee</td>
+                                    <td><span class="badge badge-red">High (88%)</span></td>
+                                    <td>Hypertension</td>
+                                    <td><button class="button primary text-sm">Approve</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Tom Wilson</td>
+                                    <td><span class="badge badge-yellow">Medium (72%)</span></td>
+                                    <td>Diabetes</td>
+                                    <td><button class="button primary text-sm">Approve</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -208,16 +233,8 @@
                             </div>
                             <span class="text-sm font-medium text-yellow-600">Within 3 days</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-semibold">Michael Brown</p>
-                                <p class="text-sm text-gray-500">Medication Adherence</p>
-                            </div>
-                            <span class="text-sm font-medium text-green-600">Next 7 days</span>
-                        </div>
                     </div>
                 </div>
-
                 <!-- Member Outreach Planning -->
                 <div class="card">
                     <div class="card-header">
@@ -242,12 +259,73 @@
                                 <option>Home Visit</option>
                             </select>
                         </div>
-                        <div>
-                            <label for="date" class="block text-sm font-medium mb-1">Date</label>
-                            <input type="date" id="date" name="date" class="input">
-                        </div>
                         <button class="button primary w-full">Schedule</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 card">
+                <div class="card-header">
+                    <h2 class="card-title">Interactive Analysis</h2>
+                </div>
+                <div class="card-content space-y-4">
+                    <div>
+                        <label class="font-medium">Ask a question</label>
+                        <input type="text" class="chat-input" placeholder="Type your question here...">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="prompt-suggestion">"Who is the highest risk patient?"</span>
+                        <span class="prompt-suggestion">"Show me patients with no recent contact"</span>
+                        <span class="prompt-suggestion">"What is the average risk score?"</span>
+                    </div>
+                    <div class="border-t pt-4 mt-4">
+                        <h3 class="font-medium mb-2">Query Parameters</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" class="input" placeholder="Risk Score >">
+                            <input type="text" class="input" placeholder="Last Contact <">
+                        </div>
+                    </div>
+                    <div class="border-t pt-4 mt-4">
+                         <h3 class="font-medium mb-2">Data Table</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Patient ID</th>
+                                    <th>Risk Score</th>
+                                    <th>Last Contact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PAT123</td>
+                                    <td>92</td>
+                                    <td>2024-07-15</td>
+                                </tr>
+                                <tr>
+                                    <td>PAT456</td>
+                                    <td>85</td>
+                                    <td>2024-07-20</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Validation Rules</h2>
+                </div>
+                <div class="card-content space-y-4">
+                    <div class="text-sm">
+                        <p><strong>Rule 1:</strong> High-risk patients contacted weekly</p>
+                        <p><strong>Rule 2:</strong> New patients approved in 48 hours</p>
+                    </div>
+                    <button class="button primary w-full">Apply Rules</button>
+                    <textarea class="textarea" placeholder="Request new validation rule..."></textarea>
+                    <button class="button outline w-full">Request New Rule</button>
                 </div>
             </div>
         </div>
