@@ -112,6 +112,30 @@
             <a href="healthcare_landing.html" class="button outline">&larr; Back to Dashboards</a>
         </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Clinical Risk Stratification -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Clinical Risk Stratification</h2>
+                    <p class="card-description">Distribution of members by risk level.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="riskStratificationChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <!-- Adherence Pattern Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Adherence Pattern Analysis</h2>
+                    <p class="card-description">Medication adherence trends over the last 12 months.</p>
+                </div>
+                <div class="card-content">
+                    <canvas id="adherencePatternChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Top-line Metrics -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="card">

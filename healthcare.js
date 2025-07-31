@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Medical Management Dashboard
+    // Medical Management & Actuarial/Financial Dashboards
     const riskStratificationChartCanvas = document.getElementById('riskStratificationChart');
     if (riskStratificationChartCanvas) {
         const ctx = riskStratificationChartCanvas.getContext('2d');
@@ -222,80 +222,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Actuarial/Financial Dashboard
-    const financialImpactChartCanvas = document.getElementById('financialImpactChart');
-    if (financialImpactChartCanvas) {
-        const ctx = financialImpactChartCanvas.getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Inpatient', 'ER Visits', 'Readmissions', 'Pharmacy'],
-                datasets: [{
-                    label: 'Cost Savings ($)',
-                    data: [500000, 250000, 300000, 150000],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-    }
-
-    const costComparisonChartCanvas = document.getElementById('costComparisonChart');
-    if (costComparisonChartCanvas) {
-        const ctx = costComparisonChartCanvas.getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Total Cost of Care'],
-                datasets: [
-                    {
-                        label: 'Without Smart Bottle',
-                        data: [12000],
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'With Smart Bottle',
-                        data: [8000],
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
     const costAvoidanceByRiskChartCanvas = document.getElementById('costAvoidanceByRiskChart');
     if (costAvoidanceByRiskChartCanvas) {
         const ctx = costAvoidanceByRiskChartCanvas.getContext('2d');
