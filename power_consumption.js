@@ -579,6 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
             calculatePowerConsumptionScore();
             setLoading(false);
+            console.log(`setLoading(false) called. loading is now: ${loading}`);
             renderApp(); // Re-render to show recommendations
             renderCharts();
         }, 2000);
@@ -599,10 +600,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setLoading(isLoading) {
+        console.log(`setLoading called with: ${isLoading}`);
         loading = isLoading;
         nextButton.disabled = isLoading;
         if (isLoading && currentStep === 2) {
-             // Re-render only the progress bar part if it exists
+             console.log('Calling renderStepContent from setLoading.');
              renderStepContent();
         }
     }
@@ -613,9 +615,18 @@ document.addEventListener('DOMContentLoaded', () => {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } },
-                x: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }
+                y: { ticks: { color: '#8B949E' }, grid: { color: '#30363D' } },
+                x: { ticks: { color: '#8B949E' }, grid: { color: '#30363D' } }
             }
+        };
+
+        const chartColors = {
+            primary: '#58A6FF',
+            primaryTransparent: 'rgba(88, 166, 255, 0.5)',
+            danger: '#F85149',
+            dangerTransparent: 'rgba(248, 81, 73, 0.1)',
+            success: '#3FB950',
+            warning: '#D29922'
         };
 
         llmRecommendations.forEach((rec, index) => {
@@ -625,16 +636,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 switch (index) {
                     case 0:
-                        chartConfig = { type: 'line', data: { labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%'], datasets: [{ data: [0, 5, 15, 30, 40, 55, 75], borderColor: 'var(--primary)', tension: 0.4 }] }, options: chartOptions };
+                        chartConfig = { type: 'line', data: { labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%'], datasets: [{ data: [0, 5, 15, 30, 40, 55, 75], borderColor: chartColors.primary, tension: 0.4 }] }, options: chartOptions };
                         break;
                     case 1:
-                        chartConfig = { type: 'bar', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [85, 45, 70, 75, 90, 60, 55], backgroundColor: 'rgba(88, 166, 255, 0.5)', borderColor: 'var(--primary)', borderWidth: 1 }] }, options: chartOptions };
+                        chartConfig = { type: 'bar', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [85, 45, 70, 75, 90, 60, 55], backgroundColor: chartColors.primaryTransparent, borderColor: chartColors.primary, borderWidth: 1 }] }, options: chartOptions };
                         break;
                     case 2:
-                        chartConfig = { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [2, 5, 18], backgroundColor: ['var(--danger)', 'var(--warning)', 'var(--success)'] }] }, options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: 'var(--text-secondary)' } } } } };
+                        chartConfig = { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [2, 5, 18], backgroundColor: [chartColors.danger, chartColors.warning, chartColors.success] }] }, options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: '#8B949E' } } } } };
                         break;
                     case 3:
-                        chartConfig = { type: 'line', data: { labels: ['-20%', '-10%', '0%', '10%', '15%', '20%'], datasets: [{ data: [5, 10, 25, 40, 60, 75], borderColor: 'var(--danger)', backgroundColor: 'rgba(248, 81, 73, 0.1)', fill: true, tension: 0.3 }] }, options: chartOptions };
+                        chartConfig = { type: 'line', data: { labels: ['-20%', '-10%', '0%', '10%', '15%', '20%'], datasets: [{ data: [5, 10, 25, 40, 60, 75], borderColor: chartColors.danger, backgroundColor: chartColors.dangerTransparent, fill: true, tension: 0.3 }] }, options: chartOptions };
                         break;
                 }
 
@@ -653,11 +664,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextButton.addEventListener('click', () => {
         if (currentStep < steps.length - 1) {
-            if (currentStep === 1) { // If moving from Risk Assessment to LLM Analysis
+            if (currentStep === 1) {
+                currentStep++;
                 generateLLMRecommendations();
+            } else {
+                currentStep++;
+                renderApp();
             }
-            currentStep++;
-            renderApp();
         } else {
             // This is the "Export Results" button
             console.log('Exporting results...', { formData, llmRecommendations, powerConsumptionScore });
@@ -720,6 +733,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const ctx = document.getElementById('forecast-chart')?.getContext('2d');
         if (!ctx) return;
 
+        const chartColors = {
+            primary: '#58A6FF',
+            primaryTransparent: 'rgba(88, 166, 255, 0.3)'
+        };
+
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -728,24 +746,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: 'Forecast',
                         data: [125, 128, 130, 127, 132, 135, 133],
-                        borderColor: 'var(--primary)',
+                        borderColor: chartColors.primary,
                         tension: 0.4,
                     },
                     {
                         label: 'Upper Bound',
                         data: [130, 133, 135, 132, 137, 140, 138],
-                        borderColor: 'rgba(88, 166, 255, 0.3)',
+                        borderColor: chartColors.primaryTransparent,
                         fill: '+1',
                     },
                     {
                         label: 'Lower Bound',
                         data: [120, 123, 125, 122, 127, 130, 128],
-                        borderColor: 'rgba(88, 166, 255, 0.3)',
+                        borderColor: chartColors.primaryTransparent,
                         fill: false,
                     },
                 ]
             },
-            options: { responsive: true, plugins: { legend: { display: true, labels: { color: 'var(--text-secondary)' } } }, scales: { y: { title: { display: true, text: 'Power Consumption (kWh)', color: 'var(--text-secondary)' }, ticks:{ color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }, x: { ticks:{ color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } } } }
+            options: { responsive: true, plugins: { legend: { display: true, labels: { color: '#8B949E' } } }, scales: { y: { title: { display: true, text: 'Power Consumption (kWh)', color: '#8B949E' }, ticks:{ color: '#8B949E' }, grid: { color: '#30363D' } }, x: { ticks:{ color: '#8B949E' }, grid: { color: '#30363D' } } } }
         });
     }
 
@@ -1021,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
             datasets: [{
                 label: `Data for ${selectedGoldenTable.name}`,
                 data: selectedGoldenTable.columns.map(() => Math.random() * 100),
-                backgroundColor: 'var(--primary)',
+                backgroundColor: '#58A6FF',
             }]
         };
 
@@ -1031,10 +1049,10 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: 'var(--text-secondary)' } } },
+                plugins: { legend: { labels: { color: '#8B949E' } } },
                 scales: {
-                    y: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } },
-                    x: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }
+                    y: { ticks: { color: '#8B949E' }, grid: { color: '#30363D' } },
+                    x: { ticks: { color: '#8B949E' }, grid: { color: '#30363D' } }
                 }
             }
         });
@@ -1232,11 +1250,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderDashboardCharts(tabId) {
-        const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'var(--text-secondary)' } } }, scales: { y: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }, x: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } } } };
+        const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8B949E' } } }, scales: { y: { ticks: { color: '#8B949E' }, grid: { color: '#30363D' } }, x: { ticks: { color: '#8B949E' }, grid: { color: '#30363D' } } } };
+        const chartColors = {
+            primary: '#58A6FF',
+            danger: '#F85149',
+            category: ['#a5b4fc', '#c7d2fe', '#e0e7ff']
+        };
 
         new Chart(document.getElementById(`chart1-${tabId}`).getContext('2d'), {
             type: 'line',
-            data: { labels: Array.from({ length: 10 }, (_, i) => `Point ${i + 1}`), datasets: [{ label: 'Value', data: Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)), borderColor: 'var(--primary)' }, { label: 'ML Outliers', data: [null, 85, null, null, 20, null, 95, null, null, null], backgroundColor: 'var(--danger)', pointRadius: 5, type: 'scatter' }] },
+            data: { labels: Array.from({ length: 10 }, (_, i) => `Point ${i + 1}`), datasets: [{ label: 'Value', data: Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)), borderColor: chartColors.primary }, { label: 'ML Outliers', data: [null, 85, null, null, 20, null, 95, null, null, null], backgroundColor: chartColors.danger, pointRadius: 5, type: 'scatter' }] },
             options: chartOptions
         });
 
@@ -1247,16 +1270,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const chart3Ctx = document.getElementById(`chart3-${tabId}`).getContext('2d');
-        chart3Ctx.fillStyle = 'var(--surface)';
+        chart3Ctx.fillStyle = '#161B22';
         chart3Ctx.fillRect(0, 0, 300, 200);
-        chart3Ctx.fillStyle = 'var(--text-secondary)';
-        chart3Ctx.font = '16px var(--font-family-sans)';
+        chart3Ctx.fillStyle = '#8B949E';
+        chart3Ctx.font = '16px Inter, sans-serif';
         chart3Ctx.fillText('Mock Correlation Matrix', 50, 100);
 
         new Chart(document.getElementById(`chart4-${tabId}`).getContext('2d'), {
             type: 'doughnut',
-            data: { labels: ['Category A', 'Category B', 'Category C'], datasets: [{ data: [30, 50, 20], backgroundColor: ['#a5b4fc', '#c7d2fe', '#e0e7ff'] }] },
-            options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: 'var(--text-secondary)' } } } }
+            data: { labels: ['Category A', 'Category B', 'Category C'], datasets: [{ data: [30, 50, 20], backgroundColor: chartColors.category }] },
+            options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: '#8B949E' } } } }
         });
     }
     // Initialize the app
