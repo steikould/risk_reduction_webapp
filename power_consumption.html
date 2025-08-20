@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pump Power Consumption Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="power_consumption.css">
+    <link rel="stylesheet" href="professional.css">
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body>
     <div id="app" class="max-w-4xl mx-auto p-6 space-y-6">
         <div id="sidebar-drawer" class="drawer">
             <div class="drawer-header">
@@ -19,7 +21,7 @@
                 </button>
             </div>
             <div id="drawer-content" class="drawer-content">
-                </div>
+            </div>
         </div>
 
         <div id="query-drawer" class="drawer">
@@ -35,7 +37,7 @@
 
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold mb-2">Pump Power Consumption Analysis</h1>
-            <p class="text-gray-600">AI-powered analysis of pump power consumption for efficiency</p>
+            <p class="text-secondary">AI-powered analysis of pump power consumption for efficiency</p>
         </div>
 
         <div class="tabs-container">
@@ -47,7 +49,7 @@
 
             <div id="analysis-tab" class="tabs-content space-y-6 pt-6">
                 <div class="flex items-center justify-between mb-6">
-                    </div>
+                </div>
 
                 <div class="card">
                     <div class="card-header">
@@ -55,7 +57,7 @@
                         <p class="card-description" id="current-step-description"></p>
                     </div>
                     <div class="card-content" id="current-step-content">
-                        </div>
+                    </div>
                 </div>
 
                 <div class="flex justify-between">
@@ -83,39 +85,27 @@
                                 <div class="space-y-2 text-sm">
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Historical RRR reports</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             project_analytics.rrr_historical
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>project_analytics.rrr_historical:</strong> Contains all historical Risk Reduction Ratio reports, including scores, project details, and outcomes.
-                                        </div>
                                     </div>
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Project success metrics</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             project_analytics.success_metrics
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>project_analytics.success_metrics:</strong> Tracks key performance indicators (KPIs) and success rates for completed projects.
-                                        </div>
                                     </div>
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Cost and timeline data</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             project_analytics.cost_timeline
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>project_analytics.cost_timeline:</strong> Detailed cost and timeline data for all projects, used for benchmarking and estimation.
-                                        </div>
                                     </div>
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Risk outcome patterns</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             risk_management.outcome_patterns
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>risk_management.outcome_patterns:</strong> Analyzes and categorizes risk patterns and their outcomes from past projects.
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -124,95 +114,71 @@
                                 <div class="space-y-2 text-sm">
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Technical specifications</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             /sites/Engineering/TechSpecs/
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/Engineering/TechSpecs/:</strong> Repository of technical specification documents for various engineering projects.
-                                        </div>
                                     </div>
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Business requirements</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             /sites/ProjectMgmt/BizReqs/
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/ProjectMgmt/BizReqs/:</strong> Collection of business requirement documents outlining project goals and stakeholder needs.
-                                        </div>
                                     </div>
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Post-mortem reports</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             /sites/PMO/PostMortems/
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-.text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/PMO/PostMortems/:</strong> Contains post-mortem reports analyzing the successes and failures of completed projects.
-                                        </div>
                                     </div>
                                     <div class="group relative flex items-center justify-between">
                                         <span>• Stakeholder feedback</span>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
+                                        <a href="#" class="text-link hover:underline text-xs">
                                             /sites/Feedback/Reviews/
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>/sites/Feedback/Reviews/:</strong> A central location for stakeholder feedback and reviews on various projects and initiatives.
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="p-4 bg-gray-50 rounded">
+                            <div class="p-4 rounded" style="background-color: var(--background)">
                                 <h4 class="font-medium mb-3">Recent SharePoint Documents</h4>
                                 <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
                                         <div>
                                             <span class="font-medium">DRA_Skid_Pump_Spec_Station47_Rev3.pdf</span>
-                                            <div class="text-xs text-gray-500">Modified: 1 day ago | Size: 3.2MB</div>
+                                            <div class="text-xs text-secondary">Modified: 1 day ago | Size: 3.2MB</div>
                                         </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/PipelineEng/DRASpecs/DRA_Skid_Pump_Spec_Station47_Rev3.pdf
+                                        <a href="#" class="text-link hover:underline text-xs">
+                                            https://company.sharepoint.com/...
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>DRA_Skid_Pump_Spec_Station47_Rev3.pdf:</strong> This document outlines the technical specifications for the new DRA skid pump, including performance curves, material requirements, and dimensional drawings. It is crucial for ensuring the correct equipment is ordered and installed.
-                                        </div>
                                     </div>
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
                                         <div>
                                             <span class="font-medium">Pump_Replacement_Procedure_v2.1.docx</span>
-                                            <div class="text-xs text-gray-500">Modified: 3 days ago | Size: 1.5MB</div>
+                                            <div class="text-xs text-secondary">Modified: 3 days ago | Size: 1.5MB</div>
                                         </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/Maintenance/PumpProcs/Pump_Replacement_Procedure_v2.1.docx
+                                        <a href="#" class="text-link hover:underline text-xs">
+                                            https://company.sharepoint.com/...
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>Pump_Replacement_Procedure_v2.1.docx:</strong> This document provides a step-by-step guide for the pump replacement procedure, including safety pre-checks, isolation steps, and post-installation testing.
-                                        </div>
                                     </div>
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
                                         <div>
                                             <span class="font-medium">Station23_Pump_Overhaul_PostMaint_Report.pdf</span>
-                                            <div class="text-xs text-gray-500">Modified: 2 weeks ago | Size: 2.8MB</div>
+                                            <div class="text-xs text-secondary">Modified: 2 weeks ago | Size: 2.8MB</div>
                                         </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/Operations/PostMaint/Station23_Pump_Overhaul_PostMaint_Report.pdf
+                                        <a href="#" class="text-link hover:underline text-xs">
+                                            https://company.sharepoint.com/...
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>Station23_Pump_Overhaul_PostMaint_Report.pdf:</strong> A post-maintenance report detailing the lessons learned from the Station 23 pump overhaul. It highlights unexpected challenges and recommendations for future projects.
-                                        </div>
                                     </div>
-                                    <div class="group relative flex items-center justify-between p-2 bg-white rounded">
+                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
                                         <div>
                                             <span class="font-medium">DRA_System_Safety_Protocol_2024.xlsx</span>
-                                            <div class="text-xs text-gray-500">Modified: 1 week ago | Size: 890KB</div>
+                                            <div class="text-xs text-secondary">Modified: 1 week ago | Size: 890KB</div>
                                         </div>
-                                        <a href="#" class="text-blue-600 hover:underline text-xs">
-                                            https://company.sharepoint.com/sites/Safety/ComplianceDocs/DRA_System_Safety_Protocol_2024.xlsx
+                                        <a href="#" class="text-link hover:underline text-xs">
+                                            https://company.sharepoint.com/...
                                         </a>
-                                        <div class="absolute bottom-full mb-2 hidden group-hover:block w-full bg-gray-800 text-white text-xs rounded py-2 px-3">
-                                            <strong>DRA_System_Safety_Protocol_2024.xlsx:</strong> The latest safety protocols for the DRA system, including chemical handling, emergency shutdown procedures, and required personal protective equipment (PPE).
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -241,13 +207,11 @@
             </div>
 
             <div id="golden-tab" class="tabs-content space-y-6 pt-6 hidden">
-                <!-- Golden Tables & Knowledge Base Header -->
                 <div class="text-left">
                     <h2 class="text-2xl font-bold">Golden Tables & Knowledge Base</h2>
-                    <p class="text-gray-600">Curated datasets for enterprise AI applications (BigQuery)</p>
+                    <p class="text-secondary">Curated datasets for enterprise AI applications (BigQuery)</p>
                 </div>
 
-                <!-- Golden Table Selection -->
                 <div class="card">
                     <div class="card-content">
                         <label for="goldenTableSelectorTrigger" class="block text-sm font-medium mb-2">Select a Golden Table</label>
@@ -257,30 +221,27 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
                             </button>
                             <div class="select-content hidden" id="goldenTableSelectorContent">
-                                <!-- Options will be injected by JS -->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Grid Layout -->
                 <div class="grid grid-cols-1 gap-6">
-                    <!-- AI-Powered Query Interface -->
                     <div class="card query-interface-card">
                         <div class="card-header">
                             <h3 class="card-title">AI-Powered Query Interface</h3>
                         </div>
                         <div class="card-content">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <div class="md:col-span-1">
+                                <div>
                                     <label for="startDate" class="block text-sm font-medium mb-1">Start Date</label>
                                     <input type="date" id="startDate" name="startDate" class="input">
                                 </div>
-                                <div class="md:col-span-1">
+                                <div>
                                     <label for="endDate" class="block text-sm font-medium mb-1">End Date</label>
                                     <input type="date" id="endDate" name="endDate" class="input">
                                 </div>
-                                <div class="md:col-span-1">
+                                <div>
                                     <label for="datePresetTrigger" class="block text-sm font-medium mb-1">Presets</label>
                                     <div class="select-wrapper">
                                         <button class="select-trigger" id="datePresetTrigger">
@@ -299,12 +260,11 @@
                             </div>
                             <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language..."></textarea>
                             <div class="query-suggestions mt-4 space-x-2">
-                                <!-- Dynamic query suggestions will be injected here -->
                             </div>
                             <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
                             <div class="query-history mt-4">
                                 <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
-                                <div class="text-xs text-gray-500 space-y-1">
+                                <div class="text-xs text-secondary space-y-1">
                                     <p>Show me compliance projects - 2 minutes ago</p>
                                     <p>List projects with RRR > 0.8 - 15 minutes ago</p>
                                 </div>
@@ -313,7 +273,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Data Visualization Panel -->
                         <div class="card visualization-panel-card">
                             <div class="card-header">
                                 <h3 class="card-title">Data Visualization</h3>
@@ -325,20 +284,18 @@
                                     <button class="button outline text-sm" data-type="scatter">Scatter Plot</button>
                                     <button class="button outline text-sm" data-type="heatmap">Heat Map</button>
                                 </div>
-                                <div class="chart-container bg-gray-50 h-64 flex items-center justify-center rounded">
+                                <div class="chart-container h-64 flex items-center justify-center rounded" style="background-color: var(--background)">
                                     <p>Select a table to see visualization</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Validation Rules Management -->
                         <div class="card validation-rules-card">
                             <div class="card-header">
                                 <h3 class="card-title">Validation Rules</h3>
                             </div>
                             <div class="card-content">
                                 <div id="validation-rules-container">
-                                    <!-- Validation rules table will be injected here -->
                                 </div>
                                 <div class="mt-4">
                                     <label for="new-rule-input" class="block text-sm font-medium mb-1">New Rule</label>
@@ -354,7 +311,6 @@
     </div>
 
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
     </script>
     <script src="power_consumption.js"></script>
