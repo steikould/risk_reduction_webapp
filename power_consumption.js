@@ -90,25 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
         stepIndicatorsContainer.innerHTML = '';
         steps.forEach((step, index) => {
             const stepDiv = document.createElement('div');
-            stepDiv.className = `flex items-center`;
+            stepDiv.className = 'flex items-center';
+            const isActive = index <= currentStep;
+            const isCompleted = index < currentStep;
+
             stepDiv.innerHTML = `
-                <div class="flex items-center justify-center w-10 h-10 rounded-full ${
-                    index <= currentStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
-                }">
+                <div class="step-indicator ${isActive ? 'active' : ''}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-${step.icon} h-5 w-5"></svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm font-medium ${
-                        index <= currentStep ? 'text-blue-600' : 'text-gray-500'
-                    }">
+                    <p class="step-title ${isActive ? 'active' : ''}">
                         ${step.title}
                     </p>
                 </div>
-                ${index < steps.length - 1 ? `<div class="w-12 h-0.5 mx-4 ${index < currentStep ? 'bg-blue-500' : 'bg-gray-200'}"></div>` : ''}
+                ${index < steps.length - 1 ? `<div class="step-connector ${isCompleted ? 'active' : ''}"></div>` : ''}
             `;
             stepIndicatorsContainer.appendChild(stepDiv);
         });
-        // Re-create Lucide icons after rendering
         lucide.createIcons();
     }
 
@@ -209,9 +207,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 contentHtml = `
                     <div class="space-y-4">
                         <div class="text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain mx-auto h-12 w-12 text-blue-500 mb-4"><path d="M12 5c-3.31 0-6 2.69-6 6v3h12v-3c0-3.31-2.69-6-6-6Z"/><path d="M16 11V7"/><path d="M8 11V7"/><path d="M10 19v-6h4v6a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain mx-auto h-12 w-12 text-primary mb-4"><path d="M12 5c-3.31 0-6 2.69-6 6v3h12v-3c0-3.31-2.69-6-6-6Z"/><path d="M16 11V7"/><path d="M8 11V7"/><path d="M10 19v-6h4v6a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2Z"/></svg>
                             <h3 class="text-lg font-medium">AI Analysis in Progress</h3>
-                            <p class="text-gray-600">Processing your pump data against historical patterns...</p>
+                            <p class="text-secondary">Processing your pump data against historical patterns...</p>
                         </div>
 
                         ${loading ? `
@@ -219,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="progress-bar">
                                     <div class="progress-indicator" style="--progress-width: 50%;"></div>
                                 </div>
-                                <p class="text-sm text-gray-600">Analyzing structured BQ data...</p>
+                                <p class="text-sm text-secondary">Analyzing structured BQ data...</p>
                             </div>
                         ` : ''}
 
@@ -231,10 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </div>
                                     <div class="card-content">
                                         <div id="chatbot-container" class="space-y-4">
-                                            <div id="chatbot-messages" class="space-y-4 h-48 overflow-y-auto p-4 border rounded-md">
-                                                </div>
+                                            <div id="chatbot-messages" class="chatbot-messages"></div>
                                             <div class="flex items-center space-x-2">
-                                                <input id="chatbot-input" type="text" placeholder="Ask a question about the recommendations..." class="input flex-grow" />
+                                                <input id="chatbot-input" type="text" placeholder="Ask a question..." class="input flex-grow" />
                                                 <button id="chatbot-send" class="button primary">Send</button>
                                             </div>
                                         </div>
@@ -256,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </div>
                                         <div class="card-content pt-0">
                                             <p class="text-sm mb-2">${rec.suggestion}</p>
-                                            <p class="text-xs text-gray-500">Source: ${rec.source}</p>
+                                            <p class="text-xs text-secondary">Source: ${rec.source}</p>
                                             ${rec.graph ? `<div class="mt-4"><canvas id="chart-${index}" height="150"></canvas></div>` : ''}
                                         </div>
                                     </div>
@@ -525,8 +522,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (message) {
             // Display user message
             const userMessageDiv = document.createElement('div');
-            userMessageDiv.className = 'text-right';
-            userMessageDiv.innerHTML = `<div class="inline-block bg-blue-500 text-white p-2 rounded-lg">${message}</div>`;
+            userMessageDiv.className = 'chatbot-message user';
+            userMessageDiv.innerHTML = `<div class="chatbot-bubble">${message}</div>`;
             messagesContainer.appendChild(userMessageDiv);
 
             // Clear input
@@ -538,8 +535,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mock AI response
             setTimeout(() => {
                 const aiResponseDiv = document.createElement('div');
-                aiResponseDiv.className = 'text-left';
-                aiResponseDiv.innerHTML = `<div class="inline-block bg-gray-200 text-gray-800 p-2 rounded-lg">This is a mock response to "${message}".</div>`;
+                aiResponseDiv.className = 'chatbot-message ai';
+                aiResponseDiv.innerHTML = `<div class="chatbot-bubble">This is a mock response to "${message}".</div>`;
                 messagesContainer.appendChild(aiResponseDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }, 1000);
@@ -611,75 +608,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCharts() {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } },
+                x: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }
+            }
+        };
+
         llmRecommendations.forEach((rec, index) => {
             if (rec.graph) {
                 const ctx = document.getElementById(`chart-${index}`).getContext('2d');
                 let chartConfig;
 
                 switch (index) {
-                    case 0: // Equipment Risk Mitigation
-                        chartConfig = {
-                            type: 'line',
-                            data: {
-                                labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%'],
-                                datasets: [{
-                                    label: 'Downtime Reduction vs. Cost',
-                                    data: [0, 5, 15, 30, 40, 55, 75],
-                                    borderColor: 'rgb(59, 130, 246)',
-                                    tension: 0.4,
-                                    pointBackgroundColor: (context) => context.dataIndex === 4 ? 'red' : 'rgb(59, 130, 246)',
-                                    pointRadius: (context) => context.dataIndex === 4 ? 6 : 3,
-                                }]
-                            },
-                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Downtime Reduction' } }, y: { title: { display: true, text: 'Implementation Cost ($k)' } } } }
-                        };
+                    case 0:
+                        chartConfig = { type: 'line', data: { labels: ['0%', '10%', '20%', '30%', '35%', '40%', '50%'], datasets: [{ data: [0, 5, 15, 30, 40, 55, 75], borderColor: 'var(--primary)', tension: 0.4 }] }, options: chartOptions };
                         break;
-                    case 1: // Operational Continuity
-                        chartConfig = {
-                            type: 'bar',
-                            data: {
-                                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                                datasets: [{
-                                    label: 'Flow Rate by Day',
-                                    data: [85, 45, 70, 75, 90, 60, 55],
-                                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                                    borderColor: 'rgb(59, 130, 246)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Day of Week' } }, y: { title: { display: true, text: 'Avg. Flow Rate' } } } }
-                        };
+                    case 1:
+                        chartConfig = { type: 'bar', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [85, 45, 70, 75, 90, 60, 55], backgroundColor: 'rgba(88, 166, 255, 0.5)', borderColor: 'var(--primary)', borderWidth: 1 }] }, options: chartOptions };
                         break;
-                    case 2: // Safety Protocol
-                        chartConfig = {
-                            type: 'doughnut',
-                            data: {
-                                labels: ['High Risk', 'Medium Risk', 'Low Risk'],
-                                datasets: [{
-                                    label: 'Risk Scenarios',
-                                    data: [2, 5, 18],
-                                    backgroundColor: ['rgb(239, 68, 68)', 'rgb(245, 158, 11)', 'rgb(34, 197, 94)'],
-                                }]
-                            },
-                            options: { responsive: true, plugins: { legend: { position: 'top' } } }
-                        };
+                    case 2:
+                        chartConfig = { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [2, 5, 18], backgroundColor: ['var(--danger)', 'var(--warning)', 'var(--success)'] }] }, options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: 'var(--text-secondary)' } } } } };
                         break;
-                    case 3: // Cost Optimization
-                        chartConfig = {
-                            type: 'line',
-                            data: {
-                                labels: ['-20%', '-10%', '0%', '10%', '15%', '20%'],
-                                datasets: [{
-                                    label: 'Cost Overrun vs. Probability',
-                                    data: [5, 10, 25, 40, 60, 75],
-                                    borderColor: 'rgb(239, 68, 68)',
-                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                                    fill: true,
-                                    tension: 0.3
-                                }]
-                            },
-                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Cost Overrun' } }, y: { title: { display: true, text: 'Probability (%)' } } } }
-                        };
+                    case 3:
+                        chartConfig = { type: 'line', data: { labels: ['-20%', '-10%', '0%', '10%', '15%', '20%'], datasets: [{ data: [5, 10, 25, 40, 60, 75], borderColor: 'var(--danger)', backgroundColor: 'rgba(248, 81, 73, 0.1)', fill: true, tension: 0.3 }] }, options: chartOptions };
                         break;
                 }
 
@@ -744,16 +699,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const headers = Object.keys(mockData[0]);
 
         container.innerHTML = `
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50">
+            <table class="table">
+                <thead>
                     <tr>
-                        ${headers.map(h => `<th class="p-2 font-medium">${h.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
+                        ${headers.map(h => `<th>${h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
                     ${mockData.map(row => `
-                        <tr class="border-b">
-                            ${headers.map(h => `<td class="p-2">${row[h]}</td>`).join('')}
+                        <tr>
+                            ${headers.map(h => `<td>${row[h]}</td>`).join('')}
                         </tr>
                     `).join('')}
                 </tbody>
@@ -773,24 +728,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: 'Forecast',
                         data: [125, 128, 130, 127, 132, 135, 133],
-                        borderColor: 'rgb(59, 130, 246)',
+                        borderColor: 'var(--primary)',
                         tension: 0.4,
                     },
                     {
                         label: 'Upper Bound',
                         data: [130, 133, 135, 132, 137, 140, 138],
-                        borderColor: 'rgba(59, 130, 246, 0.3)',
+                        borderColor: 'rgba(88, 166, 255, 0.3)',
                         fill: '+1',
                     },
                     {
                         label: 'Lower Bound',
                         data: [120, 123, 125, 122, 127, 130, 128],
-                        borderColor: 'rgba(59, 130, 246, 0.3)',
+                        borderColor: 'rgba(88, 166, 255, 0.3)',
                         fill: false,
                     },
                 ]
             },
-            options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { title: { display: true, text: 'Power Consumption (kWh)' } } } }
+            options: { responsive: true, plugins: { legend: { display: true, labels: { color: 'var(--text-secondary)' } } }, scales: { y: { title: { display: true, text: 'Power Consumption (kWh)', color: 'var(--text-secondary)' }, ticks:{ color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }, x: { ticks:{ color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } } } }
         });
     }
 
@@ -811,16 +766,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const headers = Object.keys(mockData[0]);
 
         container.innerHTML = `
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50">
+            <table class="table">
+                <thead>
                     <tr>
-                        ${headers.map(h => `<th class="p-2 font-medium">${h.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
+                        ${headers.map(h => `<th>${h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
                     ${mockData.map(row => `
-                        <tr class="border-b">
-                            ${headers.map(h => `<td class="p-2">${row[h]}</td>`).join('')}
+                        <tr>
+                            ${headers.map(h => `<td>${row[h]}</td>`).join('')}
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1051,13 +1006,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMockChart(type) {
         const chartContainer = document.querySelector('.chart-container');
         if (!selectedGoldenTable) {
-            chartContainer.innerHTML = '<p>Select a table to see visualization</p>';
+            chartContainer.innerHTML = '<p class="text-secondary">Select a table to see visualization</p>';
             return;
         }
         chartContainer.innerHTML = `<canvas id="golden-chart"></canvas>`;
         const ctx = document.getElementById('golden-chart').getContext('2d');
 
-        // Destroy previous chart if it exists
         if (window.goldenChart instanceof Chart) {
             window.goldenChart.destroy();
         }
@@ -1067,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
             datasets: [{
                 label: `Data for ${selectedGoldenTable.name}`,
                 data: selectedGoldenTable.columns.map(() => Math.random() * 100),
-                backgroundColor: '#4F46E5',
+                backgroundColor: 'var(--primary)',
             }]
         };
 
@@ -1076,7 +1030,12 @@ document.addEventListener('DOMContentLoaded', () => {
             data: mockData,
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: 'var(--text-secondary)' } } },
+                scales: {
+                    y: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } },
+                    x: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }
+                }
             }
         });
     }
@@ -1098,7 +1057,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderValidationRules() {
         const container = document.getElementById('validation-rules-container');
         if (!selectedGoldenTable) {
-            container.innerHTML = '<p>Select a table to see validation rules.</p>';
+            container.innerHTML = '<p class="text-secondary">Select a table to see validation rules.</p>';
             return;
         }
 
@@ -1106,16 +1065,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const headers = Object.keys(rules[0]);
 
         container.innerHTML = `
-            <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50">
+            <table class="table">
+                <thead>
                     <tr>
-                        ${headers.map(h => `<th class="p-2 font-medium">${h.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
+                        ${headers.map(h => `<th>${h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
                     ${rules.map(rule => `
-                        <tr class="border-b">
-                            ${headers.map(h => `<td class="p-2">${rule[h]}</td>`).join('')}
+                        <tr>
+                            ${headers.map(h => `<td>${rule[h]}</td>`).join('')}
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1239,14 +1198,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = document.querySelector(`#${sourceTabId.replace('analyze', 'table-container')} .card-title`).textContent;
         const timeWindow = document.querySelector(`#${sourceTabId.replace('analyze', 'table-container')} .card-description`).textContent;
 
-        // Create new tab button
         const newTab = document.createElement('button');
         newTab.className = 'tabs-trigger';
         newTab.dataset.tab = tabId;
         newTab.textContent = tabName;
         tabsList.appendChild(newTab);
 
-        // Create new tab content
         const newTabContent = document.createElement('div');
         newTabContent.id = tabId;
         newTabContent.className = 'tabs-content space-y-4 pt-6';
@@ -1258,124 +1215,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="card text-center">
-                    <div class="card-content">
-                        <h3 class="text-lg font-medium">Anomaly Score</h3>
-                        <p class="text-3xl font-bold text-red-500">7.8</p>
-                        <p class="text-sm text-gray-500">ML Driven KPI</p>
-                    </div>
-                </div>
-                <div class="card text-center">
-                    <div class="card-content">
-                        <h3 class="text-lg font-medium">Data Quality</h3>
-                        <p class="text-3xl font-bold text-green-500">98%</p>
-                        <p class="text-sm text-gray-500">ML Driven KPI</p>
-                    </div>
-                </div>
-                <div class="card text-center">
-                    <div class="card-content">
-                        <h3 class="text-lg font-medium">Projected Risk</h3>
-                        <p class="text-3xl font-bold text-yellow-500">Medium</p>
-                        <p class="text-sm text-gray-500">ML Driven KPI</p>
-                    </div>
-                </div>
+                <div class="card text-center"><div class="card-content"><h3 class="text-lg font-medium">Anomaly Score</h3><p class="text-3xl font-bold" style="color:var(--danger)">7.8</p><p class="text-sm text-secondary">ML Driven KPI</p></div></div>
+                <div class="card text-center"><div class="card-content"><h3 class="text-lg font-medium">Data Quality</h3><p class="text-3xl font-bold" style="color:var(--success)">98%</p><p class="text-sm text-secondary">ML Driven KPI</p></div></div>
+                <div class="card text-center"><div class="card-content"><h3 class="text-lg font-medium">Projected Risk</h3><p class="text-3xl font-bold" style="color:var(--warning)">Medium</p><p class="text-sm text-secondary">ML Driven KPI</p></div></div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Time Series with Outliers</h3>
-                    </div>
-                    <div class="card-content">
-                        <canvas id="chart1-${tabId}"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Distribution</h3>
-                    </div>
-                    <div class="card-content">
-                        <canvas id="chart2-${tabId}"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Correlation Matrix</h3>
-                    </div>
-                    <div class="card-content">
-                        <canvas id="chart3-${tabId}"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Category Breakdown</h3>
-                    </div>
-                    <div class="card-content">
-                        <canvas id="chart4-${tabId}"></canvas>
-                    </div>
-                </div>
+                <div class="card"><div class="card-header"><h3 class="card-title">Time Series with Outliers</h3></div><div class="card-content"><canvas id="chart1-${tabId}"></canvas></div></div>
+                <div class="card"><div class="card-header"><h3 class="card-title">Distribution</h3></div><div class="card-content"><canvas id="chart2-${tabId}"></canvas></div></div>
+                <div class="card"><div class="card-header"><h3 class="card-title">Correlation Matrix</h3></div><div class="card-content"><canvas id="chart3-${tabId}"></canvas></div></div>
+                <div class="card"><div class="card-header"><h3 class="card-title">Category Breakdown</h3></div><div class="card-content"><canvas id="chart4-${tabId}"></canvas></div></div>
             </div>
         `;
         document.querySelector('.tabs-container').appendChild(newTabContent);
-
-        // Switch to new tab
         newTab.click();
-
-        // Render charts
         renderDashboardCharts(tabId);
     }
 
     function renderDashboardCharts(tabId) {
-        // Chart 1: Time Series with Outliers
+        const chartOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'var(--text-secondary)' } } }, scales: { y: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }, x: { ticks: { color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } } } };
+
         new Chart(document.getElementById(`chart1-${tabId}`).getContext('2d'), {
             type: 'line',
-            data: {
-                labels: Array.from({ length: 10 }, (_, i) => `Point ${i + 1}`),
-                datasets: [{
-                    label: 'Value',
-                    data: Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)),
-                    borderColor: '#3b82f6',
-                }, {
-                    label: 'ML Outliers',
-                    data: [null, 85, null, null, 20, null, 95, null, null, null],
-                    backgroundColor: 'red',
-                    pointRadius: 5,
-                    type: 'scatter'
-                }]
-            }
+            data: { labels: Array.from({ length: 10 }, (_, i) => `Point ${i + 1}`), datasets: [{ label: 'Value', data: Array.from({ length: 10 }, () => Math.floor(Math.random() * 100)), borderColor: 'var(--primary)' }, { label: 'ML Outliers', data: [null, 85, null, null, 20, null, 95, null, null, null], backgroundColor: 'var(--danger)', pointRadius: 5, type: 'scatter' }] },
+            options: chartOptions
         });
 
-        // Chart 2: Distribution
         new Chart(document.getElementById(`chart2-${tabId}`).getContext('2d'), {
             type: 'bar',
-            data: {
-                labels: ['<20', '20-40', '40-60', '60-80', '>80'],
-                datasets: [{
-                    label: 'Distribution',
-                    data: Array.from({ length: 5 }, () => Math.floor(Math.random() * 100)),
-                    backgroundColor: '#818cf8',
-                }]
-            }
+            data: { labels: ['<20', '20-40', '40-60', '60-80', '>80'], datasets: [{ label: 'Distribution', data: Array.from({ length: 5 }, () => Math.floor(Math.random() * 100)), backgroundColor: 'rgba(88, 166, 255, 0.5)' }] },
+            options: chartOptions
         });
 
-        // Chart 3: Correlation Matrix (mock)
         const chart3Ctx = document.getElementById(`chart3-${tabId}`).getContext('2d');
-        chart3Ctx.fillStyle = '#f3f4f6';
+        chart3Ctx.fillStyle = 'var(--surface)';
         chart3Ctx.fillRect(0, 0, 300, 200);
-        chart3Ctx.fillStyle = '#6b7280';
-        chart3Ctx.font = '16px sans-serif';
+        chart3Ctx.fillStyle = 'var(--text-secondary)';
+        chart3Ctx.font = '16px var(--font-family-sans)';
         chart3Ctx.fillText('Mock Correlation Matrix', 50, 100);
 
-
-        // Chart 4: Category Breakdown
         new Chart(document.getElementById(`chart4-${tabId}`).getContext('2d'), {
             type: 'doughnut',
-            data: {
-                labels: ['Category A', 'Category B', 'Category C'],
-                datasets: [{
-                    data: [30, 50, 20],
-                    backgroundColor: ['#a5b4fc', '#c7d2fe', '#e0e7ff'],
-                }]
-            }
+            data: { labels: ['Category A', 'Category B', 'Category C'], datasets: [{ data: [30, 50, 20], backgroundColor: ['#a5b4fc', '#c7d2fe', '#e0e7ff'] }] },
+            options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: 'var(--text-secondary)' } } } }
         });
     }
     // Initialize the app
