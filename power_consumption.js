@@ -624,9 +624,8 @@ document.addEventListener('DOMContentLoaded', () => {
             primary: '#58A6FF',
             primaryTransparent: 'rgba(88, 166, 255, 0.5)',
             danger: '#F85149',
-            dangerTransparent: 'rgba(248, 81, 73, 0.1)',
-            success: '#3FB950',
-            warning: '#D29922'
+            dangerTransparent: 'rgba(248, 81, 73, 0.3)', // Increased opacity
+            doughnut: ['#F85149', '#D29922', '#3FB950'].map(color => `${color}B3`) // Added alpha for doughnut
         };
 
         llmRecommendations.forEach((rec, index) => {
@@ -642,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         chartConfig = { type: 'bar', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [85, 45, 70, 75, 90, 60, 55], backgroundColor: chartColors.primaryTransparent, borderColor: chartColors.primary, borderWidth: 1 }] }, options: chartOptions };
                         break;
                     case 2:
-                        chartConfig = { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [2, 5, 18], backgroundColor: [chartColors.danger, chartColors.warning, chartColors.success] }] }, options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: '#8B949E' } } } } };
+                        chartConfig = { type: 'doughnut', data: { labels: ['High Risk', 'Medium Risk', 'Low Risk'], datasets: [{ data: [2, 5, 18], backgroundColor: chartColors.doughnut }] }, options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: '#8B949E' } } } } };
                         break;
                     case 3:
                         chartConfig = { type: 'line', data: { labels: ['-20%', '-10%', '0%', '10%', '15%', '20%'], datasets: [{ data: [5, 10, 25, 40, 60, 75], borderColor: chartColors.danger, backgroundColor: chartColors.dangerTransparent, fill: true, tension: 0.3 }] }, options: chartOptions };
