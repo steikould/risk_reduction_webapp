@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butane Fuel Blending Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="professional.css">
+</head>
+<body>
+    <div id="app" class="max-w-4xl mx-auto p-6 space-y-6">
+        <!-- Alert Drawer -->
+        <div id="alert-drawer" class="drawer">
+            <div class="drawer-header">
+                <h2 id="alert-drawer-title" class="drawer-title">Create Alert</h2>
+                <button id="alert-drawer-close" class="drawer-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="alert-drawer-content" class="drawer-content">
+                <div class="space-y-4">
+                    <!-- Communication Type -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Communication Type</label>
+                        <div class="flex gap-2">
+                            <button id="comm-email" class="button outline active" onclick="selectCommType('email')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                Email
+                            </button>
+                            <button id="comm-chat" class="button outline" onclick="selectCommType('chat')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                Chat
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recipients -->
+                    <div>
+                        <label for="alert-recipients" class="block text-sm font-medium mb-2">Recipients</label>
+                        <input type="text" id="alert-recipients" class="input" placeholder="Enter email addresses or usernames, separated by commas">
+                    </div>
+
+                    <!-- Subject/Title -->
+                    <div>
+                        <label for="alert-subject" class="block text-sm font-medium mb-2">Subject</label>
+                        <input type="text" id="alert-subject" class="input" placeholder="Alert subject">
+                    </div>
+
+                    <!-- Message Body -->
+                    <div>
+                        <label for="alert-body" class="block text-sm font-medium mb-2">Message</label>
+                        <textarea id="alert-body" class="textarea" rows="8" placeholder="Alert message"></textarea>
+                    </div>
+
+                    <!-- Attachments -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Attachments</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="attach-raw-data" class="mr-2">
+                                <span class="text-sm">Attach Blend Data Spreadsheet (CSV)</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="attach-analytics" class="mr-2">
+                                <span class="text-sm">Attach Analytics Report (CSV)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-2 pt-4 border-t" style="border-color: var(--border);">
+                        <button id="alert-submit-btn" class="button primary w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            Send Alert
+                        </button>
+                        <button id="alert-draft-btn" class="button outline w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save as Draft in Outlook
+                        </button>
+                        <button id="alert-cancel-btn" class="button outline w-full">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Drawer for Analytics -->
+        <div id="bottom-drawer" class="bottom-drawer">
+            <div class="bottom-drawer-header">
+                <h2 id="bottom-drawer-title" class="drawer-title">Blend Analytics</h2>
+                <div class="flex items-center gap-2">
+                    <button id="bottom-drawer-export" class="button outline" style="padding: 0.4rem 0.8rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export
+                    </button>
+                    <button id="bottom-drawer-close" class="drawer-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="bottom-drawer-content" class="bottom-drawer-content">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h1 class="text-xl font-bold">Butane Fuel Blending Analysis</h1>
+            <p class="text-secondary text-sm">AI-powered RVP optimization and blend ratio calculations for pipeline operations</p>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-list grid w-full grid-cols-3">
+                <button class="tabs-trigger active" data-tab="blending">Blend Calculator</button>
+                <button class="tabs-trigger" data-tab="insights">Blend Insights</button>
+                <button class="tabs-trigger" data-tab="specifications">Specifications & Limits</button>
+            </div>
+
+            <!-- Blending Tab -->
+            <div id="blending-tab" class="tabs-content space-y-6 pt-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">RVP Blend Calculator</h2>
+                        <p class="card-description">Calculate optimal butane blend ratios for target RVP specifications</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <!-- Base Gasoline Inputs -->
+                            <div>
+                                <label for="base-rvp" class="block text-sm font-medium mb-1">Base Gasoline RVP (psi)</label>
+                                <input type="number" id="base-rvp" class="input" placeholder="e.g., 8.5" step="0.1" min="0">
+                            </div>
+                            <div>
+                                <label for="base-volume" class="block text-sm font-medium mb-1">Base Volume (BBL)</label>
+                                <input type="number" id="base-volume" class="input" placeholder="e.g., 10000" step="100" min="0">
+                            </div>
+
+                            <!-- Butane Inputs -->
+                            <div>
+                                <label for="butane-rvp" class="block text-sm font-medium mb-1">Butane RVP (psi)</label>
+                                <input type="number" id="butane-rvp" class="input" placeholder="e.g., 52.0" step="0.1" min="0">
+                            </div>
+                            <div>
+                                <label for="butane-volume" class="block text-sm font-medium mb-1">Butane Volume (BBL)</label>
+                                <input type="number" id="butane-volume" class="input" placeholder="e.g., 1000" step="10" min="0">
+                            </div>
+
+                            <!-- Target RVP -->
+                            <div class="col-span-2">
+                                <label for="target-rvp" class="block text-sm font-medium mb-1">Target RVP (psi)</label>
+                                <input type="number" id="target-rvp" class="input" placeholder="e.g., 13.0" step="0.1" min="0">
+                            </div>
+
+                            <!-- Season Selector -->
+                            <div class="col-span-2">
+                                <label class="block text-sm font-medium mb-2">Season / Specification Class</label>
+                                <div class="flex gap-2">
+                                    <button class="button outline" id="season-winter" onclick="setSeasonSpec('winter')">Winter (13-15 psi)</button>
+                                    <button class="button outline" id="season-summer" onclick="setSeasonSpec('summer')">Summer (7-9 psi)</button>
+                                    <button class="button outline active" id="season-custom" onclick="setSeasonSpec('custom')">Custom</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button id="calculate-blend-btn" class="button primary flex-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Calculate Blend
+                            </button>
+                            <button id="optimize-blend-btn" class="button outline">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+                                Optimize for Target
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Blend Suggestions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Blend Scenarios</h3>
+                        <p class="card-description">Pre-configured common blending scenarios</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="flex flex-wrap gap-2">
+                            <button class="suggestion-button" data-scenario="winter-max">
+                                Winter Max (15 psi target)
+                            </button>
+                            <button class="suggestion-button" data-scenario="winter-standard">
+                                Winter Standard (13 psi target)
+                            </button>
+                            <button class="suggestion-button" data-scenario="summer-max">
+                                Summer Max (9 psi target)
+                            </button>
+                            <button class="suggestion-button" data-scenario="summer-standard">
+                                Summer Standard (7.8 psi target)
+                            </button>
+                            <button class="suggestion-button" data-scenario="spring-fall">
+                                Spring/Fall Transition (11 psi target)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Card -->
+                <div class="card hidden" id="blend-results-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Blend Results</h3>
+                        <p class="card-description" id="blend-results-description">Calculated blend composition and properties</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="blend-results-content" class="space-y-4">
+                            <!-- Results will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blend Chart -->
+                <div class="card hidden" id="blend-chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Blend Composition</h3>
+                        <p class="card-description">Visual representation of blend ratios</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="blend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Tab -->
+            <div id="insights-tab" class="tabs-content space-y-4 pt-6 hidden">
+                <!-- Action Buttons -->
+                <div class="flex gap-2 justify-between" id="insights-action-buttons" style="display: none;">
+                    <button id="revise-blend-btn" class="button outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                        Revise Blend
+                    </button>
+                    <div class="flex gap-2">
+                        <button id="generate-report-btn" class="button primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            Generate Report
+                        </button>
+                        <button id="download-package-btn" class="button outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download Package (.zip)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">AI-Powered Blend Analysis</h2>
+                        <p class="card-description">Machine learning insights and recommendations based on your blend calculations</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="ai-recommendations-container">
+                            <p class="text-secondary text-center py-8">Calculate a blend to see AI-powered insights, optimization recommendations, and compliance analysis.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historical Blend Performance -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">RVP Trend Analysis</h3>
+                        <p class="card-description">Historical blend performance and seasonal variations</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="rvp-trend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specifications Tab -->
+            <div id="specifications-tab" class="tabs-content space-y-6 pt-6 hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">RVP Specifications & Limits</h2>
+                        <p class="card-description">Regulatory requirements and operational constraints</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="space-y-4">
+                            <!-- EPA Specifications -->
+                            <div>
+                                <h4 class="font-medium mb-2">EPA RVP Limits (United States)</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="table w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Season</th>
+                                                <th>Time Period</th>
+                                                <th>RVP Limit (psi)</th>
+                                                <th>Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Summer (Class A)</td>
+                                                <td>June 1 - September 15</td>
+                                                <td>7.8</td>
+                                                <td>Most stringent, metro areas</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Summer (Class B)</td>
+                                                <td>June 1 - September 15</td>
+                                                <td>9.0</td>
+                                                <td>Standard summer limit</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Summer (Class C)</td>
+                                                <td>June 1 - September 15</td>
+                                                <td>10.0</td>
+                                                <td>Northern areas</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Winter</td>
+                                                <td>September 16 - May 31</td>
+                                                <td>13.5 - 15.0</td>
+                                                <td>Cold weather volatility</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Transition</td>
+                                                <td>Varies by region</td>
+                                                <td>11.5 - 13.0</td>
+                                                <td>Spring/Fall periods</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Component RVP Values -->
+                            <div>
+                                <h4 class="font-medium mb-2">Typical Component RVP Values</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="table w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Component</th>
+                                                <th>RVP Range (psi)</th>
+                                                <th>Typical Use</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>n-Butane</td>
+                                                <td>51 - 52</td>
+                                                <td>Winter blending, RVP boost</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Isobutane</td>
+                                                <td>72 - 73</td>
+                                                <td>Alkylation feedstock, extreme volatility</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Base Gasoline (BOB)</td>
+                                                <td>5 - 11</td>
+                                                <td>Primary blend component</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Reformate</td>
+                                                <td>2 - 4</td>
+                                                <td>Low volatility, octane boost</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Alkylate</td>
+                                                <td>4 - 6</td>
+                                                <td>Premium blending stock</td>
+                                            </tr>
+                                            <tr>
+                                                <td>FCC Gasoline</td>
+                                                <td>1 - 3</td>
+                                                <td>Cat cracker product</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Blending Guidelines -->
+                            <div>
+                                <h4 class="font-medium mb-2">Blending Guidelines & Best Practices</h4>
+                                <div class="space-y-2">
+                                    <div class="highlight-item">
+                                        <strong>Non-Linear Blending:</strong> RVP does not blend perfectly linearly. Use correction factors for high-percentage butane blends (>10% volume).
+                                    </div>
+                                    <div class="highlight-item">
+                                        <strong>Temperature Effects:</strong> RVP measurements are at 100°F (37.8°C). Pipeline temperature variations affect actual vapor pressure.
+                                    </div>
+                                    <div class="highlight-item">
+                                        <strong>Safety Margins:</strong> Target 0.3-0.5 psi below maximum limit to account for measurement uncertainty and blending variations.
+                                    </div>
+                                    <div class="highlight-item">
+                                        <strong>Economic Optimization:</strong> Butane typically costs $0.50-$0.70/gallon vs. $0.80-$1.00/gallon for base gasoline. Maximize butane within spec limits.
+                                    </div>
+                                    <div class="highlight-item">
+                                        <strong>Pipeline Constraints:</strong> Consider vapor lock prevention, pump cavitation risks, and vapor recovery system capacity.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Specifications -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Custom Operational Limits</h3>
+                        <p class="card-description">Define facility-specific constraints</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="min-rvp-limit" class="block text-sm font-medium mb-1">Minimum RVP (psi)</label>
+                                    <input type="number" id="min-rvp-limit" class="input" placeholder="e.g., 7.5" step="0.1">
+                                </div>
+                                <div>
+                                    <label for="max-rvp-limit" class="block text-sm font-medium mb-1">Maximum RVP (psi)</label>
+                                    <input type="number" id="max-rvp-limit" class="input" placeholder="e.g., 15.0" step="0.1">
+                                </div>
+                                <div>
+                                    <label for="max-butane-pct" class="block text-sm font-medium mb-1">Maximum Butane % (vol)</label>
+                                    <input type="number" id="max-butane-pct" class="input" placeholder="e.g., 15" step="0.5">
+                                </div>
+                                <div>
+                                    <label for="safety-margin" class="block text-sm font-medium mb-1">Safety Margin (psi)</label>
+                                    <input type="number" id="safety-margin" class="input" placeholder="e.g., 0.5" step="0.1">
+                                </div>
+                            </div>
+                            <button id="save-custom-limits-btn" class="button primary w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                Save Custom Limits
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="fuel_blending.js"></script>
+</body>
+</html>
