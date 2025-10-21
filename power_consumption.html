@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="stylesheet" href="professional.css">
 </head>
 <body>
@@ -24,6 +25,81 @@
             </div>
         </div>
 
+        <div id="alert-drawer" class="drawer">
+            <div class="drawer-header">
+                <h2 id="alert-drawer-title" class="drawer-title">Create Alert</h2>
+                <button id="alert-drawer-close" class="drawer-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="alert-drawer-content" class="drawer-content">
+                <div class="space-y-4">
+                    <!-- Communication Type -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Communication Type</label>
+                        <div class="flex gap-2">
+                            <button id="comm-email" class="button outline active" onclick="selectCommType('email')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                Email
+                            </button>
+                            <button id="comm-chat" class="button outline" onclick="selectCommType('chat')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                Chat
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recipients -->
+                    <div>
+                        <label for="alert-recipients" class="block text-sm font-medium mb-2">Recipients</label>
+                        <input type="text" id="alert-recipients" class="input" placeholder="Enter email addresses or usernames, separated by commas">
+                    </div>
+
+                    <!-- Subject/Title -->
+                    <div>
+                        <label for="alert-subject" class="block text-sm font-medium mb-2">Subject</label>
+                        <input type="text" id="alert-subject" class="input" placeholder="Alert subject">
+                    </div>
+
+                    <!-- Message Body -->
+                    <div>
+                        <label for="alert-body" class="block text-sm font-medium mb-2">Message</label>
+                        <textarea id="alert-body" class="textarea" rows="8" placeholder="Alert message"></textarea>
+                    </div>
+
+                    <!-- Attachments -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Attachments</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="attach-raw-data" class="mr-2">
+                                <span class="text-sm">Attach Raw Data Spreadsheet (CSV)</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="attach-analytics" class="mr-2">
+                                <span class="text-sm">Attach Analytics Table (CSV)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-2 pt-4 border-t" style="border-color: var(--border);">
+                        <button id="alert-submit-btn" class="button primary w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            Send Alert
+                        </button>
+                        <button id="alert-draft-btn" class="button outline w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save as Draft in Outlook
+                        </button>
+                        <button id="alert-cancel-btn" class="button outline w-full">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="query-drawer" class="drawer">
             <div class="drawer-header">
                 <h2 id="query-drawer-title" class="drawer-title">Query Details</h2>
@@ -35,275 +111,303 @@
             </div>
         </div>
 
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-2">Pump Power Consumption Analysis</h1>
-            <p class="text-secondary">AI-powered analysis of pump power consumption for efficiency</p>
+        <div id="references-drawer" class="drawer">
+            <div class="drawer-header">
+                <h2 id="references-drawer-title" class="drawer-title">References</h2>
+                <button id="references-drawer-close" class="drawer-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="references-drawer-content" class="drawer-content">
+            </div>
+        </div>
+
+        <!-- Document Preview Modal -->
+        <div id="document-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="document-modal-title" class="modal-title">Document Preview</h2>
+                    <button id="document-modal-close" class="drawer-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+                <div class="modal-body" id="document-modal-body">
+                    <!-- Content will be dynamically inserted -->
+                </div>
+                <div class="modal-footer">
+                    <button id="document-download-btn" class="button primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Document
+                    </button>
+                    <button id="document-modal-cancel" class="button outline">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="bottom-drawer" class="bottom-drawer">
+            <div class="bottom-drawer-header">
+                <h2 id="bottom-drawer-title" class="drawer-title">Analytics Details</h2>
+                <div class="flex items-center gap-2">
+                    <button id="bottom-drawer-export" class="button outline" style="padding: 0.4rem 0.8rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export
+                    </button>
+                    <button id="bottom-drawer-close" class="drawer-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="bottom-drawer-content" class="bottom-drawer-content">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h1 class="text-xl font-bold">Pump Power Consumption Analysis</h1>
+            <p class="text-secondary text-sm">AI-powered analysis of pump power consumption for efficiency</p>
         </div>
 
         <div class="tabs-container">
             <div class="tabs-list grid w-full grid-cols-3">
-                <button class="tabs-trigger active" data-tab="analysis">Analysis</button>
-                <button class="tabs-trigger" data-tab="data">Data Sources</button>
-                <button class="tabs-trigger" data-tab="golden">Golden Tables</button>
+                <button class="tabs-trigger active" data-tab="analysis">Data Query</button>
+                <button class="tabs-trigger" data-tab="data">Data Insights</button>
+                <button class="tabs-trigger" data-tab="golden">Validation & Sources</button>
             </div>
 
             <div id="analysis-tab" class="tabs-content space-y-6 pt-6">
-                <div class="flex items-center justify-between mb-6">
-                </div>
-
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title" id="current-step-title"></h2>
-                        <p class="card-description" id="current-step-description"></p>
+                        <h2 class="card-title">Query Assistant</h2>
+                        <p class="card-description">Ask for the data you need in natural language</p>
                     </div>
-                    <div class="card-content" id="current-step-content">
+                    <div class="card-content">
+                        <!-- Chat Messages Container -->
+                        <div id="chatMessages" class="chat-messages mb-4"></div>
+
+                        <!-- Pre-configured Suggestions -->
+                        <div class="mb-4">
+                            <p class="text-sm text-secondary mb-2">Quick Requests:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="suggestion-button" data-request="Get last week's data for all lines and locations">
+                                    Last week - all lines & locations
+                                </button>
+                                <button class="suggestion-button" data-request="Get flowrates for all pumps at Station A for last week">
+                                    Flowrates - Station A - last week
+                                </button>
+                                <button class="suggestion-button" data-request="Get all flowrates for all locations on Line 1">
+                                    Flowrates - Line 1 - all locations
+                                </button>
+                                <button class="suggestion-button" data-request="Get temperature and pressure for Station B last 3 weeks">
+                                    Temperature & Pressure - Station B - 3 weeks
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="flex gap-2">
+                            <input type="text" id="chatInput" class="input flex-1" placeholder="Type your request here...">
+                            <button id="chatSendBtn" class="button primary">Send</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between">
-                    <button id="prev-button" class="button outline">
-                        Previous
-                    </button>
-                    <button id="next-button" class="button primary">
-                        Next
-                    </button>
+                <!-- Query Results Table -->
+                <div class="card hidden" id="queryResultsCard">
+                    <div class="card-header">
+                        <h3 class="card-title">Query Results</h3>
+                        <p class="card-description" id="queryResultsDescription">Showing results based on selected filters</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="queryResultsTable"></div>
+                    </div>
                 </div>
             </div>
 
             <div id="data-tab" class="tabs-content space-y-4 pt-6 hidden">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database h-5 w-5 mr-2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/><path d="M3 19A9 3 0 0 0 21 19"/></svg>
-                            Agent Analysis Source Documents
-                        </h2>
-                    </div>
-                    <div class="card-content space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Structured Data (BigQuery)</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Historical RRR reports</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            project_analytics.rrr_historical
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Project success metrics</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            project_analytics.success_metrics
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Cost and timeline data</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            project_analytics.cost_timeline
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Risk outcome patterns</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            risk_management.outcome_patterns
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4 border rounded">
-                                <h4 class="font-medium mb-2">Unstructured Documents (SharePoint)</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Technical specifications</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            /sites/Engineering/TechSpecs/
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Business requirements</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            /sites/ProjectMgmt/BizReqs/
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Post-mortem reports</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            /sites/PMO/PostMortems/
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between">
-                                        <span>• Stakeholder feedback</span>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            /sites/Feedback/Reviews/
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-4">
-                            <div class="p-4 rounded" style="background-color: var(--background)">
-                                <h4 class="font-medium mb-3">Recent SharePoint Documents</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
-                                        <div>
-                                            <span class="font-medium">DRA_Skid_Pump_Spec_Station47_Rev3.pdf</span>
-                                            <div class="text-xs text-secondary">Modified: 1 day ago | Size: 3.2MB</div>
-                                        </div>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            https://company.sharepoint.com/...
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
-                                        <div>
-                                            <span class="font-medium">Pump_Replacement_Procedure_v2.1.docx</span>
-                                            <div class="text-xs text-secondary">Modified: 3 days ago | Size: 1.5MB</div>
-                                        </div>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            https://company.sharepoint.com/...
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
-                                        <div>
-                                            <span class="font-medium">Station23_Pump_Overhaul_PostMaint_Report.pdf</span>
-                                            <div class="text-xs text-secondary">Modified: 2 weeks ago | Size: 2.8MB</div>
-                                        </div>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            https://company.sharepoint.com/...
-                                        </a>
-                                    </div>
-                                    <div class="group relative flex items-center justify-between p-2 rounded" style="background-color: var(--surface)">
-                                        <div>
-                                            <span class="font-medium">DRA_System_Safety_Protocol_2024.xlsx</span>
-                                            <div class="text-xs text-secondary">Modified: 1 week ago | Size: 890KB</div>
-                                        </div>
-                                        <a href="#" class="text-link hover:underline text-xs">
-                                            https://company.sharepoint.com/...
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="alert">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle h-4 w-4 alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 22h16a2 2 0 0 0 1.73-4Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                            <div class="flex-1">
-                                <p class="alert-description">
-                                    RAG system combines structured BQ data with document embeddings for contextual recommendations. Documents are automatically indexed from SharePoint with real-time updates.
-                                </p>
-                            </div>
-                        </div>
+                <!-- Action Buttons -->
+                <div class="flex gap-2 justify-between" id="insights-action-buttons" style="display: none;">
+                    <button id="revise-query-btn" class="button outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                        Revise Query
+                    </button>
+                    <div class="flex gap-2">
+                        <button id="generate-report-btn" class="button primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            Generate Report
+                        </button>
+                        <button id="download-package-btn" class="button outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download Package (.zip)
+                        </button>
                     </div>
                 </div>
-                <div id="query-results-container" class="hidden">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Query Results</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="query-results-table"></div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">AI-Powered Data Analysis</h2>
+                        <p class="card-description">Machine learning insights and recommendations based on your query</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="llm-recommendations-container">
+                            <p class="text-secondary text-center py-8">Run a query and click "Confirm & Analyze" to see AI-powered insights and recommendations.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div id="golden-tab" class="tabs-content space-y-6 pt-6 hidden">
-                <div class="text-left">
-                    <h2 class="text-2xl font-bold">Golden Tables & Knowledge Base</h2>
-                    <p class="text-secondary">Curated datasets for enterprise AI applications (BigQuery)</p>
-                </div>
-
                 <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Data Validation Assistant</h2>
+                        <p class="card-description">Query specifications, ranges, and validation rules in natural language</p>
+                    </div>
                     <div class="card-content">
-                        <label for="goldenTableSelectorTrigger" class="block text-sm font-medium mb-2">Select a Golden Table</label>
-                        <div class="select-wrapper">
-                            <button class="select-trigger" id="goldenTableSelectorTrigger">
-                                <span id="goldenTableSelectorValue">Select a table...</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                            </button>
-                            <div class="select-content hidden" id="goldenTableSelectorContent">
+                        <!-- Chat Messages Container -->
+                        <div id="validationChatMessages" class="chat-messages mb-4"></div>
+
+                        <!-- Pre-configured Validation Queries -->
+                        <div class="mb-4">
+                            <p class="text-sm text-secondary mb-2">Quick Validation Queries:</p>
+
+                            <!-- Issues/Errors Category -->
+                            <div class="mb-3">
+                                <p class="text-xs text-secondary mb-1.5">Issues & Errors:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <button class="suggestion-button validation-suggestion issue-query" data-request="How many flowrates were out of specifications last month?" data-query-type="issue">
+                                        Out-of-spec flowrates (last month)
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion issue-query" data-request="Show me all validation failures from the past week" data-query-type="issue">
+                                        Validation failures (past week)
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion issue-query" data-request="List all data quality issues detected in Station A" data-query-type="issue">
+                                        Data quality issues - Station A
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion issue-query" data-request="Show temperature violations in the last 2 weeks" data-query-type="issue">
+                                        Temperature violations (2 weeks)
+                                    </button>
+                                </div>
                             </div>
+
+                            <!-- Informational Category -->
+                            <div>
+                                <p class="text-xs text-secondary mb-1.5">Informational:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <button class="suggestion-button validation-suggestion info-query" data-request="What is the normal range of flowrates for all pumps?" data-query-type="info">
+                                        Normal flowrate ranges
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion info-query" data-request="What are the acceptable temperature ranges for pump operations?" data-query-type="info">
+                                        Temperature specifications
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion info-query" data-request="What is the maximum allowed pressure variance for Line 1?" data-query-type="info">
+                                        Pressure variance limits - Line 1
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion info-query" data-request="Show all validation rules for pumps at Station A" data-query-type="info">
+                                        All rules - Station A
+                                    </button>
+                                    <button class="suggestion-button validation-suggestion info-query" data-request="What are the power consumption limits for high-capacity pumps?" data-query-type="info">
+                                        Power limits - High-capacity
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="flex gap-2">
+                            <input type="text" id="validationChatInput" class="input flex-1" placeholder="Ask about specifications, ranges, or validation rules...">
+                            <button id="validationChatSendBtn" class="button primary">Send</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6">
-                    <div class="card query-interface-card">
-                        <div class="card-header">
-                            <h3 class="card-title">AI-Powered Query Interface</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <div>
-                                    <label for="startDate" class="block text-sm font-medium mb-1">Start Date</label>
-                                    <input type="date" id="startDate" name="startDate" class="input">
-                                </div>
-                                <div>
-                                    <label for="endDate" class="block text-sm font-medium mb-1">End Date</label>
-                                    <input type="date" id="endDate" name="endDate" class="input">
-                                </div>
-                                <div>
-                                    <label for="datePresetTrigger" class="block text-sm font-medium mb-1">Presets</label>
-                                    <div class="select-wrapper">
-                                        <button class="select-trigger" id="datePresetTrigger">
-                                            <span id="datePresetValue">Select...</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
-                                        </button>
-                                        <div class="select-content hidden" id="datePresetContent">
-                                            <div class="select-item" data-value="3">Last 3 Months</div>
-                                            <div class="select-item" data-value="6">Last 6 Months</div>
-                                            <div class="select-item" data-value="12">Last 12 Months</div>
-                                            <div class="select-item" data-value="18">Last 18 Months</div>
-                                            <div class="select-item" data-value="36">Last 36 Months</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <textarea class="textarea" rows="4" placeholder="Ask questions about your risk data in natural language..."></textarea>
-                            <div class="query-suggestions mt-4 space-x-2">
-                            </div>
-                            <button class="button primary w-full mt-4 execute-query-btn">Execute Query</button>
-                            <div class="query-history mt-4">
-                                <h4 class="font-medium text-sm mb-2">Recent Queries</h4>
-                                <div class="text-xs text-secondary space-y-1">
-                                    <p>Show me compliance projects - 2 minutes ago</p>
-                                    <p>List projects with RRR > 0.8 - 15 minutes ago</p>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Validation Results -->
+                <div class="card hidden" id="validationResultsCard">
+                    <div class="card-header">
+                        <h3 class="card-title">Validation Results</h3>
+                        <p class="card-description" id="validationResultsDescription">Results for your validation query</p>
                     </div>
+                    <div class="card-content">
+                        <div id="validationResultsContent"></div>
+                    </div>
+                </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="card visualization-panel-card">
-                            <div class="card-header">
-                                <h3 class="card-title">Data Visualization</h3>
-                            </div>
-                            <div class="card-content">
-                                <div class="chart-type-selector space-x-2 mb-4">
-                                    <button class="button outline text-sm active" data-type="bar">Bar Chart</button>
-                                    <button class="button outline text-sm" data-type="line">Line Chart</button>
-                                    <button class="button outline text-sm" data-type="scatter">Scatter Plot</button>
-                                    <button class="button outline text-sm" data-type="heatmap">Heat Map</button>
-                                </div>
-                                <div class="chart-container h-64 flex items-center justify-center rounded" style="background-color: var(--background)">
-                                    <p>Select a table to see visualization</p>
-                                </div>
+                <!-- Validation Rules Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Active Validation Rules</h3>
+                        <p class="card-description">Current specifications and acceptable ranges</p>
+                    </div>
+                    <div class="card-content">
+                        <!-- Category Filter Buttons -->
+                        <div class="mb-3">
+                            <div class="text-sm text-secondary mb-2">Filter by Category:</div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="button outline text-sm validation-category-filter active" data-category="all">
+                                    All Rules
+                                </button>
+                                <button class="button outline text-sm validation-category-filter" data-category="flowrate">
+                                    Flowrate
+                                </button>
+                                <button class="button outline text-sm validation-category-filter" data-category="temperature">
+                                    Temperature
+                                </button>
+                                <button class="button outline text-sm validation-category-filter" data-category="pressure">
+                                    Pressure
+                                </button>
+                                <button class="button outline text-sm validation-category-filter" data-category="vibration">
+                                    Vibration
+                                </button>
+                                <button class="button outline text-sm validation-category-filter" data-category="power">
+                                    Power
+                                </button>
+                                <button class="button outline text-sm validation-category-filter" data-category="data-quality">
+                                    Data Quality
+                                </button>
                             </div>
                         </div>
 
-                        <div class="card validation-rules-card">
-                            <div class="card-header">
-                                <h3 class="card-title">Validation Rules</h3>
-                            </div>
-                            <div class="card-content">
-                                <div id="validation-rules-container">
-                                </div>
-                                <div class="mt-4">
-                                    <label for="new-rule-input" class="block text-sm font-medium mb-1">New Rule</label>
-                                    <textarea id="new-rule-input" name="new-rule-input" class="textarea" placeholder="Enter new rule..."></textarea>
-                                </div>
-                                <button id="submit-new-rule-btn" class="button primary w-full mt-4">Submit New Rule</button>
+                        <!-- Location Filter Buttons -->
+                        <div class="mb-4">
+                            <div class="text-sm text-secondary mb-2">Filter by Location:</div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="button outline text-sm validation-location-filter active" data-location="all">
+                                    All Locations
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="Station A">
+                                    Station A
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="Station B">
+                                    Station B
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="Station C">
+                                    Station C
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="Line 1">
+                                    Line 1
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="Line 2">
+                                    Line 2
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="Line 3">
+                                    Line 3
+                                </button>
+                                <button class="button outline text-sm validation-location-filter" data-location="System-Wide">
+                                    System-Wide
+                                </button>
                             </div>
                         </div>
+
+                        <!-- Validation Rules Container -->
+                        <div id="validation-rules-container">
+                            <!-- Rules will be dynamically generated -->
+                        </div>
+
+                        <div class="mt-4">
+                            <label for="new-rule-input" class="block text-sm font-medium mb-1">Add New Validation Rule</label>
+                            <textarea id="new-rule-input" name="new-rule-input" class="textarea" rows="3" placeholder="Enter new validation rule or specification..."></textarea>
+                        </div>
+                        <button id="submit-new-rule-btn" class="button primary w-full mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M12 5v14M5 12h14"/></svg>
+                            Add Validation Rule
+                        </button>
                     </div>
                 </div>
             </div>
