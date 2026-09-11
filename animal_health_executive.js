@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mock historical data and business context
     const mockHistoricalData = {
         similarProjects: [
-            { name: "DRA Skid Pump Replacement - Station 47", type: "Infrastructure", rrrScore: 0.78, successRate: 85, downtime: "4.2 hrs", cost: "$45,000" },
-            { name: "Main Line Pump Overhaul - Station 23", type: "Infrastructure", rrrScore: 0.82, successRate: 92, downtime: "6.1 hrs", cost: "$38,500" },
-            { name: "DRA System Upgrade - Station 31", type: "Infrastructure", rrrScore: 0.73, successRate: 78, downtime: "8.7 hrs", cost: "$67,200" },
-            { name: "Emergency Pump Replacement - Station 15", type: "Infrastructure", rrrScore: 0.65, successRate: 72, downtime: "12.3 hrs", cost: "$52,800" },
-            { name: "Scheduled DRA Pump Maintenance - Station 62", type: "Infrastructure", rrrScore: 0.88, successRate: 95, downtime: "2.8 hrs", cost: "$28,900" }
+            { name: "Q3 Companion Animal Marketing Launch", type: "Infrastructure", rrrScore: 0.78, successRate: 85, downtime: "4.2 hrs", cost: "$45,000" },
+            { name: "EU Distribution Network Overhaul", type: "Infrastructure", rrrScore: 0.82, successRate: 92, downtime: "6.1 hrs", cost: "$38,500" },
+            { name: "Global ERP Implementation", type: "Infrastructure", rrrScore: 0.73, successRate: 78, downtime: "8.7 hrs", cost: "$67,200" },
+            { name: "Livestock Vaccine Recall Protocol", type: "Infrastructure", rrrScore: 0.65, successRate: 72, downtime: "12.3 hrs", cost: "$52,800" },
+            { name: "APAC Manufacturing Line Expansion", type: "Infrastructure", rrrScore: 0.88, successRate: 95, downtime: "2.8 hrs", cost: "$28,900" }
         ],
         riskPatterns: {
             "Infrastructure": ["Equipment failure during operation", "Unplanned downtime extension", "Environmental compliance", "Personnel safety risks"],
@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Tabs functionality
     const tabsList = document.querySelector('.tabs-list');
     const tabsContent = {
+        overview: document.getElementById('overview-tab'),
         analysis: document.getElementById('analysis-tab'),
         data: document.getElementById('data-tab'),
         golden: document.getElementById('golden-tab')
@@ -76,9 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.classList.add('active');
 
             for (const key in tabsContent) {
-                tabsContent[key].classList.add('hidden');
+                if (tabsContent[key]) tabsContent[key].classList.add('hidden');
             }
-            tabsContent[e.target.dataset.tab].classList.remove('hidden');
+            if (tabsContent[e.target.dataset.tab]) {
+                tabsContent[e.target.dataset.tab].classList.remove('hidden');
+            }
         }
     });
 
@@ -116,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = [];
         const locations = queryData.locations.length > 0 ? queryData.locations : ['station-a', 'station-b', 'station-c'];
         const lines = queryData.lineNumbers.length > 0 ? queryData.lineNumbers : ['line-1', 'line-2', 'line-3', 'line-4', 'line-5', 'line-6', 'line-7', 'line-8'];
-        const sensors = queryData.sensorCategories.length > 0 ? queryData.sensorCategories : ['pump-flowrate', 'pump-temperature'];
+        const sensors = queryData.sensorCategories.length > 0 ? queryData.sensorCategories : ['companion-revenue', 'livestock-revenue'];
 
         // Generate 50 sample rows
         for (let i = 0; i < 50; i++) {
@@ -506,147 +509,111 @@ document.addEventListener('DOMContentLoaded', () => {
         currentAlertRecommendation = null;
     }
 
-    function generateAlertEmailContent(rec, index) {
+            function generateAlertEmailContent(rec, index) {
         const templates = [
-            // Outlier Detection
+            // Revenue Anomaly
             {
-                subject: 'ALERT: Power Consumption Anomaly Detected - PUMP-A1',
+                subject: 'ALERT: Revenue Anomaly Detected - EU Parasiticides',
                 body: `Dear Team,
 
-Our AI monitoring system has detected an unusual power consumption anomaly that requires immediate attention.
+Our AI monitoring system has detected an unusual revenue drop that requires immediate attention.
 
 SUMMARY:
-A significant spike in power consumption was detected for PUMP-A1 on July 23, 2023, with a deviation of +39.1% from expected values (185 kW vs 133 kW expected).
+A significant drop in revenue was detected for Companion Animal Parasiticides in the EU region for August (28M vs 45M expected).
 
 DETAILS:
-• Equipment: PUMP-A1
-• Date/Time: July 23, 2023
-• Actual Power: 185 kW
-• Expected Power: 133 kW
-• Deviation: +39.1%
+• Portfolio: Companion Animal Parasiticides
+• Region: EU
+• Actual Revenue: $28M
+• Expected Revenue: $45M
 • Confidence Level: 95%
 
 RECOMMENDED ACTION:
-Investigate PUMP-A1 for potential cavitation or mechanical issues. This anomaly pattern suggests possible equipment malfunction that could lead to failure if not addressed.
+Review distributor inventory levels and investigate potential supply chain constraints or competitive product launches in the region.
 
-IMPACT:
-• Increased energy costs
-• Risk of equipment failure
-• Potential operational disruption
-
-Please review the attached analytics and take appropriate action within 24 hours.
+Please review the attached analytics and take appropriate action.
 
 Best regards,
-Pump Monitoring System`
+Executive Intelligence System`
             },
-            // Efficiency Opportunity
+            // Supply Chain Optimization
             {
-                subject: 'Efficiency Improvement Opportunity - PUMP-C3',
+                subject: 'Supply Chain Risk - NA Livestock Vaccines',
                 body: `Dear Team,
 
-Our analytics have identified a significant efficiency improvement opportunity for PUMP-C3.
+Our analytics have identified a potential stockout risk for Livestock Vaccines in the NA region.
 
 SUMMARY:
-PUMP-C3 is operating at 72% efficiency, considerably below peer pumps operating at 85-90% efficiency.
+Inventory is projected to drop to 2 days on hand within 4 weeks due to delayed raw material shipments.
 
 DETAILS:
-• Equipment: PUMP-C3
-• Current Efficiency: 72%
-• Peer Average: 87%
-• Efficiency Gap: 15%
-• Operating Hours: 9,456 hours
+• Portfolio: Livestock Vaccines
+• Region: NA
+• Current Inventory: 45 Days
+• Projected Inventory (Week 4): 2 Days
+• Target Minimum: 30 Days
 • Confidence Level: 88%
 
-OPPORTUNITY:
-A 5% efficiency improvement is achievable through impeller adjustments, which would:
-• Reduce power consumption
-• Lower operating costs
-• Extend equipment lifespan
-
 RECOMMENDED ACTION:
-Schedule maintenance to inspect and adjust impeller settings. Consider consulting with the manufacturer for optimal configuration.
+Expedite shipments from secondary suppliers immediately to mitigate stockout risk.
 
-ESTIMATED SAVINGS:
-Based on current operating hours, this improvement could save approximately $12,000 annually in energy costs.
-
-Please review the attached efficiency comparison data.
+Please review the attached inventory projection data.
 
 Best regards,
-Pump Monitoring System`
+Executive Intelligence System`
             },
-            // Predictive Maintenance
+            // Margin Improvement
             {
-                subject: 'URGENT: Predictive Maintenance Alert - PUMP-B2',
+                subject: 'URGENT: Margin Improvement Opportunity - APAC Therapeutics',
                 body: `Dear Team,
 
-Our predictive maintenance system has identified PUMP-B2 as requiring urgent maintenance attention.
+Our analytics system has identified a margin improvement opportunity regarding manufacturing yield.
 
 SUMMARY:
-Vibration data for PUMP-B2 correlates with increased power draw, indicating developing mechanical issues.
+Manufacturing yield for the Therapeutics line in APAC (Supplier B) has dropped to 82.4%, significantly below the 95% target.
 
 DETAILS:
-• Equipment: PUMP-B2
-• Vibration Level: 4.8 mm/s (Warning threshold: 3.0 mm/s)
-• Temperature: 168°F (elevated)
-• Power Trend: Increasing
-• Risk Score: 78/100 (High Risk)
+• Issue: Low Manufacturing Yield
+• Current Supplier: Supplier B (API-14)
+• Current Yield: 82.4%
+• Target Yield: 95.0%
+• Estimated Margin Impact: -$3.8M
 • Confidence Level: 82%
 
 RECOMMENDED ACTION:
-Schedule maintenance within the next 2-4 weeks to prevent potential failure. Immediate inspection is recommended given the high risk score.
+Suggest returning to previous supplier (Supplier C) or expediting quality review with Supplier B.
 
-RISK IF IGNORED:
-• Unplanned downtime
-• Equipment failure
-• Cascading operational impacts
-• Higher repair costs
-
-MAINTENANCE PRIORITY:
-This unit should be prioritized over routine maintenance activities due to elevated risk score.
-
-Please review the attached maintenance schedule and coordinate with the maintenance team.
+Please review the attached yield analysis.
 
 Best regards,
-Pump Monitoring System`
+Executive Intelligence System`
             },
-            // Load Balancing
+            // R&D Pipeline Forecast
             {
-                subject: 'Load Optimization Opportunity - 8% Power Reduction Available',
+                subject: 'R&D Pipeline Update - Accelerated Timeline',
                 body: `Dear Team,
 
-Our load balancing analysis has identified a significant opportunity to reduce overall power consumption.
+Our predictive model has identified an opportunity to accelerate the regulatory submission for the new feline vaccine.
 
 SUMMARY:
-By redistributing load between PUMP-A1 and PUMP-B2 during peak hours, we can achieve an 8% reduction in total power consumption.
+Phase 3 trials are trending towards early completion, potentially allowing regulatory submission to be pulled forward by 2 months.
 
 DETAILS:
-• Target Equipment: PUMP-A1 and PUMP-B2
-• Recommended Shift: 15% load from PUMP-A1 to PUMP-B2
-• Peak Period: 8:00 AM - 8:00 PM
-• Daily Savings: 50 kW (8% reduction)
+• Project: New Feline Vaccine (Phase 3)
+• Original Submission Target: November (Q4)
+• New Projected Target: September (Q3)
+• Estimated Launch Impact: Pulled forward by 1 Quarter
 • Confidence Level: 79%
 
-OPTIMIZATION SCHEDULE:
-• 08:00-12:00: Shift 15 kW
-• 12:00-16:00: Shift 20 kW (peak period)
-• 16:00-20:00: Shift 15 kW
-
-BENEFITS:
-• Reduced energy costs (~$4,500/month)
-• More balanced equipment wear
-• Improved system efficiency
-• Lower peak demand charges
-
 RECOMMENDED ACTION:
-Implement the load balancing schedule gradually over the next week, monitoring performance at each step.
+Coordinate with regulatory affairs to prepare submission documentation early.
 
-Please review the attached load distribution analysis for detailed hourly recommendations.
+Please review the attached clinical trial projections.
 
 Best regards,
-Pump Monitoring System`
+Executive Intelligence System`
             }
         ];
-
         return templates[index];
     }
 
@@ -840,35 +807,35 @@ Pump Monitoring System`
     // Store current recommendations globally
     let currentRecommendations = null;
 
-    // LLM Analysis and Power Consumption Score Calculation
+    // LLM Analysis and Insights Generation for Animal Health
     function generateLLMRecommendations() {
         const llmRecommendations = [
             {
-                category: "Outlier Detection",
-                suggestion: "Detected an unusual spike in power consumption for PUMP-A1 on 2023-07-23. Recommend investigating for potential cavitation or mechanical issue.",
+                category: "Revenue Anomaly Detection",
+                suggestion: "Detected an unusual drop in Companion Animal Parasiticides revenue in the EU region for August. Recommend reviewing distributor inventory levels.",
                 confidence: 0.95,
                 source: "Time-series Anomaly Detection",
                 graph: true
             },
             {
-                category: "Efficiency Opportunity",
-                suggestion: "PUMP-C3 is consistently operating at a lower efficiency than its peers. A 5% improvement is possible with impeller adjustments.",
+                category: "Supply Chain Optimization",
+                suggestion: "Livestock Vaccines (NA region) showing potential stockout risk in 4 weeks due to delayed raw material shipments. Recommend expediting secondary suppliers.",
                 confidence: 0.88,
-                source: "Comparative Power Analysis",
+                source: "Predictive Inventory Model",
                 graph: true
             },
             {
-                category: "Predictive Maintenance",
-                suggestion: "Vibration data for PUMP-B2 correlates with increased power draw. Recommend scheduling maintenance in the next 2-4 weeks to prevent failure.",
+                category: "Margin Improvement",
+                suggestion: "Manufacturing yield for Therapeutics line in APAC correlates with recent raw material batch changes. Suggest returning to previous supplier.",
                 confidence: 0.82,
                 source: "Multi-variate Correlation Analysis",
                 graph: true
             },
             {
-                category: "Load Balancing",
-                suggestion: "Shifting 15% of the load from PUMP-A1 to PUMP-B2 during peak hours could reduce overall power consumption by 8%.",
+                category: "R&D Pipeline Forecast",
+                suggestion: "Phase 3 trial for new feline vaccine trending towards early completion. Regulatory submission could be pulled forward by 2 months.",
                 confidence: 0.79,
-                source: "System Load Optimization Model",
+                source: "Clinical Trial Predictive Model",
                 graph: true
             }
         ];
@@ -884,10 +851,10 @@ Pump Monitoring System`
         const container = document.getElementById('llm-recommendations-container');
 
         const analyticsButtonLabels = [
-            'View Anomaly Details',
-            'View Efficiency Comparison',
-            'View Maintenance Schedule',
-            'View Load Distribution'
+            'View Revenue Analytics',
+            'View Supply Chain Projection',
+            'View Margin Details',
+            'View Pipeline Forecast'
         ];
 
         let html = '<div class="space-y-6">';
@@ -1005,7 +972,7 @@ Pump Monitoring System`
                             data: {
                                 labels: ['Jul 17', 'Jul 18', 'Jul 19', 'Jul 20', 'Jul 21', 'Jul 22', 'Jul 23', 'Jul 24'],
                                 datasets: [{
-                                    label: 'Power Consumption (kW)',
+                                    label: 'Revenue ($M)',
                                     data: [125, 128, 130, 127, 132, 135, 185, 133],
                                     borderColor: chartColors.primary,
                                     backgroundColor: chartColors.primaryTransparent,
@@ -1036,7 +1003,7 @@ Pump Monitoring System`
                         chartConfig = {
                             type: 'bar',
                             data: {
-                                labels: ['PUMP-A1', 'PUMP-B2', 'PUMP-C3', 'PUMP-D4', 'PUMP-E5'],
+                                labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
                                 datasets: [{
                                     label: 'Efficiency %',
                                     data: [85, 88, 72, 90, 87],
@@ -1199,214 +1166,97 @@ Pump Monitoring System`
         let tableHTML = '';
 
         switch (index) {
-            case 0: // Outlier Detection
+            case 0: // Revenue Anomaly
                 tableHTML = `
                     <div class="overflow-x-auto">
                         <table class="table w-full">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Pump ID</th>
-                                    <th>Power (kW)</th>
-                                    <th>Expected (kW)</th>
-                                    <th>Deviation (%)</th>
+                                    <th>Month</th>
+                                    <th>Region</th>
+                                    <th>Portfolio</th>
+                                    <th>Actual ($M)</th>
+                                    <th>Expected ($M)</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>2023-07-17</td>
-                                    <td>PUMP-A1</td>
-                                    <td>125</td>
-                                    <td>128</td>
-                                    <td>-2.3%</td>
+                                    <td>June</td>
+                                    <td>EU</td>
+                                    <td>Parasiticides</td>
+                                    <td>47</td>
+                                    <td>46.5</td>
                                     <td><span class="badge outline" style="color: var(--success);">Normal</span></td>
                                 </tr>
                                 <tr>
-                                    <td>2023-07-18</td>
-                                    <td>PUMP-A1</td>
-                                    <td>128</td>
-                                    <td>130</td>
-                                    <td>-1.5%</td>
+                                    <td>July</td>
+                                    <td>EU</td>
+                                    <td>Parasiticides</td>
+                                    <td>52</td>
+                                    <td>51</td>
                                     <td><span class="badge outline" style="color: var(--success);">Normal</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2023-07-19</td>
-                                    <td>PUMP-A1</td>
-                                    <td>130</td>
-                                    <td>129</td>
-                                    <td>+0.8%</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Normal</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2023-07-20</td>
-                                    <td>PUMP-A1</td>
-                                    <td>127</td>
-                                    <td>131</td>
-                                    <td>-3.1%</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Normal</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2023-07-21</td>
-                                    <td>PUMP-A1</td>
-                                    <td>132</td>
-                                    <td>130</td>
-                                    <td>+1.5%</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Normal</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2023-07-22</td>
-                                    <td>PUMP-A1</td>
-                                    <td>135</td>
-                                    <td>132</td>
-                                    <td>+2.3%</td>
-                                    <td><span class="badge outline" style="color: var(--warning);">Elevated</span></td>
                                 </tr>
                                 <tr style="background-color: rgba(248, 81, 73, 0.1);">
-                                    <td>2023-07-23</td>
-                                    <td>PUMP-A1</td>
-                                    <td>185</td>
-                                    <td>133</td>
-                                    <td>+39.1%</td>
+                                    <td>August</td>
+                                    <td>EU</td>
+                                    <td>Parasiticides</td>
+                                    <td>28</td>
+                                    <td>45</td>
                                     <td><span class="badge outline" style="color: var(--danger);">ANOMALY</span></td>
                                 </tr>
-                                <tr>
-                                    <td>2023-07-24</td>
-                                    <td>PUMP-A1</td>
-                                    <td>133</td>
-                                    <td>131</td>
-                                    <td>+1.5%</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Normal</span></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                 `;
                 break;
 
-            case 1: // Efficiency Opportunity
+            case 1: // Supply Chain Optimization
                 tableHTML = `
                     <div class="overflow-x-auto">
                         <table class="table w-full">
                             <thead>
                                 <tr>
-                                    <th>Pump ID</th>
-                                    <th>Efficiency (%)</th>
-                                    <th>Avg Flow (GPM)</th>
-                                    <th>Avg Power (kW)</th>
-                                    <th>Operating Hours</th>
-                                    <th>Performance</th>
+                                    <th>Week</th>
+                                    <th>Region</th>
+                                    <th>Product Line</th>
+                                    <th>Projected Inventory</th>
+                                    <th>Target Min</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>PUMP-A1</td>
-                                    <td>85%</td>
-                                    <td>450</td>
-                                    <td>125</td>
-                                    <td>8,234</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
+                                    <td>Week 1</td>
+                                    <td>NA</td>
+                                    <td>Livestock Vaccines</td>
+                                    <td>45 Days</td>
+                                    <td>30 Days</td>
+                                    <td><span class="badge outline" style="color: var(--success);">Healthy</span></td>
                                 </tr>
                                 <tr>
-                                    <td>PUMP-B2</td>
-                                    <td>88%</td>
-                                    <td>465</td>
-                                    <td>128</td>
-                                    <td>7,891</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
+                                    <td>Week 2</td>
+                                    <td>NA</td>
+                                    <td>Livestock Vaccines</td>
+                                    <td>30 Days</td>
+                                    <td>30 Days</td>
+                                    <td><span class="badge outline" style="color: var(--warning);">At Risk</span></td>
                                 </tr>
                                 <tr style="background-color: rgba(210, 153, 34, 0.1);">
-                                    <td>PUMP-C3</td>
-                                    <td>72%</td>
-                                    <td>385</td>
-                                    <td>132</td>
-                                    <td>9,456</td>
-                                    <td><span class="badge outline" style="color: var(--warning);">Below Target</span></td>
-                                </tr>
-                                <tr>
-                                    <td>PUMP-D4</td>
-                                    <td>90%</td>
-                                    <td>475</td>
-                                    <td>122</td>
-                                    <td>6,723</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Excellent</span></td>
-                                </tr>
-                                <tr>
-                                    <td>PUMP-E5</td>
-                                    <td>87%</td>
-                                    <td>460</td>
-                                    <td>127</td>
-                                    <td>8,012</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-                break;
-
-            case 2: // Predictive Maintenance
-                tableHTML = `
-                    <div class="overflow-x-auto">
-                        <table class="table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Pump ID</th>
-                                    <th>Vibration (mm/s)</th>
-                                    <th>Temperature (°F)</th>
-                                    <th>Power Trend</th>
-                                    <th>Risk Score</th>
-                                    <th>Maintenance Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PUMP-A1</td>
-                                    <td>2.1</td>
-                                    <td>142</td>
-                                    <td>Stable</td>
-                                    <td>15/100</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
+                                    <td>Week 3</td>
+                                    <td>NA</td>
+                                    <td>Livestock Vaccines</td>
+                                    <td>15 Days</td>
+                                    <td>30 Days</td>
+                                    <td><span class="badge outline" style="color: var(--warning);">Critical</span></td>
                                 </tr>
                                 <tr style="background-color: rgba(248, 81, 73, 0.1);">
-                                    <td>PUMP-B2</td>
-                                    <td>4.8</td>
-                                    <td>168</td>
-                                    <td>Increasing</td>
-                                    <td>78/100</td>
-                                    <td><span class="badge outline" style="color: var(--danger);">Action Needed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>PUMP-C3</td>
-                                    <td>2.5</td>
-                                    <td>145</td>
-                                    <td>Stable</td>
-                                    <td>22/100</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
-                                </tr>
-                                <tr>
-                                    <td>PUMP-D4</td>
-                                    <td>1.8</td>
-                                    <td>138</td>
-                                    <td>Stable</td>
-                                    <td>12/100</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
-                                </tr>
-                                <tr style="background-color: rgba(210, 153, 34, 0.1);">
-                                    <td>PUMP-E5</td>
-                                    <td>3.2</td>
-                                    <td>152</td>
-                                    <td>Slight Increase</td>
-                                    <td>45/100</td>
-                                    <td><span class="badge outline" style="color: var(--warning);">Monitor</span></td>
-                                </tr>
-                                <tr>
-                                    <td>PUMP-F6</td>
-                                    <td>2.0</td>
-                                    <td>141</td>
-                                    <td>Stable</td>
-                                    <td>18/100</td>
-                                    <td><span class="badge outline" style="color: var(--success);">Good</span></td>
+                                    <td>Week 4</td>
+                                    <td>NA</td>
+                                    <td>Livestock Vaccines</td>
+                                    <td>2 Days</td>
+                                    <td>30 Days</td>
+                                    <td><span class="badge outline" style="color: var(--danger);">Stockout Imminent</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1414,73 +1264,92 @@ Pump Monitoring System`
                 `;
                 break;
 
-            case 3: // Load Balancing
+            case 2: // Margin Improvement
                 tableHTML = `
                     <div class="overflow-x-auto">
                         <table class="table w-full">
                             <thead>
                                 <tr>
-                                    <th>Time Period</th>
-                                    <th>PUMP-A1 Current (kW)</th>
-                                    <th>PUMP-B2 Current (kW)</th>
-                                    <th>PUMP-A1 Optimized (kW)</th>
-                                    <th>PUMP-B2 Optimized (kW)</th>
-                                    <th>Savings (kW)</th>
+                                    <th>Supplier</th>
+                                    <th>Component</th>
+                                    <th>Avg Yield (%)</th>
+                                    <th>Target Yield (%)</th>
+                                    <th>Impact on Margin</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>00:00 - 04:00</td>
-                                    <td>100</td>
-                                    <td>95</td>
-                                    <td>100</td>
-                                    <td>95</td>
-                                    <td>0</td>
+                                    <td>Supplier A</td>
+                                    <td>API-12</td>
+                                    <td>96.5%</td>
+                                    <td>95.0%</td>
+                                    <td>+$1.2M</td>
+                                    <td><span class="badge outline" style="color: var(--success);">Above Target</span></td>
+                                </tr>
+                                <tr style="background-color: rgba(248, 81, 73, 0.1);">
+                                    <td>Supplier B (Current)</td>
+                                    <td>API-14</td>
+                                    <td>82.4%</td>
+                                    <td>95.0%</td>
+                                    <td>-$3.8M</td>
+                                    <td><span class="badge outline" style="color: var(--danger);">Action Needed</span></td>
+                                </tr>
+                                <tr style="background-color: rgba(210, 153, 34, 0.1);">
+                                    <td>Supplier C (Backup)</td>
+                                    <td>API-14</td>
+                                    <td>91.2%</td>
+                                    <td>95.0%</td>
+                                    <td>-$0.5M</td>
+                                    <td><span class="badge outline" style="color: var(--warning);">Monitor</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                break;
+
+            case 3: // R&D Pipeline Forecast
+                tableHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th>Trial Phase</th>
+                                    <th>Original Timeline</th>
+                                    <th>Accelerated Timeline</th>
+                                    <th>Time Saved</th>
+                                    <th>Regulatory Submission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Phase 1</td>
+                                    <td>Complete</td>
+                                    <td>Complete</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                 </tr>
                                 <tr>
-                                    <td>04:00 - 08:00</td>
-                                    <td>95</td>
-                                    <td>88</td>
-                                    <td>95</td>
-                                    <td>88</td>
-                                    <td>0</td>
+                                    <td>Phase 2</td>
+                                    <td>Complete</td>
+                                    <td>Complete</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                 </tr>
                                 <tr style="background-color: rgba(63, 185, 80, 0.1);">
-                                    <td>08:00 - 12:00</td>
-                                    <td>140</td>
-                                    <td>110</td>
-                                    <td>125</td>
-                                    <td>125</td>
-                                    <td>15</td>
-                                </tr>
-                                <tr style="background-color: rgba(63, 185, 80, 0.1);">
-                                    <td>12:00 - 16:00</td>
-                                    <td>180</td>
-                                    <td>125</td>
-                                    <td>165</td>
-                                    <td>140</td>
-                                    <td>20</td>
-                                </tr>
-                                <tr style="background-color: rgba(63, 185, 80, 0.1);">
-                                    <td>16:00 - 20:00</td>
-                                    <td>160</td>
-                                    <td>115</td>
-                                    <td>145</td>
-                                    <td>130</td>
-                                    <td>15</td>
-                                </tr>
-                                <tr>
-                                    <td>20:00 - 24:00</td>
-                                    <td>120</td>
-                                    <td>105</td>
-                                    <td>120</td>
-                                    <td>105</td>
-                                    <td>0</td>
+                                    <td>Phase 3</td>
+                                    <td>Q4 (Nov)</td>
+                                    <td>Q3 (Sep)</td>
+                                    <td>2 Months</td>
+                                    <td>Pulled forward to Oct</td>
                                 </tr>
                                 <tr style="font-weight: bold; background-color: var(--background);">
-                                    <td>Total Daily Savings</td>
-                                    <td colspan="4">-</td>
-                                    <td>50 kW (8% reduction)</td>
+                                    <td>Est. Commercial Launch</td>
+                                    <td>Q2 Next Year</td>
+                                    <td>Q1 Next Year</td>
+                                    <td>1 Quarter</td>
+                                    <td>-</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1579,19 +1448,19 @@ Pump Monitoring System`
 
         // Parse sensors
         if (requestLower.includes('all sensors') || requestLower.includes('all data')) {
-            sensors = ['pump-flowrate', 'pump-temperature', 'pump-pressure', 'pump-vibration', 'power-consumption', 'motor-speed'];
+            sensors = ['companion-revenue', 'livestock-revenue', 'margin-percentage', 'inventory-days', 'power-consumption', 'yield-percentage'];
         } else {
-            if (requestLower.includes('flowrate')) sensors.push('pump-flowrate');
-            if (requestLower.includes('temperature')) sensors.push('pump-temperature');
-            if (requestLower.includes('pressure')) sensors.push('pump-pressure');
-            if (requestLower.includes('vibration')) sensors.push('pump-vibration');
+            if (requestLower.includes('flowrate')) sensors.push('companion-revenue');
+            if (requestLower.includes('temperature')) sensors.push('livestock-revenue');
+            if (requestLower.includes('pressure')) sensors.push('margin-percentage');
+            if (requestLower.includes('vibration')) sensors.push('inventory-days');
             if (requestLower.includes('power')) sensors.push('power-consumption');
-            if (requestLower.includes('speed')) sensors.push('motor-speed');
+            if (requestLower.includes('speed')) sensors.push('yield-percentage');
         }
 
-        // If no specific sensors mentioned but "all pumps" is mentioned, get all sensors
-        if (sensors.length === 0 && (requestLower.includes('all pumps') || requestLower.includes('all'))) {
-            sensors = ['pump-flowrate', 'pump-temperature', 'pump-pressure', 'pump-vibration', 'power-consumption', 'motor-speed'];
+        // If no specific sensors mentioned but "all portfolios" is mentioned, get all sensors
+        if (sensors.length === 0 && (requestLower.includes('all portfolios') || requestLower.includes('all'))) {
+            sensors = ['companion-revenue', 'livestock-revenue', 'margin-percentage', 'inventory-days', 'power-consumption', 'yield-percentage'];
         }
 
         return { dateRange, locations, lines, sensors, timeIncrement };
@@ -1614,8 +1483,8 @@ Pump Monitoring System`
         };
 
         const sensorMap = {
-            'pump-flowrate': 'Pump Flowrate', 'pump-temperature': 'Pump Temperature', 'pump-pressure': 'Pump Pressure',
-            'pump-vibration': 'Pump Vibration', 'power-consumption': 'Power Consumption', 'motor-speed': 'Motor Speed'
+            'companion-revenue': 'Companion Revenue', 'livestock-revenue': 'Livestock Revenue', 'margin-percentage': 'Margin Percentage',
+            'inventory-days': 'Inventory Days', 'margin': 'Margin', 'yield-percentage': 'Yield Percentage'
         };
 
         return {
@@ -1715,7 +1584,7 @@ Pump Monitoring System`
 
         // Add welcome message
         setTimeout(() => {
-            addChatMessage("Hello! I'm your pump data assistant. You can ask me to retrieve sensor data using the quick request buttons above, or type your own request.", false);
+            addChatMessage("Hello! I'm your executive AI assistant. You can ask me to retrieve sensor data using the quick request buttons above, or type your own request.", false);
         }, 300);
 
         // Setup chat input handlers
@@ -1780,7 +1649,7 @@ Pump Monitoring System`
                     },
                 ]
             },
-            options: { responsive: true, plugins: { legend: { display: true, labels: { color: '#8B949E' } } }, scales: { y: { title: { display: true, text: 'Power Consumption (kWh)', color: '#8B949E' }, ticks:{ color: '#8B949E' }, grid: { color: '#30363D' } }, x: { ticks:{ color: '#8B949E' }, grid: { color: '#30363D' } } } }
+            options: { responsive: true, plugins: { legend: { display: true, labels: { color: '#8B949E' } } }, scales: { y: { title: { display: true, text: 'Projected Margin (%)', color: '#8B949E' }, ticks:{ color: '#8B949E' }, grid: { color: '#30363D' } }, x: { ticks:{ color: '#8B949E' }, grid: { color: '#30363D' } } } }
         });
     }
 
@@ -1836,20 +1705,20 @@ Pump Monitoring System`
             day: 'numeric'
         });
 
-        let reportContent = `PUMP POWER CONSUMPTION ANALYSIS REPORT
+        let reportContent = `ANIMAL HEALTH EXECUTIVE VITAL SIGNS REPORT
 Generated: ${today}
 
 EXECUTIVE SUMMARY
 ================================================================================
-This report presents AI-powered analysis of pump power consumption data,
+This report presents AI-powered analysis of business vital signs data,
 identifying ${currentRecommendations.length} key insights and recommendations for operational
 improvement and risk mitigation.
 
 Query Parameters:
 - Date Range: ${queryData.fromDate} to ${queryData.toDate}
-- Locations: ${queryData.locations.map(l => l.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())).join(', ')}
-- Lines: ${queryData.lineNumbers.map(l => l.replace('line-', 'Line ')).join(', ')}
-- Sensors: ${queryData.sensorCategories.map(s => s.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())).join(', ')}
+- Regions: ${queryData.locations.join(', ')}
+- Portfolios: ${queryData.lineNumbers.join(', ')}
+- Metrics: ${queryData.sensorCategories.join(', ')}
 
 DETAILED FINDINGS
 ================================================================================
@@ -1870,58 +1739,58 @@ ${rec.suggestion}
 
             // Add specific details based on recommendation type
             switch(index) {
-                case 0: // Outlier Detection
+                case 0: // Revenue Anomaly Detection
                     reportContent += `Key Metrics:
-- Equipment: PUMP-A1
-- Anomaly Date: July 23, 2023
-- Actual Power: 185 kW
-- Expected Power: 133 kW
-- Deviation: +39.1%
+- Portfolio: Companion Animal Parasiticides
+- Region: EU
+- Actual Revenue: $28M
+- Expected Revenue: $45M
+- Deviation: -37.8%
 
 Recommended Action:
-Immediate investigation of PUMP-A1 for cavitation or mechanical issues.
-Timeline: Within 24 hours
+Review distributor inventory levels and competitive activity.
+Timeline: Immediate
 
 `;
                     break;
-                case 1: // Efficiency Opportunity
+                case 1: // Supply Chain Optimization
                     reportContent += `Key Metrics:
-- Equipment: PUMP-C3
-- Current Efficiency: 72%
-- Peer Average: 87%
-- Efficiency Gap: 15%
-- Estimated Annual Savings: $12,000
+- Portfolio: Livestock Vaccines
+- Region: NA
+- Current Inventory: 45 Days
+- Projected (Week 4): 2 Days
+- Target Minimum: 30 Days
 
 Recommended Action:
-Schedule maintenance for impeller adjustment.
-Timeline: Next scheduled maintenance window
+Expedite secondary suppliers to avoid stockouts.
+Timeline: Next 5 days
 
 `;
                     break;
-                case 2: // Predictive Maintenance
+                case 2: // Margin Improvement
                     reportContent += `Key Metrics:
-- Equipment: PUMP-B2
-- Vibration Level: 4.8 mm/s (Warning: >3.0 mm/s)
-- Temperature: 168°F (Elevated)
-- Risk Score: 78/100 (High Risk)
+- Issue: Low Manufacturing Yield
+- Current Supplier: Supplier B (API-14)
+- Current Yield: 82.4%
+- Target Yield: 95.0%
 
 Recommended Action:
-Schedule maintenance within 2-4 weeks to prevent failure.
-Timeline: Urgent - within 14-28 days
+Return to previous supplier (Supplier C).
+Timeline: Next production batch
 
 `;
                     break;
-                case 3: // Load Balancing
+                case 3: // R&D Pipeline Forecast
                     reportContent += `Key Metrics:
-- Target Equipment: PUMP-A1 and PUMP-B2
-- Recommended Load Shift: 15%
-- Peak Period: 8:00 AM - 8:00 PM
-- Daily Savings: 50 kW (8% reduction)
-- Estimated Monthly Savings: $4,500
+- Project: New Feline Vaccine
+- Trial Phase: Phase 3
+- Original Target: Q4
+- New Projected Target: Q3
+- Launch Impact: +1 Quarter
 
 Recommended Action:
-Implement load balancing schedule gradually over next week.
-Timeline: 7-day implementation period
+Prepare regulatory submission early.
+Timeline: Coordinate next 30 days
 
 `;
                     break;
@@ -1936,21 +1805,21 @@ ${currentRecommendations.map((rec, i) => `${i + 1}. ${rec.category} (${(rec.conf
 NEXT STEPS
 ================================================================================
 1. Review all high-confidence recommendations (>80%)
-2. Prioritize urgent items (Predictive Maintenance, Outlier Detection)
-3. Schedule maintenance activities
-4. Implement load optimization schedule
+2. Prioritize urgent items (Revenue Anomaly, Supply Chain Risk)
+3. Coordinate with Commercial and Operations leaders
+4. Adjust Q3 and Q4 forecast models
 5. Monitor results and adjust as needed
 
 END OF REPORT
 ================================================================================
-Generated by Pump Monitoring System - AI-Powered Analytics
+Generated by Executive Intelligence System - AI-Powered Analytics
 Report Date: ${today}
 `;
 
         // Download report
         const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8;' });
         const link = document.createElement('a');
-        const filename = `Pump_Analysis_Report_${new Date().toISOString().split('T')[0]}.txt`;
+        const filename = `Animal_Health_Report_${new Date().toISOString().split('T')[0]}.txt`;
 
         link.href = URL.createObjectURL(blob);
         link.download = filename;
@@ -1987,7 +1856,7 @@ Report Date: ${today}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pump Power Consumption Analysis Report</title>
+    <title>Animal Health Executive Vital Signs Report</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -2144,13 +2013,13 @@ Report Date: ${today}
 </head>
 <body>
     <div class="header">
-        <h1>Pump Power Consumption Analysis Report</h1>
+        <h1>Animal Health Executive Vital Signs Report</h1>
         <div class="date">Generated: ${today}</div>
     </div>
 
     <div class="section">
         <h2>Executive Summary</h2>
-        <p>This report presents AI-powered analysis of pump power consumption data, identifying ${currentRecommendations.length} key insights and recommendations for operational improvement and risk mitigation.</p>
+        <p>This report presents AI-powered analysis of executive commercial and operations data, identifying ${currentRecommendations.length} key insights and recommendations for operational improvement and risk mitigation.</p>
 
         <div class="params">
             <div class="params-item">
@@ -2179,39 +2048,37 @@ Report Date: ${today}
         currentRecommendations.forEach((rec, index) => {
             const detailsMap = [
                 {
-                    equipment: 'PUMP-A1',
-                    date: 'July 23, 2023',
-                    actual: '185 kW',
-                    expected: '133 kW',
-                    deviation: '+39.1%',
-                    action: 'Immediate investigation of PUMP-A1 for cavitation or mechanical issues.',
-                    timeline: 'Within 24 hours'
+                    portfolio: 'Companion Animal Parasiticides',
+                    region: 'EU',
+                    actual: '$28M',
+                    expected: '$45M',
+                    deviation: '-37.8%',
+                    action: 'Review distributor inventory levels and competitive activity.',
+                    timeline: 'Immediate'
                 },
                 {
-                    equipment: 'PUMP-C3',
-                    efficiency: '72%',
-                    peerAvg: '87%',
-                    gap: '15%',
-                    savings: '$12,000',
-                    action: 'Schedule maintenance for impeller adjustment.',
-                    timeline: 'Next scheduled maintenance window'
+                    portfolio: 'Livestock Vaccines',
+                    region: 'NA',
+                    projectedInventory: '2 Days (Week 4)',
+                    targetMinimum: '30 Days',
+                    action: 'Expedite secondary suppliers to avoid stockouts.',
+                    timeline: 'Next 5 days'
                 },
                 {
-                    equipment: 'PUMP-B2',
-                    vibration: '4.8 mm/s (Warning: >3.0 mm/s)',
-                    temperature: '168°F (Elevated)',
-                    risk: '78/100 (High Risk)',
-                    action: 'Schedule maintenance within 2-4 weeks to prevent failure.',
-                    timeline: 'Urgent - within 14-28 days'
+                    issue: 'Low Manufacturing Yield',
+                    supplier: 'Supplier B (API-14)',
+                    currentYield: '82.4%',
+                    targetYield: '95.0%',
+                    action: 'Return to previous supplier (Supplier C).',
+                    timeline: 'Next production batch'
                 },
                 {
-                    equipment: 'PUMP-A1 and PUMP-B2',
-                    shift: '15%',
-                    period: '8:00 AM - 8:00 PM',
-                    savings: '50 kW (8% reduction)',
-                    monthlySavings: '$4,500',
-                    action: 'Implement load balancing schedule gradually over next week.',
-                    timeline: '7-day implementation period'
+                    project: 'New Feline Vaccine',
+                    trialPhase: 'Phase 3',
+                    originalTarget: 'Q4',
+                    newProjectedTarget: 'Q3',
+                    action: 'Prepare regulatory submission early.',
+                    timeline: 'Coordinate next 30 days'
                 }
             ];
 
@@ -2272,16 +2139,16 @@ Report Date: ${today}
         <div class="next-steps">
             <ol>
                 <li>Review all high-confidence recommendations (&gt;80%)</li>
-                <li>Prioritize urgent items (Predictive Maintenance, Outlier Detection)</li>
-                <li>Schedule maintenance activities</li>
-                <li>Implement load optimization schedule</li>
+                <li>Prioritize urgent items (Revenue Anomaly, Supply Chain Risk)</li>
+                <li>Coordinate with Commercial and Operations leaders</li>
+                <li>Adjust Q3 and Q4 forecast models</li>
                 <li>Monitor results and adjust as needed</li>
             </ol>
         </div>
     </div>
 
     <div class="footer">
-        <p><strong>Generated by Pump Monitoring System - AI-Powered Analytics</strong></p>
+        <p><strong>Generated by Executive Intelligence System - AI-Powered Analytics</strong></p>
         <p>Report Date: ${today}</p>
     </div>
 </body>
@@ -2290,7 +2157,7 @@ Report Date: ${today}
         // Download HTML report
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
         const link = document.createElement('a');
-        const filename = `Pump_Analysis_Report_${new Date().toISOString().split('T')[0]}.html`;
+        const filename = `Animal_Health_Report_${new Date().toISOString().split('T')[0]}.html`;
 
         link.href = URL.createObjectURL(blob);
         link.download = filename;
@@ -2312,11 +2179,11 @@ Report Date: ${today}
 
         // Add the text report
         const reportContent = await generateReportContent();
-        zip.file(`Pump_Analysis_Report_${today}.txt`, reportContent);
+        zip.file(`Animal_Health_Report_${today}.txt`, reportContent);
 
         // Add the HTML report with embedded charts
         const htmlReport = await generateHTMLReportContent();
-        zip.file(`Pump_Analysis_Report_${today}.html`, htmlReport);
+        zip.file(`Animal_Health_Report_${today}.html`, htmlReport);
 
         // Add chart images as separate PNG files
         for (let i = 0; i < currentRecommendations.length; i++) {
@@ -2349,27 +2216,27 @@ Report Date: ${today}
         }
 
         // Add README
-        const readme = `PUMP POWER CONSUMPTION ANALYSIS PACKAGE
+        const readme = `ANIMAL HEALTH EXECUTIVE VITAL SIGNS PACKAGE
 Generated: ${today}
 
 CONTENTS:
 =========
 REPORTS:
-1. Pump_Analysis_Report_${today}.txt - Text-based comprehensive analysis report
-2. Pump_Analysis_Report_${today}.html - HTML report with embedded charts and visualizations
+1. Animal_Health_Report_${today}.txt - Text-based comprehensive analysis report
+2. Animal_Health_Report_${today}.html - HTML report with embedded charts and visualizations
 
 DATA FILES:
-3. outlier_detection_analytics_${today}.csv - Anomaly detection data
-4. efficiency_comparison_${today}.csv - Pump efficiency comparison
-5. maintenance_schedule_${today}.csv - Predictive maintenance data
-6. load_distribution_${today}.csv - Load balancing analysis
+3. revenue_anomaly_analytics_${today}.csv - Anomaly detection data
+4. supply_chain_optimization_${today}.csv - Supply chain analysis
+5. margin_improvement_${today}.csv - Margin improvement breakdown
+6. rd_pipeline_forecast_${today}.csv - R&D Pipeline analysis
 7. query_results_${today}.csv - Raw query results (if available)
 
 CHARTS (PNG format):
-8. charts/outlier_detection_chart_${today}.png - Anomaly detection visualization
-9. charts/efficiency_comparison_chart_${today}.png - Efficiency bar chart
-10. charts/maintenance_schedule_chart_${today}.png - Maintenance risk breakdown
-11. charts/load_distribution_chart_${today}.png - Load optimization chart
+8. charts/revenue_anomaly_chart_${today}.png - Anomaly detection visualization
+9. charts/supply_chain_optimization_chart_${today}.png - Supply Chain bar chart
+10. charts/margin_improvement_chart_${today}.png - Margin Improvement doughnut chart
+11. charts/rd_pipeline_forecast_chart_${today}.png - Pipeline forecast line chart
 
 INSTRUCTIONS:
 =============
@@ -2391,7 +2258,7 @@ For questions or assistance, please contact your system administrator.
         // Generate and download ZIP
         zip.generateAsync({ type: 'blob' }).then(function(content) {
             const link = document.createElement('a');
-            const filename = `Pump_Analysis_Package_${today}.zip`;
+            const filename = `Executive_Analysis_Package_${today}.zip`;
 
             link.href = URL.createObjectURL(content);
             link.download = filename;
@@ -2433,7 +2300,7 @@ For questions or assistance, please contact your system administrator.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pump Power Consumption Analysis Report</title>
+    <title>Animal Health Executive Vital Signs Report</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
@@ -2445,7 +2312,7 @@ For questions or assistance, please contact your system administrator.
 </head>
 <body>
     <div class="header">
-        <h1>Pump Power Consumption Analysis Report</h1>
+        <h1>Animal Health Executive Vital Signs Report</h1>
         <div>Generated: ${today}</div>
     </div>
     <div class="section">
@@ -2465,12 +2332,12 @@ For questions or assistance, please contact your system administrator.
             day: 'numeric'
         });
 
-        let reportContent = `PUMP POWER CONSUMPTION ANALYSIS REPORT
+        let reportContent = `ANIMAL HEALTH EXECUTIVE VITAL SIGNS REPORT
 Generated: ${today}
 
 EXECUTIVE SUMMARY
 ================================================================================
-This report presents AI-powered analysis of pump power consumption data,
+This report presents AI-powered analysis of executive commercial and operations data,
 identifying ${currentRecommendations.length} key insights and recommendations for operational
 improvement and risk mitigation.
 
@@ -2500,56 +2367,60 @@ ${rec.suggestion}
             switch(index) {
                 case 0:
                     reportContent += `Key Metrics:
-- Equipment: PUMP-A1
+- Portfolio: Companion Animal Parasiticides
+- Region: EU
 - Anomaly Date: July 23, 2023
-- Actual Power: 185 kW
-- Expected Power: 133 kW
-- Deviation: +39.1%
+- Actual Revenue: $28M
+- Expected Revenue: $45M
+- Deviation: -37.8%
 
 Recommended Action:
-Immediate investigation of PUMP-A1 for cavitation or mechanical issues.
+Review distributor inventory levels and competitive activity.
 Timeline: Within 24 hours
 
 `;
                     break;
                 case 1:
                     reportContent += `Key Metrics:
-- Equipment: PUMP-C3
-- Current Efficiency: 72%
-- Peer Average: 87%
-- Efficiency Gap: 15%
-- Estimated Annual Savings: $12,000
+- Portfolio: Livestock Vaccines
+- Region: NA
+- Current Inventory: 45 Days
+- Projected (Week 4): 2 Days
+- Target Minimum: 30 Days
+
 
 Recommended Action:
-Schedule maintenance for impeller adjustment.
-Timeline: Next scheduled maintenance window
+Expedite secondary suppliers to avoid stockouts.
+Timeline: Next 5 days
 
 `;
                     break;
                 case 2:
                     reportContent += `Key Metrics:
-- Equipment: PUMP-B2
-- Vibration Level: 4.8 mm/s (Warning: >3.0 mm/s)
-- Temperature: 168°F (Elevated)
-- Risk Score: 78/100 (High Risk)
+- Issue: Low Manufacturing Yield
+- Current Supplier: Supplier B (API-14)
+- Current Yield: 82.4%
+- Target Yield: 95.0%
+
 
 Recommended Action:
-Schedule maintenance within 2-4 weeks to prevent failure.
-Timeline: Urgent - within 14-28 days
+Return to previous supplier (Supplier C).
+Timeline: Next production batch
 
 `;
                     break;
                 case 3:
                     reportContent += `Key Metrics:
-- Target Equipment: PUMP-A1 and PUMP-B2
-- Recommended Load Shift: 15%
-- Peak Period: 8:00 AM - 8:00 PM
-- Daily Savings: 50 kW (8% reduction)
-- Estimated Monthly Savings: $4,500
+- Project: New Feline Vaccine
+- Trial Phase: Phase 3
+- Original Target: Q4
+- New Projected Target: Q3
+- Launch Impact: +1 Quarter
+
 
 Recommended Action:
-Implement load balancing schedule gradually over next week.
-Timeline: 7-day implementation period
+Prepare regulatory submission early.
+Timeline: Coordinate next 30 days
 
 `;
                     break;
@@ -2564,14 +2435,14 @@ ${currentRecommendations.map((rec, i) => `${i + 1}. ${rec.category} (${(rec.conf
 NEXT STEPS
 ================================================================================
 1. Review all high-confidence recommendations (>80%)
-2. Prioritize urgent items (Predictive Maintenance, Outlier Detection)
-3. Schedule maintenance activities
-4. Implement load optimization schedule
+2. Prioritize urgent items (Revenue Anomaly, Supply Chain Risk)
+3. Coordinate with Commercial and Operations leaders
+4. Adjust Q3 and Q4 forecast models
 5. Monitor results and adjust as needed
 
 END OF REPORT
 ================================================================================
-Generated by Pump Monitoring System - AI-Powered Analytics
+Generated by Executive Intelligence System - AI-Powered Analytics
 Report Date: ${today}
 `;
 
@@ -2687,31 +2558,24 @@ Report Date: ${today}
     // Validation rules data
     const validationRules = [
         // Flowrate rules (3)
-        { id: 'FR001', category: 'flowrate', pump: 'PUMP-A1', station: 'Station A', location: 'Station A', type: 'Standard', min: 120, max: 480, unit: 'GPM', optimal: '250-400', status: 'Active' },
-        { id: 'FR002', category: 'flowrate', pump: 'PUMP-B1', station: 'Station B', location: 'Station B', type: 'Standard', min: 110, max: 500, unit: 'GPM', optimal: '245-395', status: 'Active' },
-        { id: 'FR003', category: 'flowrate', pump: 'PUMP-C1', station: 'Station C', location: 'Station C', type: 'Low-Flow', min: 30, max: 145, unit: 'GPM', optimal: '60-120', status: 'Active' },
+        // Revenue rules
+        { id: 'RV001', category: 'revenue', portfolio: 'Companion Animal', region: 'NA', location: 'NA', type: 'Growth', min: 2, max: 15, unit: '%', optimal: '>8', status: 'Active' },
+        { id: 'RV002', category: 'revenue', portfolio: 'Livestock', region: 'EU', location: 'EU', type: 'Growth', min: -5, max: 10, unit: '%', optimal: '>2', status: 'Active' },
 
-        // Temperature rules (3)
-        { id: 'TR001', category: 'temperature', pump: 'PUMP-A1', station: 'Station A', location: 'Station A', min: 50, max: 180, unit: '°F', warning: '45/185', critical: '40/195', status: 'Active' },
-        { id: 'TR002', category: 'temperature', pump: 'PUMP-B2', station: 'Station B', location: 'Station B', min: 50, max: 180, unit: '°F', warning: '45/185', critical: '40/195', status: 'Active' },
-        { id: 'TR003', category: 'temperature', pump: 'PUMP-C2', station: 'Station C', location: 'Station C', min: 50, max: 180, unit: '°F', warning: '45/185', critical: '40/195', status: 'Active' },
+        // Margin rules
+        { id: 'MG001', category: 'margin', portfolio: 'Therapeutics', region: 'APAC', location: 'APAC', min: 55, max: 85, unit: '%', warning: '60/80', critical: '50/90', status: 'Active' },
 
-        // Pressure rules (3)
-        { id: 'PR001', category: 'pressure', line: 'Line 1', location: 'Line 1', baseline: 150, variance: '±10%', range: '135-165', unit: 'PSI', status: 'Active' },
-        { id: 'PR002', category: 'pressure', line: 'Line 2', location: 'Line 2', baseline: 145, variance: '±10%', range: '130-160', unit: 'PSI', status: 'Active' },
-        { id: 'PR003', category: 'pressure', line: 'Line 3', location: 'Line 3', baseline: 155, variance: '±8%', range: '143-167', unit: 'PSI', status: 'Active' },
+        // Yield rules
+        { id: 'YL001', category: 'yield', line: 'Vaccine Line A', location: 'NA', baseline: 95, variance: '±2%', range: '93-97', unit: '%', status: 'Active' },
+        { id: 'YL002', category: 'yield', line: 'Parasiticide Line B', location: 'EU', baseline: 98, variance: '±1%', range: '97-99', unit: '%', status: 'Active' },
 
-        // Vibration rules (2)
-        { id: 'VR001', category: 'vibration', pump: 'PUMP-A2', station: 'Station A', location: 'Station A', max: 0.3, warning: 0.25, unit: 'in/sec', status: 'Active' },
-        { id: 'VR002', category: 'vibration', pump: 'PUMP-B3', station: 'Station B', location: 'Station B', max: 0.4, warning: 0.32, unit: 'in/sec', status: 'Active' },
+        // Inventory rules
+        { id: 'IV001', category: 'inventory', portfolio: 'Companion Animal', region: 'Global', location: 'Global', max: 60, warning: 30, unit: 'Days', status: 'Active' },
+        { id: 'IV002', category: 'inventory', portfolio: 'Livestock', region: 'NA', location: 'NA', max: 45, warning: 25, unit: 'Days', status: 'Active' },
 
-        // Power rules (2)
-        { id: 'PW001', category: 'power', pump: 'PUMP-A3', station: 'Station A', location: 'Station A', nominal: 125, variance: '±18%', range: '102.5-147.5', unit: 'kW', status: 'Active' },
-        { id: 'PW002', category: 'power', pump: 'PUMP-B1', station: 'Station B', location: 'Station B', nominal: 48, variance: '±15%', range: '40.8-55.2', unit: 'kW', status: 'Active' },
-
-        // Data quality rules (2)
-        { id: 'DQ001', category: 'data-quality', rule: 'Data Freshness', location: 'System-Wide', requirement: 'Readings within 5 minutes', scope: 'All Sensors', status: 'Active' },
-        { id: 'DQ002', category: 'data-quality', rule: 'Calibration Schedule', location: 'System-Wide', requirement: 'Calibration every 90 days', scope: 'All Sensors', status: 'Active' },
+        // Data quality rules
+        { id: 'DQ001', category: 'data-quality', rule: 'Sales Reporting Delay', location: 'System-Wide', requirement: 'T+2 Days Max', scope: 'All Regions', status: 'Active' },
+        { id: 'DQ002', category: 'data-quality', rule: 'Inventory Reconciliation', location: 'System-Wide', requirement: 'Weekly', scope: 'All Warehouses', status: 'Active' },
     ];
 
     let currentCategoryFilter = 'all';
@@ -2787,11 +2651,11 @@ Report Date: ${today}
     // Generate HTML for a single rule
     function generateRuleHTML(rule) {
         const categoryColors = {
-            'flowrate': 'var(--primary)',
-            'temperature': '#ff6b35',
-            'pressure': '#9b59b6',
-            'vibration': '#3498db',
-            'power': '#f39c12',
+            'revenue': 'var(--primary)',
+            'margin': '#ff6b35',
+            'yield': '#9b59b6',
+            'inventory': '#3498db',
+
             'data-quality': 'var(--success)'
         };
 
@@ -2802,7 +2666,7 @@ Report Date: ${today}
                 <div class="p-3 rounded" style="background-color: var(--background); border-left: 3px solid ${borderColor};">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <div class="font-medium">${rule.pump} - ${rule.station}</div>
+                            <div class="font-medium">${rule.portfolio} - ${rule.region}</div>
                             <div class="text-sm text-secondary mt-1">
                                 Type: ${rule.type} | Range: ${rule.min}-${rule.max} ${rule.unit} | Optimal: ${rule.optimal} ${rule.unit}
                             </div>
@@ -2816,7 +2680,7 @@ Report Date: ${today}
                 <div class="p-3 rounded" style="background-color: var(--background); border-left: 3px solid ${borderColor};">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <div class="font-medium">${rule.pump} - ${rule.station}</div>
+                            <div class="font-medium">${rule.portfolio} - ${rule.region}</div>
                             <div class="text-sm text-secondary mt-1">
                                 Range: ${rule.min}-${rule.max}${rule.unit} | Warning: ${rule.warning}${rule.unit} | Critical: ${rule.critical}${rule.unit}
                             </div>
@@ -2826,7 +2690,7 @@ Report Date: ${today}
                 </div>
             `;
         } else if (rule.category === 'pressure') {
-            const location = rule.line || `${rule.pump} - ${rule.station}`;
+            const location = rule.line || `${rule.portfolio} - ${rule.region}`;
             return `
                 <div class="p-3 rounded" style="background-color: var(--background); border-left: 3px solid ${borderColor};">
                     <div class="flex justify-between items-start">
@@ -2845,7 +2709,7 @@ Report Date: ${today}
                 <div class="p-3 rounded" style="background-color: var(--background); border-left: 3px solid ${borderColor};">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <div class="font-medium">${rule.pump} - ${rule.station}</div>
+                            <div class="font-medium">${rule.portfolio} - ${rule.region}</div>
                             <div class="text-sm text-secondary mt-1">
                                 Max: ${rule.max} ${rule.unit} | Warning: ${rule.warning} ${rule.unit}
                             </div>
@@ -2859,7 +2723,7 @@ Report Date: ${today}
                 <div class="p-3 rounded" style="background-color: var(--background); border-left: 3px solid ${borderColor};">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <div class="font-medium">${rule.pump} - ${rule.station}</div>
+                            <div class="font-medium">${rule.portfolio} - ${rule.region}</div>
                             <div class="text-sm text-secondary mt-1">
                                 Nominal: ${rule.nominal} ${rule.unit} | Variance: ${rule.variance} | Range: ${rule.range} ${rule.unit}
                             </div>
@@ -2993,30 +2857,26 @@ Report Date: ${today}
         }, 500);
     }
 
-    function generateValidationResponse(request) {
+            function generateValidationResponse(request) {
         const requestLower = request.toLowerCase();
 
-        // Issue/Error queries
-        if (requestLower.includes('out of spec') || requestLower.includes('out-of-spec')) {
-            return "Last month, 23 flowrate readings were outside specifications (4.2% of total readings). Most occurred at Station B during peak load hours. I've included the violation records and applicable validation rules below.";
-        } else if (requestLower.includes('validation failure')) {
-            return "In the past week, there were 12 validation failures: 7 flowrate out-of-range, 3 temperature warnings, and 2 data freshness issues. See breakdown with reference rules below.";
+        if (requestLower.includes('out of spec') || requestLower.includes('out-of-spec') || requestLower.includes('batches')) {
+            return "Last month, 3 manufacturing batches for Livestock Vaccines (EU) were out of specification for yield. Most occurred during the second week. I've included the violation records and applicable validation rules below.";
+        } else if (requestLower.includes('validation failure') || requestLower.includes('supply chain')) {
+            return "In the past week, there were 4 supply chain validation failures: 3 relating to minimum inventory days on hand in NA, and 1 data freshness issue. See breakdown with reference rules below.";
         } else if (requestLower.includes('data quality') && requestLower.includes('issue')) {
-            return "Station A has 3 active data quality issues: 1 sensor with intermittent connectivity, 1 calibration overdue alert, and 1 reading frequency below threshold. Reference validation rules are shown below.";
-        } else if (requestLower.includes('temperature') && requestLower.includes('violation')) {
-            return "In the last 2 weeks, there were 8 temperature violations across all stations. 5 were warning-level (exceeded 185°F) and 3 were critical (exceeded 195°F). Violations and relevant rules are detailed below.";
+            return "NA region sales reporting has 2 active data quality issues: T+2 reporting delay rule violation, and 1 pending weekly inventory reconciliation. Reference validation rules are shown below.";
+        } else if (requestLower.includes('inventory') && requestLower.includes('violation')) {
+            return "In the last 2 weeks, there were 3 inventory compliance violations in EU. 2 were warning-level (under 30 days) and 1 was critical (under 15 days). Violations and relevant rules are detailed below.";
         }
-        // Informational queries
-        else if (requestLower.includes('flowrate') && requestLower.includes('range')) {
-            return "The normal flowrate range for standard pumps is 100-500 GPM. High-capacity pumps operate at 500-1000 GPM, and low-flow pumps at 30-145 GPM. I'll show you the detailed specifications with reference rules below.";
-        } else if (requestLower.includes('temperature') && requestLower.includes('range')) {
-            return "Operating temperature ranges are 50-180°F for standard operations, with warning thresholds at 45°F (low) and 185°F (high). Critical shutdown occurs at 40°F or 195°F. Full specifications and validation rules are shown below.";
-        } else if (requestLower.includes('pressure variance')) {
-            return "Line 1 allows a maximum pressure variance of ±10% from baseline (150 PSI). Current variance monitoring shows 94% compliance rate. Reference pressure validation rules are included below.";
-        } else if (requestLower.includes('rules') && requestLower.includes('station a')) {
-            return "Station A has 5 active validation rules covering flowrate, temperature, vibration, and power consumption for PUMP-A1, A2, and A3. All rules and their specifications are detailed below.";
-        } else if (requestLower.includes('power') && requestLower.includes('high-capacity')) {
-            return "High-capacity pumps (PUMP-A3, PUMP-B3) have power consumption limits of 102.5-147.5 kW (±18% variance from 125-130 kW nominal). Detailed power validation rules are shown below.";
+        else if (requestLower.includes('margin') && requestLower.includes('target')) {
+            return "The target gross margin for Companion Animal therapeutics is >80%. The acceptable range is 60-90%. I'll show you the detailed specifications with reference rules below.";
+        } else if (requestLower.includes('yield') && requestLower.includes('threshold')) {
+            return "Acceptable yield thresholds for vaccine manufacturing are 93-97% (baseline 95% ±2%). Full specifications and validation rules are shown below.";
+        } else if (requestLower.includes('inventory limit') || requestLower.includes('inventory days')) {
+            return "EU allows a maximum inventory of 60 days on hand, with a warning threshold at 30 days. Current compliance rate is 94%. Reference inventory rules are included below.";
+        } else if (requestLower.includes('revenue recognition')) {
+            return "Q3 revenue recognition requires T+2 days max reporting delay. All rules and their specifications are detailed below.";
         } else {
             return "I've analyzed your validation query. The relevant specifications, current compliance status, and reference validation rules are shown in the results below.";
         }
@@ -3035,30 +2895,30 @@ Report Date: ${today}
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Pump Type</th>
-                                <th>Min Flowrate (GPM)</th>
-                                <th>Max Flowrate (GPM)</th>
-                                <th>Typical Operating Range</th>
+                                <th>Portfolio</th>
+                                <th>Min Target (%)</th>
+                                <th>Max Target (%)</th>
+                                <th>Typical Margin (%)</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Standard Pump</td>
+                                <td>Companion Animal</td>
                                 <td>100</td>
                                 <td>500</td>
                                 <td>250-400</td>
                                 <td><span class="badge outline" style="border-color: var(--success); color: var(--success);">Active</span></td>
                             </tr>
                             <tr>
-                                <td>High-Capacity Pump</td>
+                                <td>Livestock</td>
                                 <td>500</td>
                                 <td>1000</td>
                                 <td>700-900</td>
                                 <td><span class="badge outline" style="border-color: var(--success); color: var(--success);">Active</span></td>
                             </tr>
                             <tr>
-                                <td>Low-Flow Pump</td>
+                                <td>Equine</td>
                                 <td>25</td>
                                 <td>150</td>
                                 <td>50-120</td>
@@ -3076,8 +2936,8 @@ Report Date: ${today}
                             <tr>
                                 <th>Date</th>
                                 <th>Location</th>
-                                <th>Pump ID</th>
-                                <th>Reading (GPM)</th>
+                                <th>Portfolio</th>
+                                <th>Yield (%)</th>
                                 <th>Expected Range</th>
                                 <th>Deviation</th>
                             </tr>
@@ -3085,27 +2945,27 @@ Report Date: ${today}
                         <tbody>
                             <tr style="background-color: rgba(248, 81, 73, 0.1);">
                                 <td>2024-12-15</td>
-                                <td>Station B</td>
-                                <td>PUMP-B3</td>
-                                <td>537</td>
-                                <td>100-500</td>
-                                <td style="color: var(--danger);">+7.4%</td>
+                                <td>EU</td>
+                                <td>Livestock Vaccines</td>
+                                <td>89</td>
+                                <td>93-97</td>
+                                <td style="color: var(--danger);">-4%</td>
                             </tr>
                             <tr style="background-color: rgba(248, 81, 73, 0.1);">
                                 <td>2024-12-14</td>
-                                <td>Station B</td>
-                                <td>PUMP-B2</td>
-                                <td>89</td>
-                                <td>100-500</td>
-                                <td style="color: var(--danger);">-11%</td>
+                                <td>EU</td>
+                                <td>Livestock Vaccines</td>
+                                <td>91</td>
+                                <td>93-97</td>
+                                <td style="color: var(--danger);">-2%</td>
                             </tr>
                             <tr style="background-color: rgba(248, 81, 73, 0.1);">
                                 <td>2024-12-12</td>
-                                <td>Station A</td>
-                                <td>PUMP-A1</td>
-                                <td>523</td>
-                                <td>100-500</td>
-                                <td style="color: var(--danger);">+4.6%</td>
+                                <td>EU</td>
+                                <td>Livestock Vaccines</td>
+                                <td>90</td>
+                                <td>93-97</td>
+                                <td style="color: var(--danger);">-3%</td>
                             </tr>
                             <tr>
                                 <td colspan="6" class="text-center text-secondary">Showing 3 of 23 out-of-spec readings</td>
@@ -3312,14 +3172,14 @@ Report Date: ${today}
     function generateDocumentHighlights(document) {
         // Generate highlights based on document type and keywords
         const highlightsMap = {
-            "pump-flowrate-specs": [
-                { title: "Standard Pump Range", content: "Acceptable flowrate range: 100-500 GPM for standard operations. Optimal performance at 250-400 GPM." },
-                { title: "High-Capacity Specifications", content: "High-capacity pumps operate at 500-1000 GPM. Warning thresholds set at ±5% of nominal rate." },
+            "companion-revenue-specs": [
+                { title: "Companion Animal Range", content: "Target growth is >8% for core products." },
+                { title: "High-Growth Opportunities", content: "New therapeutics should target >15% YoY growth." },
                 { title: "Out-of-Spec Protocols", content: "Readings beyond acceptable range trigger automatic alerts. Three consecutive violations require immediate investigation." },
                 { title: "Calibration Requirements", content: "Flow meters must be calibrated quarterly. Accuracy tolerance: ±2% of reading." }
             ],
             "flowrate-monitoring-sop": [
-                { title: "Continuous Monitoring", content: "Real-time monitoring required for all critical pumps. Data logged at 30-second intervals." },
+                { title: "Weekly Sales Reporting", content: "Weekly aggregation required for all commercial lines." },
                 { title: "Alert Escalation", content: "Level 1: Warning at ±8% variance. Level 2: Critical at ±12% variance. Level 3: Auto-shutdown at ±20%." },
                 { title: "Response Procedures", content: "Operations team must respond to Level 1 alerts within 30 minutes. Critical alerts require immediate action." }
             ],
@@ -3330,7 +3190,7 @@ Report Date: ${today}
                 { title: "Seasonal Adjustments", content: "Winter operations may require adjusted baselines for outdoor equipment." }
             ],
             "thermal-mgmt-practices": [
-                { title: "Heat Dissipation", content: "Proper ventilation required to maintain ambient temperature below 95°F in pump rooms." },
+                { title: "Supply Chain Reserves", content: "Strategic reserve required to maintain 30 days inventory." },
                 { title: "Cooling Systems", content: "Active cooling systems must engage when temperatures exceed 170°F." },
                 { title: "Preventive Maintenance", content: "Quarterly thermal imaging surveys recommended to identify hot spots before failure." }
             ],
@@ -3361,12 +3221,12 @@ Report Date: ${today}
                 { title: "Next Actions", content: "TEMP-A4 and FLOW-C2 scheduled for calibration next Monday." }
             ],
             "epa-compliance-reqs": [
-                { title: "Reporting Requirements", content: "Monthly reports required for all pump operations. Include flow rates, operating hours, and incidents." },
+                { title: "Commercial Reporting Requirements", content: "Monthly reporting for all sales portfolios." },
                 { title: "Specification Compliance", content: "All equipment must operate within EPA-defined limits. Violations must be reported within 24 hours." },
                 { title: "Audit Preparation", content: "Maintain 5 years of operational data for compliance audits." }
             ],
             "iso-9001-quality-mgmt": [
-                { title: "Quality Management System", content: "ISO 9001:2015 framework applied to pump operations and validation processes." },
+                { title: "Financial Management System", content: "SOX compliance applied to revenue operations." },
                 { title: "Continuous Improvement", content: "Regular review cycles to identify process improvements and reduce validation failures." },
                 { title: "Documentation Standards", content: "All procedures documented according to ISO standards. Annual certification review." }
             ]
@@ -3376,8 +3236,8 @@ Report Date: ${today}
         const docId = document.url.split('/').pop();
         return highlightsMap[docId] || [
             { title: "Document Summary", content: document.description },
-            { title: "Key Information", content: "This document contains important specifications and guidelines for pump operations." },
-            { title: "Applicability", content: "Applies to all pump systems and monitoring operations." }
+            { title: "Key Information", content: "This document contains vital business guidelines." },
+            { title: "Applicability", content: "Applies to all commercial and operational reporting." }
         ];
     }
 
@@ -3406,16 +3266,16 @@ Report Date: ${today}
         const allReferences = [
             // Flowrate references
             {
-                title: "Pump Flowrate Specifications - Technical Manual",
-                description: "Comprehensive guide covering acceptable flowrate ranges for all pump types including standard, high-capacity, and low-flow models.",
-                url: "#/documents/pump-flowrate-specs",
+                title: "Sales Reporting Compliance Manual",
+                description: "Comprehensive guide covering revenue and margin targets including standard, high-capacity, and low-flow models.",
+                url: "#/documents/companion-revenue-specs",
                 type: "Technical Manual",
                 date: "Updated Jan 2025",
                 version: "3.2",
                 keywords: ["flowrate", "range", "specification"]
             },
             {
-                title: "Operating Guidelines: Flowrate Monitoring",
+                title: "Operating Guidelines: Revenue Recognition",
                 description: "Standard operating procedures for continuous flowrate monitoring and out-of-specification detection protocols.",
                 url: "#/documents/flowrate-monitoring-sop",
                 type: "SOP",
@@ -3425,8 +3285,8 @@ Report Date: ${today}
             },
             // Temperature references
             {
-                title: "Temperature Control Standards",
-                description: "Defines acceptable temperature ranges, warning thresholds, and critical shutdown procedures for pump operations.",
+                title: "Margin Threshold Standards",
+                description: "Defines supply chain optimization and inventory targets.",
                 url: "#/documents/temp-control-standards",
                 type: "Standard",
                 date: "Nov 2024",
@@ -3434,8 +3294,8 @@ Report Date: ${today}
                 keywords: ["temperature", "range", "specification"]
             },
             {
-                title: "Thermal Management Best Practices",
-                description: "Industry best practices for maintaining optimal pump operating temperatures and preventing thermal-related failures.",
+                title: "Supply Chain Best Practices",
+                description: "Industry best practices for improving manufacturing yield.",
                 url: "#/documents/thermal-mgmt-practices",
                 type: "Best Practice Guide",
                 date: "Oct 2024",
@@ -3443,7 +3303,7 @@ Report Date: ${today}
             },
             // Pressure references
             {
-                title: "Pressure Variance Tolerances - Line-Specific",
+                title: "Yield Variance Tolerances - Line-Specific",
                 description: "Detailed variance tolerances for each production line, including baseline pressures and acceptable deviation ranges.",
                 url: "#/documents/pressure-variance-specs",
                 type: "Technical Specification",
@@ -3491,7 +3351,7 @@ Report Date: ${today}
             // Compliance references
             {
                 title: "Regulatory Compliance Requirements - EPA",
-                description: "Environmental Protection Agency requirements for pump system monitoring, reporting, and specification compliance.",
+                description: "Financial compliance reporting.",
                 url: "#/documents/epa-compliance-reqs",
                 type: "Regulatory Document",
                 date: "2024",
@@ -3499,7 +3359,7 @@ Report Date: ${today}
             },
             {
                 title: "Industry Standard ISO 9001:2015 - Quality Management",
-                description: "ISO quality management standards applicable to pump operations and validation processes.",
+                description: "Quality standards for commercial data.",
                 url: "#/documents/iso-9001-quality-mgmt",
                 type: "ISO Standard",
                 date: "2015",
@@ -3594,9 +3454,9 @@ Report Date: ${today}
 
     function initializeGoldenTablesTab() {
         setupGoldenTableSelector();
-        setupQueryInterface();
-        setupVisualizationPanel();
-        setupValidationRules();
+        // setupQueryInterface(); // Removed in Animal Health
+        // setupVisualizationPanel(); // Removed in Animal Health
+        // setupValidationRules(); // Removed in Animal Health
 
         // Setup all selects after DOM is ready
         setTimeout(() => {
@@ -3688,44 +3548,9 @@ Report Date: ${today}
     }
 
     function setupQueryInterface() {
-        const executeBtn = document.querySelector('.execute-query-btn');
-        const queryTextarea = document.querySelector('.query-interface-card textarea');
-        const querySuggestions = document.querySelector('.query-suggestions');
-        const datePresetContent = document.getElementById('datePresetContent');
-
-        executeBtn.addEventListener('click', () => {
-            if (!selectedGoldenTable) {
-                alert("Please select a golden table first.");
-                return;
-            }
-            openQueryDrawer(queryTextarea.value);
-        });
-
-        querySuggestions.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON') {
-                queryTextarea.value = e.target.textContent.trim().replace(/"/g, '');
-            }
-        });
-
-        datePresetContent.addEventListener('click', (e) => {
-            if (e.target.classList.contains('select-item')) {
-                const months = parseInt(e.target.dataset.value);
-                const endDate = new Date();
-                const startDate = new Date();
-                startDate.setMonth(endDate.getMonth() - months);
-
-                document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
-                document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
-                document.getElementById('datePresetValue').textContent = e.target.textContent;
-                datePresetContent.classList.add('hidden');
-
-                // Manually trigger the select for the dropdown
-                const trigger = document.getElementById('datePresetTrigger');
-                const valueSpan = document.getElementById('datePresetValue');
-                valueSpan.textContent = e.target.textContent;
-                trigger.dispatchEvent(new Event('change'));
-            }
-        });
+        // Elements were removed from the HTML for the Animal Health version to simplify the view.
+        // We handle any necessary logic setup here if added back later.
+        console.log("Query interface simplified for this dashboard.");
     }
 
     function setupVisualizationPanel() {
@@ -4000,4 +3825,72 @@ Report Date: ${today}
             options: { ...chartOptions, plugins: { legend: { position: 'top', labels: { color: '#8B949E' } } } }
         });
     }
+
+    // Render Overview Charts for the new Splashpage
+    function renderOverviewCharts() {
+        const revCtx = document.getElementById('overview-chart-revenue');
+        if (revCtx) {
+            new Chart(revCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['NA', 'EU', 'APAC', 'LATAM'],
+                    datasets: [
+                        { label: 'Companion Animal', data: [850, 420, 180, 90], backgroundColor: '#3b82f6' },
+                        { label: 'Livestock', data: [320, 290, 150, 110], backgroundColor: '#8b5cf6' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { stacked: true, grid: { color: '#f3f4f6' } },
+                        x: { stacked: true, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        const supplyCtx = document.getElementById('overview-chart-supply');
+        if (supplyCtx) {
+            new Chart(supplyCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [
+                        { label: 'Demand Forecast', data: [100, 105, 110, 108, 115, 120], borderColor: '#10b981', tension: 0.3 },
+                        { label: 'Inventory Level', data: [110, 108, 105, 95, 98, 90], borderColor: '#f59e0b', tension: 0.3, fill: true, backgroundColor: 'rgba(245, 158, 11, 0.1)' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        const yieldCtx = document.getElementById('mini-chart-yield');
+        if (yieldCtx) {
+            new Chart(yieldCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['1', '2', '3', '4', '5', '6', '7'],
+                    datasets: [{ data: [96, 95.5, 95, 96, 94.8, 93, 94.2], borderColor: '#ef4444', borderWidth: 2, tension: 0.3, pointRadius: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false, min: 90, max: 100 } }
+                }
+            });
+        }
+    }
+
+    // Initialize overview charts after a slight delay
+    setTimeout(renderOverviewCharts, 200);
+
 });
