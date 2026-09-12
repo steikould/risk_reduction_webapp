@@ -1498,9 +1498,30 @@ Executive Intelligence System`
         };
     }
 
+
     function handleUserMessage(message) {
+        // Phase 5: Abstain state for unclear queries
+        const requestLower = message.toLowerCase();
+        if (requestLower.includes('how many employees') || requestLower.includes('meaning of life') || requestLower.includes('stock price')) {
+            addChatMessage(message, true);
+            setTimeout(() => {
+                const abstainHtml = `
+                    <div class="mt-2 p-3 bg-red-900/30 border border-red-700 rounded-lg text-sm text-slate-300">
+                        <div class="font-semibold text-red-400 mb-1 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Cannot Safely Answer
+                        </div>
+                        <div>I am configured to provide insights on Animal Health Commercial and Operational data. I cannot verify or synthesize information outside of these domains.</div>
+                    </div>
+                `;
+                addChatMessage(abstainHtml, false, true);
+            }, 800);
+            return;
+        }
+
         // Add user message to chat
         addChatMessage(message, true);
+
 
         // Parse the request
         const parsedQuery = parseUserRequest(message);
@@ -1508,8 +1529,59 @@ Executive Intelligence System`
 
         // Add assistant response with confirmation
         setTimeout(() => {
-            const responseMessage = "I understand you'd like to retrieve the following data:";
-            const assistantMsg = addChatMessage(responseMessage, false, true, queryDetails);
+
+
+            // Add Interpretation Chip
+            const interpretationHtml = `
+                <div class="mt-2 p-3 bg-slate-800 border border-slate-600 rounded-lg text-sm text-slate-300">
+                    <div class="font-semibold text-violet-400 mb-1 flex justify-between items-center cursor-pointer group" onclick="document.getElementById('reasoning-drawer').classList.remove('translate-x-full')">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            Interpreting your request
+                        </div>
+                        <div class="text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">View reasoning trace &rarr;</div>
+                    </div>
+                    <div>Looking at <span class="bg-slate-700 px-1 rounded cursor-pointer hover:bg-slate-600">${queryDetails.dateRangeText}</span> for <span class="bg-slate-700 px-1 rounded cursor-pointer hover:bg-slate-600">${queryDetails.linesText}</span> in <span class="bg-slate-700 px-1 rounded cursor-pointer hover:bg-slate-600">${queryDetails.locationsText}</span>.</div>
+
+                    <details class="mt-2 text-xs text-slate-500 border-t border-slate-700 pt-2">
+                        <summary class="cursor-pointer hover:text-slate-300">Show generated query parameters</summary>
+                        <pre class="mt-2 p-2 bg-slate-900 rounded border border-slate-800 overflow-x-auto">
+{
+  "intent": "fetch_metrics",
+  "timeframe": "${queryDetails.dateRangeText}",
+  "portfolios": "${queryDetails.linesText}",
+  "regions": "${queryDetails.locationsText}",
+  "confidence_threshold": 0.85
+}</pre>
+                    </details>
+                </div>
+            `;
+            const assistantMsg = addChatMessage("I understand you'd like to retrieve the following data:", false, true, queryDetails);
+
+
+            const btnContainer = assistantMsg.querySelector('.mt-3.flex.gap-2');
+            if (btnContainer) {
+                btnContainer.insertAdjacentHTML('beforebegin', interpretationHtml);
+
+                // Add Pin Button
+                const confirmBtn = assistantMsg.querySelector('.confirm-query-btn');
+                if (confirmBtn) {
+                    confirmBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1"><path d="M12 20v-6M6 20V10M18 20V4"/></svg> Confirm & View Data';
+
+                    const pinBtn = document.createElement('button');
+                    pinBtn.className = 'button outline text-xs py-1 px-2 cancel-query-btn ml-2';
+                    pinBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Pin to board';
+                    btnContainer.appendChild(pinBtn);
+
+                    pinBtn.addEventListener('click', () => {
+                        addChatMessage("Pinned to your Executive Board. It will be available in the Today tab.", false);
+                        pinBtn.classList.add('bg-green-600', 'text-white', 'border-green-600');
+                        pinBtn.innerHTML = 'Pinned!';
+                        setTimeout(() => pinBtn.parentElement.remove(), 1000);
+                    });
+                }
+            }
+
 
             // Add event listeners to confirmation buttons
             const confirmBtn = assistantMsg.querySelector('.confirm-query-btn');
@@ -1580,6 +1652,46 @@ Executive Intelligence System`
 
     // Initialize the application
     function initializeApp() {
+
+    // Phase 2: Agent Workspace Sliders Logic
+    const slider1 = document.querySelector('input[type="range"][max="150"]');
+    const slider2 = document.querySelector('input[type="range"][max="45"]');
+    if (slider1 && slider2) {
+        const updateGraph = () => {
+            const cost = parseInt(slider1.value);
+            const buffer = parseInt(slider2.value);
+
+            document.getElementById('slider-val-1').textContent = `$${cost}k`;
+            document.getElementById('slider-val-2').textContent = `${buffer} Days`;
+
+            // Recompute proposed trajectory (mock logic based on sliders)
+            // Buffer drives the end height, cost drives how fast we get there
+            const endY = 100 - buffer; // Invert for SVG (0 is top)
+            const midY = 100 - (buffer * (cost/150 + 0.5)); // Faster rise with more cost
+
+            const path = document.querySelector('path[stroke="#8b5cf6"]');
+            if (path) {
+                path.setAttribute('d', `M0,40 L20,50 L40,${midY} L60,${endY+10} L80,${endY+5} L100,${endY}`);
+            }
+        };
+
+        slider1.addEventListener('input', updateGraph);
+        slider2.addEventListener('input', updateGraph);
+    }
+
+    // Phase 6: Presenter Affordances
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'p' || e.key === 'P') {
+            const switcher = document.getElementById('scenario-switcher');
+            if (switcher) {
+                switcher.classList.toggle('hidden');
+            }
+        }
+        if (e.key === 'r' || e.key === 'R') {
+            window.location.reload();
+        }
+    });
+
         lucide.createIcons();
 
         // Add welcome message
