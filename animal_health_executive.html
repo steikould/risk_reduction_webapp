@@ -175,99 +175,147 @@
 
         <div class="tabs-container">
             <div class="tabs-list grid w-full grid-cols-4">
-                <button class="tabs-trigger active" data-tab="overview">Overview</button>
-                <button class="tabs-trigger" data-tab="analysis">Data Query</button>
-                <button class="tabs-trigger" data-tab="data">Data Insights</button>
+                <button class="tabs-trigger active" data-tab="overview">Today</button>
+                <button class="tabs-trigger" data-tab="analysis">Ask</button>
+                <button class="tabs-trigger" data-tab="data">Signals</button>
                 <button class="tabs-trigger" data-tab="golden">Validation & Sources</button>
             </div>
 
             <div id="overview-tab" class="tabs-content space-y-6 pt-6">
-                <!-- AI Summary Insight -->
-                <div class="card bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100">
-                    <div class="card-content p-5 flex items-start gap-4">
-                        <div class="bg-blue-100 text-blue-600 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+
+                <!-- What Changed Strip -->
+                <div class="bg-[#1e293b] border border-[#334155] rounded-md px-4 py-2 flex items-center gap-3 text-sm mb-6">
+                    <span class="text-[#94a3b8] whitespace-nowrap">Since Tuesday:</span>
+                    <div class="flex-1 text-[#e2e8f0] truncate">
+                        EU Livestock Vaccine projected stockout date advanced by 1 week; Global Mfg Yield dropped below 95% threshold.
+                    </div>
+                </div>
+
+                <!-- 3 Things Need You Today (Decision Cards) -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">3 things need you today:</h3>
+                    <div class="space-y-4">
+                        <!-- Card 1 -->
+                        <div class="card border border-slate-700 bg-slate-800 p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="badge" style="background-color: var(--danger); color: white;">Critical</span>
+                                        <h4 class="font-bold text-slate-100">EU Livestock Vaccine Stockout Risk</h4>
+                                    </div>
+                                    <p class="text-sm text-slate-300">Projected stockout in 3 weeks. Recommend engaging secondary supplier immediately.</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="button outline text-xs">Dismiss</button>
+                                    <button class="button primary text-xs bg-violet-600 border-none hover:bg-violet-500" onclick="document.getElementById('agent-workspace').classList.remove('hidden')">Invoke Agent</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <h3 class="text-sm font-bold text-blue-900 uppercase tracking-wider mb-1">AI Executive Summary</h3>
-                            <p class="text-blue-800 text-sm">Overall business health is <strong>Strong</strong>. Companion Animal revenue is exceeding targets by 4.2%, driven by the new parasiticide launch in NA. However, AI forecasting indicates a potential supply chain constraint for Livestock Vaccines in EU entering Q4 due to raw material delays. Recommended action: expedite secondary supplier qualification.</p>
+
+                        <!-- Card 2 -->
+                        <div class="card border border-slate-700 bg-slate-800 p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="badge" style="background-color: var(--warning); color: black;">Warning</span>
+                                        <h4 class="font-bold text-slate-100">Global Mfg Yield Drop</h4>
+                                    </div>
+                                    <p class="text-sm text-slate-300">Yield dropped below 95% threshold in APAC facilities.</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="button outline text-xs">Dismiss</button>
+                                    <button class="button primary text-xs" onclick="document.querySelector('.tabs-trigger[data-tab=\'data\']').click()">View Signals</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="card border border-slate-700 bg-slate-800 p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="badge" style="background-color: var(--success); color: white;">Action Required</span>
+                                        <h4 class="font-bold text-slate-100">Approve New Parasiticide Campaign</h4>
+                                    </div>
+                                    <p class="text-sm text-slate-300">Commercial agent requires approval to launch Q4 marketing spend.</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="button outline text-xs">Decline</button>
+                                    <button class="button primary text-xs">Approve ($1.2M)</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- KPI Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- KPI 1 -->
-                    <div class="card p-4 relative overflow-hidden group hover:border-blue-300 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\'analysis\']').click()">
-                        <div class="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M15 3h6v6"/><path d="m9 21 12-12"/><path d="M21 21v-6h-6"/></svg>
-                        </div>
-                        <h4 class="text-xs font-medium text-secondary mb-1">YTD Global Revenue</h4>
-                        <div class="flex items-end gap-2 mb-2">
-                            <span class="text-2xl font-bold">$2.4B</span>
-                            <span class="text-sm font-medium text-green-600 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
-                                6.5%
-                            </span>
-                        </div>
-                        <div class="w-full bg-gray-100 rounded-full h-1.5 mb-1">
-                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 85%"></div>
-                        </div>
-                        <span class="text-xs text-secondary">85% of Annual Target</span>
-                    </div>
+                <!-- AI Summary Insight Removed per brief -->
 
-                    <!-- KPI 2 -->
-                    <div class="card p-4 relative overflow-hidden group hover:border-blue-300 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\'analysis\']').click()">
-                        <div class="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M15 3h6v6"/><path d="m9 21 12-12"/><path d="M21 21v-6h-6"/></svg>
+                                <!-- KPI Grid -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Revenue -->
+                    <div class="card p-4 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <h4 class="text-sm font-medium text-slate-400 mb-2">Q3 Revenue Projection</h4>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-slate-100">$412M</span>
+                            <span class="text-sm text-green-400">+5.2%</span>
                         </div>
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-xs font-medium text-secondary">Global Mfg Yield</h4>
-                            <div class="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1 font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                                Action Req
+                        <div class="mt-2 pt-2 border-t border-slate-700/50">
+                            <div class="flex justify-between text-xs text-slate-500">
+                                <span>AI Confidence: <span class="text-green-400">High (92%)</span></span>
+                                <span>Range: $405M - $420M</span>
                             </div>
                         </div>
-                        <div class="flex items-end gap-2 mb-2">
-                            <span class="text-2xl font-bold">94.2%</span>
-                            <span class="text-sm font-medium text-red-600 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
-                                1.8%
-                            </span>
-                        </div>
-                        <div class="h-8 w-full"><canvas id="mini-chart-yield"></canvas></div>
                     </div>
 
-                    <!-- KPI 3 -->
-                    <div class="card p-4 relative overflow-hidden group hover:border-blue-300 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\'analysis\']').click()">
-                        <div class="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M15 3h6v6"/><path d="m9 21 12-12"/><path d="M21 21v-6h-6"/></svg>
+                    <!-- Margin -->
+                    <div class="card p-4 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <h4 class="text-sm font-medium text-slate-400 mb-2">Global Gross Margin</h4>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-slate-100">68.4%</span>
+                            <span class="text-sm text-red-400">-1.2%</span>
                         </div>
-                        <h4 class="text-xs font-medium text-secondary mb-1">Companion Animal Growth</h4>
-                        <div class="flex items-end gap-2 mb-2">
-                            <span class="text-2xl font-bold">+12.4%</span>
-                            <span class="text-sm font-medium text-gray-500">YoY</span>
-                        </div>
-                        <div class="flex gap-1 h-8 items-end mt-2">
-                            <div class="bg-blue-200 w-1/5 rounded-t" style="height: 40%"></div>
-                            <div class="bg-blue-300 w-1/5 rounded-t" style="height: 55%"></div>
-                            <div class="bg-blue-400 w-1/5 rounded-t" style="height: 70%"></div>
-                            <div class="bg-blue-500 w-1/5 rounded-t" style="height: 85%"></div>
-                            <div class="bg-blue-600 w-1/5 rounded-t" style="height: 100%"></div>
-                        </div>
-                    </div>
-
-                    <!-- KPI 4 -->
-                    <div class="card p-4 relative overflow-hidden group hover:border-blue-300 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\'analysis\']').click()">
-                        <div class="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M15 3h6v6"/><path d="m9 21 12-12"/><path d="M21 21v-6h-6"/></svg>
-                        </div>
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-xs font-medium text-secondary">R&D Pipeline Health</h4>
-                            <div class="bg-indigo-100 text-indigo-600 text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1 font-medium">
-                                AI Forecast
+                        <div class="mt-2 pt-2 border-t border-slate-700/50">
+                            <div class="flex justify-between text-xs text-slate-500">
+                                <span>AI Confidence: <span class="text-yellow-400">Medium (76%)</span></span>
+                                <span>Range: 66.5% - 69.2%</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Yield -->
+                    <div class="card p-4 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <h4 class="text-sm font-medium text-slate-400 mb-2">APAC Mfg Yield</h4>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-slate-100">92.8%</span>
+                            <span class="text-sm text-red-400">-3.1%</span>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-slate-700/50">
+                            <div class="flex justify-between text-xs text-slate-500">
+                                <span>AI Confidence: <span class="text-green-400">High (95%)</span></span>
+                                <span>Range: 91.0% - 94.5%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory -->
+                    <div class="card p-4 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-sky-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <h4 class="text-sm font-medium text-slate-400 mb-2">Livestock Vaccine Stock</h4>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-slate-100">22 Days</span>
+                            <span class="text-sm text-red-400">-12 Days</span>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-slate-700/50">
+                            <div class="flex justify-between text-xs text-slate-500">
+                                <span>AI Confidence: <span class="text-green-400">High (88%)</span></span>
+                                <span>Range: 18 - 25 Days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                         <div class="flex items-end gap-2 mb-2">
                             <span class="text-2xl font-bold">3</span>
                             <span class="text-sm text-secondary">Approvals Expected Q4</span>
@@ -358,39 +406,47 @@
                 </div>
             </div>
 
-            <div id="data-tab" class="tabs-content space-y-4 pt-6 hidden">
-                <!-- Action Buttons -->
-                <div class="flex gap-2 justify-between" id="insights-action-buttons" style="display: none;">
-                    <button id="revise-query-btn" class="button outline">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                        Revise Query
-                    </button>
-                    <div class="flex gap-2">
-                        <button id="generate-report-btn" class="button primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                            Generate Report
-                        </button>
-                        <button id="download-package-btn" class="button outline">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Download Package (.zip)
-                        </button>
+                        <div id="data-tab" class="tabs-content space-y-4 pt-6 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">External Signal Fusion</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Signal Card 1 -->
+                    <div class="card p-4 border-l-4" style="border-left-color: #f97316;">
+                        <h3 class="font-bold text-orange-300">External Signal: Weather Event</h3>
+                        <p class="text-sm mt-2 text-slate-300">Typhoon approaching major APAC manufacturing hub. Correlated with 15% drop in on-time shipping for previous similar events.</p>
+                        <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-700">
+                            <span class="font-semibold text-violet-400 text-sm">Causal Narrative:</span>
+                            <p class="text-xs text-slate-400 mt-1">The upcoming weather event in APAC is the likely root cause of the projected supply chain delays flagged in the Today tab. We recommend adjusting lead times by +5 days and engaging secondary suppliers immediately.</p>
+                        </div>
+                    </div>
+
+                    <!-- Signal Card 2 -->
+                    <div class="card p-4 border-l-4" style="border-left-color: #3b82f6;">
+                        <h3 class="font-bold text-blue-300">External Signal: Competitor Pricing</h3>
+                        <p class="text-sm mt-2 text-slate-300">Competitor X announced a 5% price drop on livestock vaccines in the EU market yesterday.</p>
+                        <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-700">
+                            <span class="font-semibold text-violet-400 text-sm">Causal Narrative:</span>
+                            <p class="text-xs text-slate-400 mt-1">The recent dip in our EU market share for livestock vaccines is directly correlated with Competitor X's aggressive pricing strategy. Revenue targets for Q3 are at risk unless promotions are matched.</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card mt-6">
                     <div class="card-header">
                         <h2 class="card-title">AI-Powered Data Analysis</h2>
-                        <p class="card-description">Machine learning insights and recommendations based on your query</p>
+                        <p class="card-description">Machine learning insights and recommendations based on internal metrics</p>
                     </div>
                     <div class="card-content">
                         <div id="llm-recommendations-container">
-                            <p class="text-secondary text-center py-8">Run a query and click "Confirm & Analyze" to see AI-powered insights and recommendations.</p>
+                            <p class="text-secondary text-center py-8">Run a query in the Ask tab and click "Confirm & Analyze" to see AI-powered insights here.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="golden-tab" class="tabs-content space-y-6 pt-6 hidden">
+<div id="golden-tab" class="tabs-content space-y-6 pt-6 hidden">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Data Validation Assistant</h2>
@@ -399,6 +455,58 @@
                     <div class="card-content">
                         <!-- Chat Messages Container -->
                         <div id="validationChatMessages" class="chat-messages mb-4"></div>
+
+
+                        <!-- Guardrails Panel -->
+                        <div class="mt-6 p-4 bg-slate-900 border border-slate-700 rounded-lg">
+                            <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+                                <svg class="text-green-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                Active Guardrails
+                            </h3>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> PII & Sensitive Data Filtered</div>
+                                <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> Financial Compliance Checked (SOX)</div>
+                                <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> Confidence Threshold > 80%</div>
+                                <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> Hallucination Mitigation Active</div>
+                            </div>
+                        </div>
+
+
+                        <!-- Audit Log -->
+                        <div class="mt-6">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-sm font-semibold">Security & Audit Log</h3>
+                                <button class="button outline text-xs py-1" onclick="alert('Audit log downloaded as CSV.')">Export Log</button>
+                            </div>
+                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 h-48 overflow-y-auto font-mono text-xs text-slate-400 space-y-2">
+                                <div class="flex gap-4 border-b border-slate-800 pb-2"><span class="w-24 shrink-0 text-slate-500">09:12:44 UTC</span><span class="w-16 shrink-0 text-blue-400">AUTH</span><span class="text-slate-300">User Executive (ID: 8492) logged in.</span></div>
+                                <div class="flex gap-4 border-b border-slate-800 pb-2"><span class="w-24 shrink-0 text-slate-500">09:14:11 UTC</span><span class="w-16 shrink-0 text-violet-400">QUERY</span><span class="text-slate-300">PII filter applied to 'Companion Animal Revenue' request.</span></div>
+                                <div class="flex gap-4 border-b border-slate-800 pb-2"><span class="w-24 shrink-0 text-slate-500">09:22:05 UTC</span><span class="w-16 shrink-0 text-orange-400">AGENT</span><span class="text-slate-300">Supply Chain agent invoked. Approval gate instantiated.</span></div>
+                                <div class="flex gap-4 border-b border-slate-800 pb-2"><span class="w-24 shrink-0 text-slate-500">09:41:30 UTC</span><span class="w-16 shrink-0 text-green-400">SYSTEM</span><span class="text-slate-300">SOX compliance check passed for Q3 revenue forecast.</span></div>
+                                <div class="flex gap-4"><span class="w-24 shrink-0 text-slate-500">10:05:12 UTC</span><span class="w-16 shrink-0 text-violet-400">QUERY</span><span class="text-slate-300">Abstain state triggered: out-of-domain request ('stock price').</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Provenance Explorer -->
+                        <div class="mt-6">
+                            <h3 class="text-sm font-semibold mb-3">Provenance Explorer</h3>
+                            <div class="flex items-center justify-between p-3 bg-slate-800 rounded border border-slate-700 text-xs text-slate-300 relative">
+                                <div class="text-center z-10 w-1/3">
+                                    <div class="font-semibold text-blue-400 mb-1">Source Systems</div>
+                                    <div>SAP ERP, Salesforce, IoT Sensors</div>
+                                </div>
+                                <div class="absolute left-1/3 top-1/2 w-1/6 border-t-2 border-dashed border-slate-500 z-0 transform -translate-y-1/2"></div>
+                                <div class="text-center z-10 w-1/3">
+                                    <div class="font-semibold text-violet-400 mb-1">Fusion Model</div>
+                                    <div>Enterprise AI Agent v2.4</div>
+                                </div>
+                                <div class="absolute left-1/2 top-1/2 w-1/6 border-t-2 border-dashed border-slate-500 z-0 transform -translate-y-1/2" style="left: 66.66%"></div>
+                                <div class="text-center z-10 w-1/3">
+                                    <div class="font-semibold text-green-400 mb-1">Final Insight</div>
+                                    <div>Verified Executive Summary</div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Pre-configured Validation Queries -->
                         <div class="mb-4">
@@ -538,6 +646,125 @@
     <script>
         lucide.createIcons();
     </script>
-    <script src="animal_health_executive.js"></script>
+
+            <div id="agent-workspace" class="fixed inset-0 bg-slate-950 z-50 hidden flex-col">
+                <div class="h-14 border-b border-slate-800 flex items-center justify-between px-6 bg-slate-900">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-violet-600/20 text-violet-500 flex items-center justify-center border border-violet-500/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                        </div>
+                        <div>
+                            <h2 class="font-semibold text-slate-100 text-sm">Autonomous Supply Chain Agent</h2>
+                            <p class="text-xs text-slate-400">EU Livestock Vaccine Remediation</p>
+                        </div>
+                    </div>
+                    <button class="text-slate-400 hover:text-white" onclick="document.getElementById('agent-workspace').classList.add('hidden')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <div class="flex-1 flex overflow-hidden">
+                    <!-- Left: Agent Logs -->
+                    <div class="w-1/3 border-r border-slate-800 bg-slate-900/50 p-6 overflow-y-auto font-mono text-xs text-slate-300">
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
+                            <span class="text-slate-400 uppercase tracking-wider font-semibold">Execution Log</span>
+                            <span class="text-green-400 animate-pulse flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> ACTIVE</span>
+                        </div>
+                        <div class="space-y-3" id="agent-logs">
+                            <div class="text-slate-500">[10:42:01] <span class="text-slate-300">Agent activated by User (Role: Executive)</span></div>
+                            <div class="text-slate-500">[10:42:03] <span class="text-violet-400">Goal: Remediate EU Livestock Vaccine stockout risk</span></div>
+                            <div class="text-slate-500">[10:42:05] <span class="text-slate-300">Querying ERP: current inventory levels (EU Hub) -> 22 Days</span></div>
+                            <div class="text-slate-500">[10:42:08] <span class="text-slate-300">Analyzing primary supplier lead time -> 14 Days (Delayed, Weather)</span></div>
+                            <div class="text-slate-500">[10:42:12] <span class="text-slate-300">Identifying secondary suppliers: Vendor B (Capacity: 80%), Vendor C (Capacity: 40%)</span></div>
+                            <div class="text-slate-500">[10:42:15] <span class="text-slate-300">Calculating freight scenarios (Air vs Sea)</span></div>
+                            <div class="text-slate-500">[10:42:19] <span class="text-green-400">Optimal path found: Split order Vendor B (Air) + Vendor C (Sea)</span></div>
+                            <div class="text-slate-500">[10:42:20] <span class="text-orange-400">HUMAN APPROVAL GATE: Cost > $50k ($82k premium)</span></div>
+                            <div class="text-slate-500">[10:42:21] <span class="text-slate-300">Waiting for executive approval to execute POs...</span></div>
+                        </div>
+                    </div>
+                    <!-- Right: Visual Sandbox & Approval -->
+                    <div class="flex-1 p-8 bg-slate-950 flex flex-col items-center justify-center relative">
+                        <div class="w-full max-w-2xl">
+                            <h3 class="text-xl font-semibold mb-6 text-center">Proposed Remediation Scenario</h3>
+
+                            <!-- Graph visualization mock -->
+                            <div class="h-64 bg-slate-900 border border-slate-800 rounded-lg mb-8 relative p-6 flex flex-col justify-end pb-8">
+                                <div class="absolute top-4 left-4 text-xs text-slate-400">Inventory Projection (Days)</div>
+                                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-xs text-slate-400">Timeline (Weeks)</div>
+                                <!-- Danger line -->
+                                <div class="absolute left-0 right-0 bottom-16 border-t border-red-500/50 border-dashed z-0"></div>
+                                <div class="absolute left-2 bottom-17 text-[10px] text-red-500">Critical Stockout (< 15 Days)</div>
+
+                                <svg class="w-full h-full absolute inset-0 z-10 p-6 overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                                    <!-- Original trajectory -->
+                                    <path d="M0,40 L20,60 L40,85 L60,110" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" opacity="0.5" />
+                                    <!-- Proposed trajectory -->
+                                    <path d="M0,40 L20,50 L40,45 L60,30 L80,25 L100,20" fill="none" stroke="#8b5cf6" stroke-width="3" />
+                                </svg>
+                            </div>
+
+                            <!-- Sliders -->
+                            <div class="space-y-6 mb-8 bg-slate-900/50 p-6 rounded-lg border border-slate-800">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-slate-300">Air Freight Premium Spend</span>
+                                        <span class="text-violet-400 font-bold" id="slider-val-1">$82k</span>
+                                    </div>
+                                    <input type="range" min="0" max="150" value="82" class="w-full accent-violet-500 bg-slate-700 h-1 rounded-full appearance-none">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-slate-300">Target Inventory Buffer</span>
+                                        <span class="text-violet-400 font-bold" id="slider-val-2">28 Days</span>
+                                    </div>
+                                    <input type="range" min="15" max="45" value="28" class="w-full accent-violet-500 bg-slate-700 h-1 rounded-full appearance-none">
+                                </div>
+                            </div>
+
+                            <!-- Approval Gate -->
+                            <div class="p-6 bg-slate-900 border border-violet-500/30 rounded-lg text-center shadow-[0_0_15px_rgba(139,92,246,0.1)]">
+                                <h4 class="text-white font-semibold mb-2">Approval Required</h4>
+                                <p class="text-sm text-slate-400 mb-6">Execute 2 Purchase Orders across secondary suppliers to maintain 28-day inventory buffer. Total cost premium: $82,000.</p>
+                                <div class="flex justify-center gap-4">
+                                    <button class="button outline px-6" onclick="document.getElementById('agent-workspace').classList.add('hidden')">Reject Plan</button>
+                                    <button class="button bg-violet-600 hover:bg-violet-700 text-white px-8 font-medium shadow-lg shadow-violet-600/20" onclick="alert('Agent execution authorized. Purchase orders are being transmitted via EDI.'); document.getElementById('agent-workspace').classList.add('hidden')">Authorize Execution</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<script src="animal_health_executive.js"></script>
+    <!-- Presenter Scenario Switcher -->
+    <div id="scenario-switcher" class="fixed bottom-4 right-4 bg-slate-800 border border-slate-600 rounded p-3 shadow-lg z-50 hidden">
+        <h4 class="text-sm font-semibold mb-2">Scenario Switcher (Presenter)</h4>
+        <div class="space-y-2">
+            <button class="button outline text-xs w-full" onclick="document.querySelector('.tabs-trigger[data-tab=\'overview\']').click()">1. Executive Overview</button>
+            <button class="button outline text-xs w-full" onclick="document.querySelector('.tabs-trigger[data-tab=\'analysis\']').click()">2. Ask / Disambiguation</button>
+            <button class="button outline text-xs w-full" onclick="document.querySelector('.tabs-trigger[data-tab=\'data\']').click()">3. Signal Fusion</button>
+            <button class="button outline text-xs w-full" onclick="document.querySelector('.tabs-trigger[data-tab=\'golden\']').click()">4. Trust & Guardrails</button>
+        </div>
+    </div>
+
+
+    <!-- Reasoning Drawer -->
+    <div id="reasoning-drawer" class="fixed right-0 top-0 h-full w-[400px] bg-slate-900 border-l border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 z-40 overflow-y-auto">
+        <div class="p-4 border-b border-slate-800 flex justify-between items-center sticky top-0 bg-slate-900/95 backdrop-blur z-10">
+            <h3 class="font-semibold text-slate-100 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line></svg>
+                AI Reasoning Trace
+            </h3>
+            <button onclick="document.getElementById('reasoning-drawer').classList.add('translate-x-full')" class="text-slate-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="p-6 font-mono text-xs text-slate-400 space-y-4" id="reasoning-content">
+            <div class="text-slate-500">[10:45:01] <span class="text-slate-300">Initializing reasoning trace...</span></div>
+            <div class="text-slate-500">[10:45:02] <span class="text-violet-400">Loading Enterprise Ontology (v2.4)</span></div>
+            <div class="text-slate-500">[10:45:03] <span class="text-slate-300">Evaluating multi-modal inputs from SAP, SFDC, and IoT layers.</span></div>
+            <div class="text-slate-500">[10:45:04] <span class="text-green-400">Confidence threshold met (>85%). Generating insights.</span></div>
+        </div>
+    </div>
+
 </body>
 </html>
