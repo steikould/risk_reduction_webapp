@@ -178,7 +178,7 @@
                 <button class="tabs-trigger active" data-tab="overview">Today</button>
                 <button class="tabs-trigger" data-tab="analysis">Ask</button>
                 <button class="tabs-trigger" data-tab="data">Signals</button>
-                <button class="tabs-trigger" data-tab="golden">Validation & Sources</button>
+                <button class="tabs-trigger" data-tab="golden">Trust</button>
             </div>
 
             <div id="overview-tab" class="tabs-content space-y-6 pt-6">
@@ -316,18 +316,6 @@
                         </div>
                     </div>
                 </div>
-                        <div class="flex items-end gap-2 mb-2">
-                            <span class="text-2xl font-bold">3</span>
-                            <span class="text-sm text-secondary">Approvals Expected Q4</span>
-                        </div>
-                        <div class="flex justify-between mt-3 text-xs">
-                            <div class="text-center"><div class="font-bold text-gray-700">12</div><div class="text-gray-400">Phase 1</div></div>
-                            <div class="text-center"><div class="font-bold text-gray-700">8</div><div class="text-gray-400">Phase 2</div></div>
-                            <div class="text-center"><div class="font-bold text-gray-700">5</div><div class="text-gray-400">Phase 3</div></div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Main Charts -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="card">
@@ -419,6 +407,17 @@
                         <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-700">
                             <span class="font-semibold text-violet-400 text-sm">Causal Narrative:</span>
                             <p class="text-xs text-slate-400 mt-1">The upcoming weather event in APAC is the likely root cause of the projected supply chain delays flagged in the Today tab. We recommend adjusting lead times by +5 days and engaging secondary suppliers immediately.</p>
+                        </div>
+                    </div>
+
+
+                    <!-- Signal Card 3 -->
+                    <div class="card p-4 border-l-4" style="border-left-color: #22c55e;">
+                        <h3 class="font-bold text-green-300">External Signal: Regulatory Policy Shift</h3>
+                        <p class="text-sm mt-2 text-slate-300">New FDA accelerated approval pathway announced for novel companion animal therapeutics.</p>
+                        <div class="mt-3 p-3 bg-slate-900 rounded border border-slate-700">
+                            <span class="font-semibold text-violet-400 text-sm">Causal Narrative:</span>
+                            <p class="text-xs text-slate-400 mt-1">This shift aligns perfectly with our R&D pipeline. Probability of Phase 3 Feline Oncology drug approval increased by 15%. Recommend reallocating marketing spend to prepare for early Q1 launch.</p>
                         </div>
                     </div>
 
@@ -764,6 +763,13 @@
             <div class="text-slate-500">[10:45:03] <span class="text-slate-300">Evaluating multi-modal inputs from SAP, SFDC, and IoT layers.</span></div>
             <div class="text-slate-500">[10:45:04] <span class="text-green-400">Confidence threshold met (>85%). Generating insights.</span></div>
         </div>
+    </div>
+
+    <!-- Persistent Footer Disclaimer -->
+    <div class="fixed bottom-0 w-full bg-slate-900 border-t border-slate-800 text-center py-2 z-50">
+        <span class="text-xs text-slate-500 font-mono tracking-wider uppercase">
+            Directional prototype. Synthetic data. Not a validated system.
+        </span>
     </div>
 
 </body>
