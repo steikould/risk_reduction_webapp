@@ -43,3 +43,18 @@
     width: 100% !important;
     height: 100% !important;
 }
+
+/* Mobile optimizations for drawers */
+@media (max-width: 640px) {
+    .drawer, #sidebar-drawer {
+        width: 100%;
+        right: -100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .tabs-trigger {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.875rem; /* smaller text for tabs on mobile */
+    }
+}
