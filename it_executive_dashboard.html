@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IT Executive Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="it_executive_dashboard.css" />
+  </head>
+  <body
+    class="bg-[var(--color-canvas)] text-[var(--color-ink)] font-sans antialiased overflow-hidden flex h-screen"
+  >
+    <!-- Sidebar -->
+    <aside
+      id="app-sidebar"
+      class="w-[220px] bg-[var(--color-sidebar)] flex-shrink-0 flex flex-col transition-all duration-300 relative z-20"
+    >
+      <div class="p-4 text-white font-bold text-lg border-b border-white/10">
+        IT Executive
+      </div>
+      <nav
+        class="flex-1 overflow-y-auto py-4 space-y-1 px-2"
+        aria-label="Dashboard sections"
+        id="sidebar-nav"
+      >
+        <!-- Nav items will be injected here -->
+      </nav>
+      <div class="p-4 border-t border-white/10">
+        <div class="border border-white/20 rounded p-3">
+          <div
+            class="text-[11px] uppercase text-[var(--color-sidebar-ink)] font-bold mb-3 tracking-widest"
+          >
+            Data View
+          </div>
+          <div
+            class="space-y-2 text-sm text-[var(--color-sidebar-ink)]"
+            id="data-view-controls"
+          >
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-white"
+            >
+              <input
+                type="radio"
+                name="dataView"
+                value="enterprise"
+                checked
+                class="accent-blue-500"
+              />
+              US IT (Enterprise)
+            </label>
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-white"
+            >
+              <input
+                type="radio"
+                name="dataView"
+                value="hp"
+                class="accent-blue-500"
+              />
+              Human Pharma (HP)
+            </label>
+            <label
+              class="flex items-center gap-2 cursor-pointer hover:text-white"
+            >
+              <input
+                type="radio"
+                name="dataView"
+                value="ah"
+                class="accent-blue-500"
+              />
+              Animal Health (AH)
+            </label>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+      <!-- Header -->
+      <header
+        class="h-14 bg-white border-b border-[var(--color-border)] flex items-center justify-between px-4 xl:px-5 flex-shrink-0 z-10"
+      >
+        <div class="flex items-center gap-4">
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-gray-500 hover:text-gray-900"
+          >
+            <i data-lucide="menu"></i>
+          </button>
+          <h1 id="page-title" class="text-lg font-semibold">
+            Executive Summary
+          </h1>
+          <select
+            id="period-select"
+            class="text-sm border border-[var(--color-border)] rounded-md px-2 py-1 ml-4 outline-none"
+          >
+            <option value="2026-05">May 2026</option>
+            <option value="2026-04">Apr 2026</option>
+            <option value="2026-03">Mar 2026</option>
+            <option value="2026-02">Feb 2026</option>
+            <option value="2026-01">Jan 2026</option>
+            <option value="2025-12">Dec 2025</option>
+          </select>
+          <span
+            id="historical-badge"
+            class="hidden ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded"
+            >Historical view</span
+          >
+        </div>
+        <div class="flex items-center gap-4">
+          <a
+            href="animal_health_executive.html"
+            class="text-sm text-blue-600 hover:underline flex items-center gap-1 font-medium"
+          >
+            <i data-lucide="external-link" class="w-4 h-4"></i> AH Operations
+            Pulse
+          </a>
+          <div class="w-px h-4 bg-gray-300"></div>
+          <span
+            id="last-updated"
+            class="text-xs text-[var(--color-ink-subtle)]"
+          ></span>
+          <button
+            id="refresh-btn"
+            class="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded hover:bg-gray-100 transition-colors"
+          >
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable content -->
+      <div id="content-area" class="flex-1 overflow-y-auto p-4 xl:p-5">
+        <!-- Dynamic content injected here -->
+      </div>
+    </main>
+
+    <!-- Overlay for mobile sidebar -->
+    <div
+      id="sidebar-overlay"
+      class="fixed inset-0 bg-black/50 z-10 hidden md:hidden"
+    ></div>
+
+    <!-- Right Drawer (Strategic Portfolio Detail) -->
+    <div
+      id="project-drawer"
+      class="fixed right-0 top-0 h-full w-full max-w-[440px] bg-white border-l border-[var(--color-border)] shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col"
+    >
+      <div
+        class="p-4 border-b border-[var(--color-border)] flex justify-between items-start"
+      >
+        <div>
+          <div class="flex gap-2 mb-2" id="drawer-badges"></div>
+          <h2
+            id="drawer-title"
+            class="text-lg font-bold text-[var(--color-ink)] leading-tight"
+          ></h2>
+        </div>
+        <button
+          id="drawer-close"
+          class="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded hover:bg-gray-100"
+        >
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-6" id="drawer-content">
+        <!-- Project details injected here -->
+      </div>
+    </div>
+
+    <!-- Include Javascript -->
+    <script src="it_executive_dashboard.js"></script>
+  </body>
+</html>
