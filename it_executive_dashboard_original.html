@@ -4,10 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IT Executive Dashboard</title>
-    <script src="https://cdn.tailwindcss.com?version=3.4.1"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-    <link rel="stylesheet" href="it_executive_dashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="it_executive_dashboard_original.css" />
   </head>
   <body
     class="bg-[var(--color-canvas)] text-[var(--color-ink)] font-sans antialiased overflow-hidden flex h-screen"
@@ -86,9 +88,9 @@
         <div class="flex items-center gap-4">
           <button
             id="mobile-menu-btn"
-            class="md:hidden text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+            class="md:hidden text-gray-500 hover:text-gray-900"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            <i data-lucide="menu"></i>
           </button>
           <h1 id="page-title" class="text-lg font-semibold">
             Executive Summary
@@ -111,23 +113,23 @@
           >
         </div>
         <div class="flex items-center gap-4">
+          <a
+            href="animal_health_executive.html"
+            class="text-sm text-blue-600 hover:underline flex items-center gap-1 font-medium"
+          >
+            <i data-lucide="external-link" class="w-4 h-4"></i> AH Operations
+            Pulse
+          </a>
           <div class="w-px h-4 bg-gray-300"></div>
           <span
             id="last-updated"
             class="text-xs text-[var(--color-ink-subtle)]"
           ></span>
-          <a href="it_executive_dashboard_original.html"
-             class="text-xs text-[var(--color-ink-muted)] border border-[var(--color-border)] rounded px-2 py-1 hover:bg-[var(--color-surface-muted)] transition-colors"
-             target="_blank"
-          >
-            See Original
-          </a>
           <button
-            id="theme-toggle-btn"
-            class="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-            onclick="window.toggleTheme()"
+            id="refresh-btn"
+            class="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded hover:bg-gray-100 transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
           </button>
         </div>
       </header>
@@ -162,9 +164,8 @@
         <button
           id="drawer-close"
           class="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded hover:bg-gray-100"
-          onclick="window.closeRightPanel()"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <i data-lucide="x"></i>
         </button>
       </div>
       <div class="flex-1 overflow-y-auto p-6" id="drawer-content">
@@ -173,6 +174,6 @@
     </div>
 
     <!-- Include Javascript -->
-    <script type="module" src="src/main.js"></script>
+    <script src="it_executive_dashboard_original.js"></script>
   </body>
 </html>
