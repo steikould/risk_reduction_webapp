@@ -844,6 +844,12 @@ const renderSidebar = () => {
 
 const renderDelta = (delta, direction = "higher-is-better") => {
   if (!delta) return "";
+
+  let colorClass = "text-[var(--color-ink-muted)]";
+  let icon = "minus";
+
+  if (delta.value > 0) {
+    colorClass =
       direction === "higher-is-better"
         ? "text-[var(--color-status-good)]"
         : "text-[var(--color-status-poor)]";
