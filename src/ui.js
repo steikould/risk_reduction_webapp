@@ -97,7 +97,10 @@ function renderTab1(container) {
     if (state.findings.length > 0) {
         html += `<div class="flex flex-wrap gap-2 mt-3">`;
         state.findings.slice(0,4).forEach(f => {
-            html += `<button onclick="window.openRightPanel('log')" class="px-2 py-1 bg-[var(--lead-line)] rounded text-xs text-[var(--lead-ink)] hover:bg-[var(--lead-sub)] transition-colors flex items-center gap-1 focus-visible-ring cursor-pointer">${f.title}</button>`;
+            let pillClass = f.severity === 'crit'
+                ? 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200'
+                : 'bg-[var(--lead-line)] text-[var(--lead-ink)] hover:bg-[var(--lead-sub)] border border-transparent';
+            html += `<button onclick="window.openRightPanel('finding', '${f.id}')" class="px-2 py-1 rounded text-xs transition-colors flex items-center gap-1 focus-visible-ring cursor-pointer ${pillClass}">${f.title}</button>`;
         });
         html += `</div>`;
     }
@@ -509,6 +512,56 @@ export function renderRightPanel() {
                 ${lineageHtml}
             </div>
         </div>`;
+        content.innerHTML = html;
+
+    } else if (state.panel.mode === 'finding') {
+        const finding = state.findings.find(f => f.id === state.panel.id);
+        if (!finding) return;
+
+        title.innerText = "Insight Detail";
+        badges.innerHTML = `<span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-gray-100 border border-gray-200">${finding.severity}</span>`;
+
+        let html = `<div class="space-y-6 pb-10">
+            <div class="bg-gray-50 p-4 rounded-md border border-gray-100 text-sm">
+                <h3 class="font-bold mb-2">${finding.title}</h3>
+                <p class="text-[var(--color-ink-muted)] leading-relaxed">${finding.evidence}</p>
+            </div>`;
+
+        if (finding.actions && finding.actions.length > 0) {
+            html += `<div class="flex gap-2">`;
+            finding.actions.forEach((a, i) => {
+                html += `<button onclick="window.agentAction(${state.findings.indexOf(finding)}, ${i})" class="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded hover:bg-blue-100 focus-visible-ring">${a.label}</button>`;
+            });
+            html += `</div>`;
+        }
+
+        if (finding.projects && finding.projects.length > 0) {
+            html += `
+            <div class="border-t border-[var(--color-border)] pt-4">
+                <h3 class="text-[12px] font-bold uppercase mb-3">Associated Projects</h3>
+                <div class="space-y-2">
+            `;
+            finding.projects.forEach(projectId => {
+                const p = state.projects.find(proj => proj.id === projectId);
+                if (p) {
+                    html += `
+                        <div class="p-3 border border-[var(--color-border)] rounded-md hover:bg-gray-50 cursor-pointer transition-colors" onclick="window.openRightPanel('project', '${p.id}')">
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="font-bold text-sm">${p.name}</div>
+                                <div class="w-2 h-2 rounded-full ${p.health === 'on-track' ? 'bg-green-500' : p.health === 'at-risk' ? 'bg-yellow-500' : 'bg-red-500'}"></div>
+                            </div>
+                            <div class="flex gap-4 text-[10px] text-[var(--color-ink-muted)] uppercase tracking-wide">
+                                <span>Unit: ${p.unit}</span>
+                                <span>Risk: ${p.riskPct}%</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            html += `</div></div>`;
+        }
+
+        html += `</div>`;
         content.innerHTML = html;
 
     } else if (state.panel.mode === 'log') {
