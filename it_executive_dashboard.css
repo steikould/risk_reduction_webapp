@@ -1,0 +1,275 @@
+:root {
+  /* Surfaces */
+  --color-canvas: #f1f2f4; /* page background */
+  --color-surface: #ffffff; /* card background */
+  --color-surface-muted: #f8f9fa; /* inset panels, table stripes */
+  --color-border: #e3e5e8;
+
+  /* Text */
+  --color-ink: #1a1d21; /* primary */
+  --color-ink-muted: #5a6068; /* labels */
+  --color-ink-subtle: #8b9198; /* axis, captions */
+
+  /* Status (RAG) */
+  --color-status-good: #1f9d55;
+  --color-status-fair: #e8a317;
+  --color-status-poor: #d1373a;
+  --color-status-neutral: #9aa0a6;
+  --color-status-fair-text: #9a6a00; /* For text accessibility */
+
+  /* Domain accents — used for card header bars */
+  --color-domain-trust: #1c7a6b;
+  --color-domain-ops: #1f6fd0;
+  --color-domain-portfolio: #4b3fb5;
+  --color-domain-delivery: #d18a1a;
+  --color-domain-finance: #1e7a4c;
+  --color-domain-people: #c02a55;
+  --color-domain-ai: #128a8a;
+  --color-domain-cyber: #1560bd;
+
+  /* Sidebar */
+  --color-sidebar: #17335c;
+  --color-sidebar-active: #1f6fd0;
+  --color-sidebar-ink: #dfe6f2;
+
+  /* Chart series */
+  --color-chart-1: #1f6fd0;
+  --color-chart-2: #1c7a6b;
+  --color-chart-3: #d18a1a;
+  --color-chart-4: #4b3fb5;
+  --color-chart-5: #c02a55;
+
+  /* Radii & shadow */
+  --radius-card: 6px;
+  --shadow-card:
+    0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+/* Typography Utility Classes */
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.text-card-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.text-hero-score {
+  font-size: 40px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.text-card-score {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.text-band-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.text-metric-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+}
+
+.text-metric-value {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+.text-section-heading {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.text-table-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.text-table-cell {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.text-chart-axis {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--color-ink-subtle);
+}
+
+/* Components */
+.kpi-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.domain-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+  display: flex;
+  flex-direction: column;
+}
+
+.domain-card:hover {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.domain-header {
+  height: 28px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 1rem;
+}
+
+/* Gauges / Donut Container */
+.gauge-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.gauge-svg {
+  overflow: visible;
+}
+
+/* Sidebar Active Item */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  color: var(--color-sidebar-ink);
+  border-radius: 9999px; /* pill */
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+  text-decoration: none;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-item.active {
+  background-color: var(--color-sidebar-active);
+  color: white;
+  font-weight: 500;
+}
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table tbody tr:nth-child(even) {
+  background-color: var(--color-surface-muted);
+}
+
+.data-table tbody tr:hover {
+  background-color: #f0f4f8; /* slightly raised */
+}
+
+/* Custom Scrollbar for Drawer/Sidebar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-subtle);
+}
+
+/* Responsive adjustments for Sidebar */
+@media (min-width: 768px) and (max-width: 1023px) {
+  #app-sidebar {
+    width: 56px;
+  }
+  .sidebar-label {
+    display: none;
+  }
+  #app-sidebar .p-4.text-white.font-bold {
+    font-size: 12px;
+    text-align: center;
+    padding: 16px 4px;
+  }
+  #data-view-controls label {
+    justify-content: center;
+  }
+  #data-view-controls label span {
+    display: none;
+  }
+}
