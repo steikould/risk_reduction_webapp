@@ -834,21 +834,16 @@ const renderSidebar = () => {
       renderSidebar();
       renderContent();
       updateUrl();
-      if (window.innerWidth < 768)
-        document
-          .getElementById("app-sidebar")
-          .classList.add("-translate-x-full"); // close mobile sidebar
+      if (window.innerWidth < 768) {
+        document.getElementById("app-sidebar").classList.add("-translate-x-full");
+        document.getElementById("sidebar-overlay").classList.add("hidden"); // close mobile sidebar
+      }
     });
   });
 };
 
 const renderDelta = (delta, direction = "higher-is-better") => {
   if (!delta) return "";
-  let colorClass = "text-[var(--color-status-neutral)]";
-  let icon = "minus";
-
-  if (delta.value > 0) {
-    colorClass =
       direction === "higher-is-better"
         ? "text-[var(--color-status-good)]"
         : "text-[var(--color-status-poor)]";

@@ -162,7 +162,7 @@
             </div>
         </div>
 
-        <div class="mb-6 flex justify-between items-end">
+        <div class="mb-6 flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4">
             <div>
                 <h1 class="text-xl font-bold">Executive Vital Signs</h1>
                 <p class="text-secondary text-sm">Animal Health Pharma - Commercial & Operations Pulse</p>
@@ -174,7 +174,7 @@
         </div>
 
         <div class="tabs-container">
-            <div class="tabs-list grid w-full grid-cols-4">
+            <div class="tabs-list grid w-full grid-cols-4 text-xs sm:text-base">
                 <button class="tabs-trigger active" data-tab="overview">Today</button>
                 <button class="tabs-trigger" data-tab="analysis">Ask</button>
                 <button class="tabs-trigger" data-tab="data">Signals</button>
@@ -184,7 +184,7 @@
             <div id="overview-tab" class="tabs-content space-y-6 pt-6">
 
                 <!-- What Changed Strip -->
-                <div class="bg-[#1e293b] border border-[#334155] rounded-md px-4 py-2 flex items-center gap-3 text-sm mb-6">
+                <div class="bg-[#1e293b] border border-[#334155] rounded-md px-4 py-2 flex flex-col md:flex-row md:items-center gap-3 text-sm mb-6">
                     <span class="text-[#94a3b8] whitespace-nowrap">Since Tuesday:</span>
                     <div class="flex-1 text-[#e2e8f0] truncate">
                         EU Livestock Vaccine projected stockout date advanced by 1 week; Global Mfg Yield dropped below 95% threshold.
@@ -197,7 +197,7 @@
                     <div class="space-y-4">
                         <!-- Card 1 -->
                         <div class="card border border-slate-700 bg-slate-800 p-4">
-                            <div class="flex justify-between items-start">
+                            <div class="flex flex-col md:flex-row justify-between items-start gap-4">
                                 <div>
                                     <div class="flex items-center gap-2 mb-1">
                                         <span class="badge" style="background-color: var(--danger); color: white;">Critical</span>
@@ -214,7 +214,7 @@
 
                         <!-- Card 2 -->
                         <div class="card border border-slate-700 bg-slate-800 p-4">
-                            <div class="flex justify-between items-start">
+                            <div class="flex flex-col md:flex-row justify-between items-start gap-4">
                                 <div>
                                     <div class="flex items-center gap-2 mb-1">
                                         <span class="badge" style="background-color: var(--warning); color: black;">Warning</span>
@@ -231,7 +231,7 @@
 
                         <!-- Card 3 -->
                         <div class="card border border-slate-700 bg-slate-800 p-4">
-                            <div class="flex justify-between items-start">
+                            <div class="flex flex-col md:flex-row justify-between items-start gap-4">
                                 <div>
                                     <div class="flex items-center gap-2 mb-1">
                                         <span class="badge" style="background-color: var(--success); color: white;">Action Required</span>
@@ -251,7 +251,7 @@
                 <!-- AI Summary Insight Removed per brief -->
 
                                 <!-- KPI Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Revenue -->
                     <div class="card p-4 relative overflow-hidden group">
                         <div class="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -317,7 +317,7 @@
                     </div>
                 </div>
                 <!-- Main Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="card">
                         <div class="card-header flex justify-between items-center">
                             <div>
@@ -462,7 +462,7 @@
                                 <svg class="text-green-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                 Active Guardrails
                             </h3>
-                            <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                                 <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> PII & Sensitive Data Filtered</div>
                                 <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> Financial Compliance Checked (SOX)</div>
                                 <div class="flex items-center gap-2 text-slate-300"><div class="w-2 h-2 rounded-full bg-green-500"></div> Confidence Threshold > 80%</div>
@@ -661,9 +661,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
-                <div class="flex-1 flex overflow-hidden">
+                <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
                     <!-- Left: Agent Logs -->
-                    <div class="w-1/3 border-r border-slate-800 bg-slate-900/50 p-6 overflow-y-auto font-mono text-xs text-slate-300">
+                    <div class="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-slate-800 bg-slate-900/50 p-4 md:p-6 overflow-y-auto font-mono text-xs text-slate-300 max-h-[40vh] md:max-h-full">
                         <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
                             <span class="text-slate-400 uppercase tracking-wider font-semibold">Execution Log</span>
                             <span class="text-green-400 animate-pulse flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> ACTIVE</span>
@@ -681,7 +681,7 @@
                         </div>
                     </div>
                     <!-- Right: Visual Sandbox & Approval -->
-                    <div class="flex-1 p-8 bg-slate-950 flex flex-col items-center justify-center relative">
+                    <div class="flex-1 p-4 md:p-8 bg-slate-950 flex flex-col items-center justify-center relative overflow-y-auto">
                         <div class="w-full max-w-2xl">
                             <h3 class="text-xl font-semibold mb-6 text-center">Proposed Remediation Scenario</h3>
 
@@ -723,7 +723,7 @@
                             <div class="p-6 bg-slate-900 border border-violet-500/30 rounded-lg text-center shadow-[0_0_15px_rgba(139,92,246,0.1)]">
                                 <h4 class="text-white font-semibold mb-2">Approval Required</h4>
                                 <p class="text-sm text-slate-400 mb-6">Execute 2 Purchase Orders across secondary suppliers to maintain 28-day inventory buffer. Total cost premium: $82,000.</p>
-                                <div class="flex justify-center gap-4">
+                                <div class="flex flex-col sm:flex-row justify-center gap-4">
                                     <button class="button outline px-6" onclick="document.getElementById('agent-workspace').classList.add('hidden')">Reject Plan</button>
                                     <button class="button bg-violet-600 hover:bg-violet-700 text-white px-8 font-medium shadow-lg shadow-violet-600/20" onclick="alert('Agent execution authorized. Purchase orders are being transmitted via EDI.'); document.getElementById('agent-workspace').classList.add('hidden')">Authorize Execution</button>
                                 </div>
@@ -747,7 +747,7 @@
 
 
     <!-- Reasoning Drawer -->
-    <div id="reasoning-drawer" class="fixed right-0 top-0 h-full w-[400px] bg-slate-900 border-l border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 z-40 overflow-y-auto">
+    <div id="reasoning-drawer" class="fixed right-0 top-0 h-full w-full sm:w-[400px] bg-slate-900 border-l border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 z-40 overflow-y-auto">
         <div class="p-4 border-b border-slate-800 flex justify-between items-center sticky top-0 bg-slate-900/95 backdrop-blur z-10">
             <h3 class="font-semibold text-slate-100 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line></svg>
